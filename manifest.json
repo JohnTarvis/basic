@@ -1,0 +1,30 @@
+{
+
+  "manifest_version": 2,
+  "name": "QuickDef",
+  "version": "1.0",
+
+  "description": "Select text and see it defined at the bottom of the page",
+  "icons": {
+    "48": "icons/icoQuickDef-32.png"
+  },
+  
+  "permissions": [
+	"activeTab"
+  ],
+  
+  "content_scripts": [
+	{
+	  "matches": ["<all_urls>"],
+	  "js": ["define.js","jquery-3.4.1.min.js","testScript.js"]
+	}
+  ],
+  
+  "browser_action": {
+    "default_icon": "icons/icoQuickDef-32.png",
+    "default_title": "QuickDef"
+  },
+  
+  "web_accessible_resources": ["dictionary.txt"]
+  
+}
