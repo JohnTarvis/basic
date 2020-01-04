@@ -1,7 +1,1 @@
-let colorCodes = {
-
-  back  : "#fff",
-  front : "#888",
-  side  : "#369"
-
-};
+let word = "the word was read";

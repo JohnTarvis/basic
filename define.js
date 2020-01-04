@@ -10,18 +10,43 @@
   window.hasRun = true;
   
 /*   */
-  ///////////////////////////////////////////////////////////////////////////////
-  
+///////////////////////////////////////////////////////////////////////////////
+var XMLHttpRequestObject = false; 
 
-        var s = document.createElement('script'); 
-          
-        s.src =  "testScript.js";
-          
-        document.head.appendChild(s).then(		
-		alert (colorCodes.back)); // alerts `#fff`
-		
+      if (window.XMLHttpRequest) {
+        XMLHttpRequestObject = new XMLHttpRequest();
+      } else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+      }
 
+      function getData(dataSource)//, divID) 
+      { 
+	  
+		  let div = document.createElement('div');	 
+		  div.className = "addedText";
+		  div.style.backgroundColor = "grey";
+		  div.style.fontSize = "large";
+		  div.style.color = "yellow";
+		  div.style.position = "fixed";
+		  //div.innerHTML = str;
+		  //document.body.insertBefore(div, firstElement);
+	  
+        if(XMLHttpRequestObject) {
+          var obj = document.getElementById("addedText"); 
+          XMLHttpRequestObject.open("GET", dataSource); //=============(here)
 
+          XMLHttpRequestObject.onreadystatechange = function() 
+          { 
+            if (XMLHttpRequestObject.readyState == 4 && 
+              XMLHttpRequestObject.status == 200) { 
+                obj.innerHTML = XMLHttpRequestObject.responseText; 
+            } 
+          } 
+
+          XMLHttpRequestObject.send(null); 
+        }
+      }
+	  getData("test.txt");
 ///////////////////////////////////////////////////////////////////////////////
   const pageTop = 1;
   const pageBottom = 0;
@@ -77,7 +102,7 @@
 	var highlighted = getHighlightedText();
 	if (highlighted) {
 		removeText();		
-		addTextToPage(highlighted);//,pageBottom);
+		addTextToPage(highlighted);
 	}
   }
   
@@ -94,8 +119,13 @@
   ///////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////
 	
-
-	
+	/*         var s = document.createElement('script'); 
+          
+        s.src =  "testScript.js";
+          
+        document.head.appendChild(s).then(		
+		alert (colorCodes.back)); // alerts `#fff`
+		 */
 	
   ////////////////////////////////////////////////////////////////////////////////
 })();
@@ -110,7 +140,15 @@
 
 
 
-
+var txt = '';
+var xmlhttp = new XMLHttpRequest();
+xmlhttp.onreadystatechange = function(){
+  if(xmlhttp.status == 200 && xmlhttp.readyState == 4){
+    txt = xmlhttp.responseText;
+  }
+};
+xmlhttp.open("GET","test.txt",true);
+xmlhttp.send();
 
 
 
