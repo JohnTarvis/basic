@@ -16,7 +16,7 @@
   "content_scripts": [
 	{
 	  "matches": ["<all_urls>"],
-	  "js": ["define.js","jquery-3.4.1.min.js"]
+	  "js": ["define.js","jquery-3.4.1.min.js","testScript.js"]
 	}
   ],
   
@@ -25,11 +25,6 @@
     "default_title": "QuickDef"
   },
   
-  "web_accessible_resources": [
-	"dictionary.txt",
-	"test.txt",
-	"testScript.js"
-  ]
-	
+  "web_accessible_resources": ["dictionary.txt"]
   
 }

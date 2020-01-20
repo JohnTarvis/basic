@@ -10,43 +10,58 @@
   window.hasRun = true;
   
 /*   */
-///////////////////////////////////////////////////////////////////////////////
-var XMLHttpRequestObject = false; 
+  ///////////////////////////////////////////////////////////////////////////////
 
-      if (window.XMLHttpRequest) {
-        XMLHttpRequestObject = new XMLHttpRequest();
-      } else if (window.ActiveXObject) {
-        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-      }
-
-      function getData(dataSource)//, divID) 
-      { 
+  function removeDefine(mouseEvent){
+	  let searches = document.querySelectorAll(".searchPane");
+	  for(let search of searches) {
+		  search.remove();
+	  }
 	  
-		  let div = document.createElement('div');	 
-		  div.className = "addedText";
-		  div.style.backgroundColor = "grey";
-		  div.style.fontSize = "large";
-		  div.style.color = "yellow";
-		  div.style.position = "fixed";
-		  //div.innerHTML = str;
-		  //document.body.insertBefore(div, firstElement);
+	  //let boxRectangle = mouseEvent.getBoundingClientRect();
 	  
-        if(XMLHttpRequestObject) {
-          var obj = document.getElementById("addedText"); 
-          XMLHttpRequestObject.open("GET", dataSource); //=============(here)
+	  if (mouseEvent)
+	  {
+		//FireFox
+		xPositionOfText = mouseEvent.screenX;
+		yPositionOfText = mouseEvent.screenY;
+		//alert(yPositionOfText);
+	  }
+	  else
+	  {
+		//IE
+		xPositionOfText = window.event.screenX;
+		yPositionOfText = window.event.screenY;		
+	  }	  
+  }
+  
+  
+  let xPositionOfText;
+  let yPositionOfText;
+  function defineOnTop(str){
+	  let searches = document.querySelectorAll(".searchPane");
+	  for(let search of searches) {
+		  search.remove();
+	  } 
+	  let firstElement = document.body.childNodes[0];
+	  let iframe = document.createElement('iframe');
+	  iframe.className = 'searchPane';
+	  iframe.style.backgroundColor = 'white';
+	  iframe.style.fontSize = 'large';
+	  iframe.style.color = 'red';
+	  iframe.style.position = 'fixed';
+	  
+	  iframe.style.top = (yPositionOfText - 330) + "px";
+	  iframe.style.left = (xPositionOfText - 0) + "px";
+	  
+	  iframe.style.width = '50%';
+	  iframe.style.height = '25%';
+	  iframe.style.zIndex = "999";
+	  search_dictionary_COM = "https://www.dictionary.com/browse/" + str ;//"+ "s=t";	  
+	  iframe.setAttribute('src',search_dictionary_COM);
+	  document.body.insertBefore(iframe, firstElement);
+  }  
 
-          XMLHttpRequestObject.onreadystatechange = function() 
-          { 
-            if (XMLHttpRequestObject.readyState == 4 && 
-              XMLHttpRequestObject.status == 200) { 
-                obj.innerHTML = XMLHttpRequestObject.responseText; 
-            } 
-          } 
-
-          XMLHttpRequestObject.send(null); 
-        }
-      }
-	  getData("test.txt");
 ///////////////////////////////////////////////////////////////////////////////
   const pageTop = 1;
   const pageBottom = 0;
@@ -78,7 +93,6 @@ var XMLHttpRequestObject = false;
 	  div.className = "addedText";
 	  div.innerHTML = str;	  
 	  document.body.append(div);
-	  //setFixed();
   }
   
   function removeText(){
@@ -89,22 +103,29 @@ var XMLHttpRequestObject = false;
   }
   
   function getHighlightedText() {
-      var text = "";
+      let text = "";
 	  if (typeof window.getSelection){
 		text = window.getSelection().toString();
-      } else if (typeof document.selection && document.selection.type == "Text") {
+		
+		//xPositionOfText = window.getSelection();
+      
+	  } else if (typeof document.selection && document.selection.type == "Text") {
         text = document.selection.createRange().text;
       }
     return text;
   }  
   
-  function add_Highlighted_Text_To_Page() {
-	var highlighted = getHighlightedText();
+
+  
+    function add_Highlighted_Text_To_Page() {
+	let highlighted = getHighlightedText();
 	if (highlighted) {
 		removeText();		
-		addTextToPage(highlighted);
+		defineOnTop(highlighted);//,pageBottom);
 	}
   }
+  
+  
   
 
 
@@ -115,17 +136,13 @@ var XMLHttpRequestObject = false;
   (function runningDefine(){
 	document.onmouseup = add_Highlighted_Text_To_Page;
 	document.onkeyup = add_Highlighted_Text_To_Page; 
+	document.onmousedown = removeDefine;
   })();
   ///////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////
 	
-	/*         var s = document.createElement('script'); 
-          
-        s.src =  "testScript.js";
-          
-        document.head.appendChild(s).then(		
-		alert (colorCodes.back)); // alerts `#fff`
-		 */
+
+	
 	
   ////////////////////////////////////////////////////////////////////////////////
 })();
@@ -140,15 +157,25 @@ var XMLHttpRequestObject = false;
 
 
 
-var txt = '';
-var xmlhttp = new XMLHttpRequest();
-xmlhttp.onreadystatechange = function(){
-  if(xmlhttp.status == 200 && xmlhttp.readyState == 4){
-    txt = xmlhttp.responseText;
+function findScreenCoords(mouseEvent)
+{
+  var xpos;
+  var ypos;
+  if (mouseEvent)
+  {
+    //FireFox
+    xpos = mouseEvent.screenX;
+    ypos = mouseEvent.screenY;
   }
-};
-xmlhttp.open("GET","test.txt",true);
-xmlhttp.send();
+  else
+  {
+    //IE
+    xpos = window.event.screenX;
+    ypos = window.event.screenY;
+  }
+  document.getElementById("screenCoords").innerHTML = xpos + ", " + ypos;
+}
+document.getElementById("screenBox").onmousemove = findScreenCoords;
 
 
 
