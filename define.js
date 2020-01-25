@@ -11,132 +11,110 @@
   
 /*   */
   ///////////////////////////////////////////////////////////////////////////////
+  
+  //add jquery   
 
-  function removeDefine(mouseEvent){
-	  let searches = document.querySelectorAll(".searchPane");
-	  for(let search of searches) {
-		  search.remove();
-	  }
-	  
-	  //let boxRectangle = mouseEvent.getBoundingClientRect();
-	  
-	  if (mouseEvent)
-	  {
-		//FireFox
-		xPositionOfText = mouseEvent.screenX;
-		yPositionOfText = mouseEvent.screenY;
-		//alert(yPositionOfText);
-	  }
-	  else
-	  {
-		//IE
-		xPositionOfText = window.event.screenX;
-		yPositionOfText = window.event.screenY;		
+	var jQuery = document.createElement('script');
+	jQuery.setAttribute('src','/jquery-3.4.1.min.js');
+	document.head.appendChild(jQuery);
+
+
+ 
+  
+  testJQ();
+  
+  let InfoPane = {	    
+	  selectedText: 'carrots',  
+	  x: 0,
+	  y: 0,
+	  iframe: document.createElement('iframe'),
+	  search_dictionary_COM(){
+		  return "https://www.dictionary.com/browse/" + this.selectedText;
+	  },		  
+	  getFirstElement(){
+		  return document.body.childNodes[0];
+	  },	  
+	  setupButtonStrip(){
+		  return '<button class="testbtn">test</button>'		  
+	  },
+	  setup_iframe(){
+		  this.iframe.className = 'infoPane';
+		  this.iframe.style.backgroundColor = 'white';
+		  this.iframe.style.fontSize = 'large';
+		  this.iframe.style.color = 'red';
+		  this.iframe.style.position = 'fixed';	  
+		  this.iframe.style.top = this.y + "px";
+		  this.iframe.style.left = this.x + "px";	  
+		  this.iframe.style.width = '50%';
+		  this.iframe.style.height = '25%';
+		  this.iframe.style.zIndex = "999";		  
+		  this.iframe.setAttribute('src',this.search_dictionary_COM());	  
+	  },	  
+	  displayPane(){
+		  this.remove();
+		  this.setup_iframe();
+		  document.body.insertBefore(this.iframe, this.getFirstElement());
+	  },  	
+	  displayButtonStrip(){
+		  let buttons = document.querySelectorAll('.testbtn');
+		  for(let button of buttons){
+			  button.remove();
+		  }
+		  document.body.insertBefore(this.setupButtonStrip(),this.getFirstElement());
+	  },
+	  remove(){
+		  let panes = document.querySelectorAll('.infoPane');
+		  for(let pane of panes){
+			  pane.remove();
+		  }
 	  }	  
-  }
-  
-  
-  let xPositionOfText;
-  let yPositionOfText;
-  function defineOnTop(str){
-	  let searches = document.querySelectorAll(".searchPane");
-	  for(let search of searches) {
-		  search.remove();
-	  } 
-	  let firstElement = document.body.childNodes[0];
-	  let iframe = document.createElement('iframe');
-	  iframe.className = 'searchPane';
-	  iframe.style.backgroundColor = 'white';
-	  iframe.style.fontSize = 'large';
-	  iframe.style.color = 'red';
-	  iframe.style.position = 'fixed';
-	  
-	  iframe.style.top = (yPositionOfText - 330) + "px";
-	  iframe.style.left = (xPositionOfText - 0) + "px";
-	  
-	  iframe.style.width = '50%';
-	  iframe.style.height = '25%';
-	  iframe.style.zIndex = "999";
-	  search_dictionary_COM = "https://www.dictionary.com/browse/" + str ;//"+ "s=t";	  
-	  iframe.setAttribute('src',search_dictionary_COM);
-	  document.body.insertBefore(iframe, firstElement);
-  }  
+  }; 
 
-///////////////////////////////////////////////////////////////////////////////
-  const pageTop = 1;
-  const pageBottom = 0;
-  function addTextToPage(str, pageSection = pageTop){
-	  switch (pageSection){
-		  case pageTop:
-			addTextToTop(str)
-			break;
-		  case pageBottom:
-			addTextToBottom(str)
-			break;
-	  }
-  }  
+///////////////////////////////////////////////////////////////////////////////  
   
-  function addTextToTop(str){
-	  let firstElement = document.body.childNodes[0];
-	  let div = document.createElement('div');	 
-	  div.className = "addedText";
-	  div.style.backgroundColor = "grey";
-	  div.style.fontSize = "large";
-	  div.style.color = "yellow";
-	  div.style.position = "fixed";
-	  div.innerHTML = str;
-	  document.body.insertBefore(div, firstElement);
-  }  
-	  
-  function addTextToBottom(str){
-	  let div = document.createElement('div');
-	  div.className = "addedText";
-	  div.innerHTML = str;	  
-	  document.body.append(div);
-  }
-  
-  function removeText(){
-	  let additions = document.querySelectorAll(".addedText");
-	  for(let addition of additions) {
-		  addition.remove();
-	  }
-  }
-  
-  function getHighlightedText() {
+  function getHighlightedText(mouseEvent) {	  
       let text = "";
 	  if (typeof window.getSelection){
-		text = window.getSelection().toString();
-		
-		//xPositionOfText = window.getSelection();
-      
+		text = window.getSelection().toString();      
 	  } else if (typeof document.selection && document.selection.type == "Text") {
         text = document.selection.createRange().text;
       }
-    return text;
+	  if(text){
+		  InfoPane.selectedText = text;
+		  if (mouseEvent)
+		  {
+			InfoPane.x = mouseEvent.clientX;
+			InfoPane.y = mouseEvent.clientY;
+		  }
+		  else
+		  {
+			//IE
+			InfoPane.x = window.event.clientX;
+			InfoPane.y = window.event.clientY		
+		  }	 
+		  //InfoPane.displayPane();
+		  InfoPane.displayButtonStrip();
+	  }
+	  
   }  
   
-
   
-    function add_Highlighted_Text_To_Page() {
-	let highlighted = getHighlightedText();
-	if (highlighted) {
-		removeText();		
-		defineOnTop(highlighted);//,pageBottom);
-	}
+  function testJQ(){
+	  
+	  $("button").click(function(){
+		  $("p").text("Hello world!");
+	  });
+	  
   }
   
-  
-  
 
 
   ///////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////
-  //document.onmouseup = add_Highlighted_Text_To_Page;
-  //document.onkeyup = add_Highlighted_Text_To_Page; 
   (function runningDefine(){
-	document.onmouseup = add_Highlighted_Text_To_Page;
-	document.onkeyup = add_Highlighted_Text_To_Page; 
-	document.onmousedown = removeDefine;
+	document.onmouseup = getHighlightedText;
+	document.onkeyup = getHighlightedText; 
+	document.onmousedown = InfoPane.remove;
   })();
   ///////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////
@@ -157,42 +135,16 @@
 
 
 
-function findScreenCoords(mouseEvent)
-{
-  var xpos;
-  var ypos;
-  if (mouseEvent)
-  {
-    //FireFox
-    xpos = mouseEvent.screenX;
-    ypos = mouseEvent.screenY;
-  }
-  else
-  {
-    //IE
-    xpos = window.event.screenX;
-    ypos = window.event.screenY;
-  }
-  document.getElementById("screenCoords").innerHTML = xpos + ", " + ypos;
-}
-document.getElementById("screenBox").onmousemove = findScreenCoords;
+  function temp_remove(){
+	  let panes = document.querySelectorAll('.infoPane');
+	  for(let pane of panes){
+		  pane.remove();
+	  }
+  }	 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  
 	////////////////////////////6666666666666666666666666666666666666	
 	////////////////////////////777777777777777777777777777	
 	////////////////////////////888888888888888888888		
