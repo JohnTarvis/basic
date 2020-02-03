@@ -14,14 +14,8 @@
   
   //add jquery   
 
-	var jQuery = document.createElement('script');
-	jQuery.setAttribute('src','/jquery-3.4.1.min.js');
-	document.head.appendChild(jQuery);
 
 
- 
-  
-  testJQ();
   
   let InfoPane = {	    
 	  selectedText: 'carrots',  
@@ -74,9 +68,12 @@
   
   function getHighlightedText(mouseEvent) {	  
       let text = "";
+	  let selection;
 	  if (typeof window.getSelection){
+		  selection = window.getSelection();
 		text = window.getSelection().toString();      
 	  } else if (typeof document.selection && document.selection.type == "Text") {
+		  selection = document.selection.createRange();
         text = document.selection.createRange().text;
       }
 	  if(text){
@@ -86,33 +83,41 @@
 			InfoPane.x = mouseEvent.clientX;
 			InfoPane.y = mouseEvent.clientY;
 		  }
-		  else
-		  {
-			//IE
-			InfoPane.x = window.event.clientX;
-			InfoPane.y = window.event.clientY		
-		  }	 
+
 		  //InfoPane.displayPane();
-		  InfoPane.displayButtonStrip();
+		  //InfoPane.displayButtonStrip();
 	  }
 	  
   }  
   
-  
-  function testJQ(){
-	  
-	  $("button").click(function(){
-		  $("p").text("Hello world!");
-	  });
-	  
+  function yellowHighlighted(mouseEvent) {
+    if (window.getSelection) {
+        var sel = window.getSelection();
+        if (sel.rangeCount) {
+            var range = sel.getRangeAt(0).cloneRange();
+            range.surroundContents('<b>');
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
+    }
   }
+  
+  
+function wrapSelectedText() {       
+    var selection= window.getSelection().getRangeAt(0);
+    var selectedText = selection.extractContents();
+    var span= document.createElement("span");
+    span.style.backgroundColor = "yellow";
+    span.appendChild(selectedText);
+    selection.insertNode(span);
+}
   
 
 
   ///////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////
   (function runningDefine(){
-	document.onmouseup = getHighlightedText;
+	document.onmouseup = wrapSelectedText;//yellowHighlighted;//getHighlightedText;
 	document.onkeyup = getHighlightedText; 
 	document.onmousedown = InfoPane.remove;
   })();
@@ -132,18 +137,12 @@
 *_________________________________________________________________
 *`````````````````````````````````````````````````````````````````
 *
-
-
-
   function temp_remove(){
 	  let panes = document.querySelectorAll('.infoPane');
 	  for(let pane of panes){
 		  pane.remove();
 	  }
   }	 
-
-
-
   
 	////////////////////////////6666666666666666666666666666666666666	
 	////////////////////////////777777777777777777777777777	
