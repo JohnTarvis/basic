@@ -103,15 +103,24 @@
   }
   
   
-function wrapSelectedText() {       
-    var selection= window.getSelection().getRangeAt(0);
-    var selectedText = selection.extractContents();
-    var span= document.createElement("span");
-    span.style.backgroundColor = "yellow";
-    span.appendChild(selectedText);
-    selection.insertNode(span);
-}
-  
+	function wrapSelectedText() {
+		removeWrap();
+		var selection= window.getSelection().getRangeAt(0);
+		var selectedText = selection.extractContents();
+		var span= document.createElement("span");
+		span.style.backgroundColor = "yellow";
+		span.appendChild(selectedText);
+		span.className = 'wrap';
+		selection.insertNode(span);
+	}
+
+	function removeWrap(){
+			  let wraps = document.querySelectorAll('.wrap');
+			  for(let wrap of wraps){
+				  wrap.remove();
+			  }
+	}	  
+	  
 
 
   ///////////////////////////////////////////////////////////////////////////////
@@ -119,7 +128,7 @@ function wrapSelectedText() {
   (function runningDefine(){
 	document.onmouseup = wrapSelectedText;//yellowHighlighted;//getHighlightedText;
 	document.onkeyup = getHighlightedText; 
-	document.onmousedown = InfoPane.remove;
+	//document.onmousedown = removeHighlight;//InfoPane.remove;
   })();
   ///////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////
