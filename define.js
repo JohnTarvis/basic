@@ -1,13 +1,15 @@
+"use strict";
+
 (function() {
   /**
    * Check and set a global guard variable.
    * If this content script is injected into the same page again,
    * it will do nothing next time.
    */
-  if (window.hasRun) {
-    return;
-  }
-  window.hasRun = true;
+	if (window.hasRun) {
+		return;
+	}
+	window.hasRun = true;
   
 /*   */
   ///////////////////////////////////////////////////////////////////////////////
@@ -16,8 +18,9 @@
 
 
 
+
   
-  let InfoPane = {	    
+	let InfoPane = {	    
 	  selectedText: 'carrots',  
 	  x: 0,
 	  y: 0,
@@ -66,69 +69,54 @@
 
 ///////////////////////////////////////////////////////////////////////////////  
   
-  function getHighlightedText(mouseEvent) {	  
-      let text = "";
-	  let selection;
-	  if (typeof window.getSelection){
-		  selection = window.getSelection();
-		text = window.getSelection().toString();      
-	  } else if (typeof document.selection && document.selection.type == "Text") {
-		  selection = document.selection.createRange();
-        text = document.selection.createRange().text;
-      }
-	  if(text){
-		  InfoPane.selectedText = text;
-		  if (mouseEvent)
-		  {
-			InfoPane.x = mouseEvent.clientX;
-			InfoPane.y = mouseEvent.clientY;
-		  }
-
-		  //InfoPane.displayPane();
-		  //InfoPane.displayButtonStrip();
-	  }
-	  
-  }  
-  
-  function yellowHighlighted(mouseEvent) {
-    if (window.getSelection) {
-        var sel = window.getSelection();
-        if (sel.rangeCount) {
-            var range = sel.getRangeAt(0).cloneRange();
-            range.surroundContents('<b>');
-            sel.removeAllRanges();
-            sel.addRange(range);
-        }
-    }
-  }
-  
+	function getHighlightedText(mouseEvent) {	  
+		let text = "";
+		let selection;
+		if (typeof window.getSelection){
+			selection = window.getSelection();
+			text = window.getSelection().toString();      
+		} else if (typeof document.selection && document.selection.type == "Text") {
+			selection = document.selection.createRange();
+			text = document.selection.createRange().text;
+		}
+	}  
+	
+	let lastSelected;
   
 	function wrapSelectedText() {
-		removeWrap();
-		var selection= window.getSelection().getRangeAt(0);
-		var selectedText = selection.extractContents();
-		var span= document.createElement("span");
+		let selection= window.getSelection().getRangeAt(0);
+		let selectedText = selection.extractContents();	
+		
+		lastSelected = selectedText;//.toString();		
+		//alert(lastSelected);		
+
+		let span = document.createElement("span");
 		span.style.backgroundColor = "yellow";
 		span.appendChild(selectedText);
-		span.className = 'wrap';
+		span.id = 'defineTooltip'		
 		selection.insertNode(span);
+		
+		
 	}
 
+	 
+	
 	function removeWrap(){
-			  let wraps = document.querySelectorAll('.wrap');
-			  for(let wrap of wraps){
-				  wrap.remove();
-			  }
-	}	  
-	  
-
+		let wrap = document.getElementById('defineTooltip');			
+		if(wrap && lastSelected){
+			wrap.parentNode.replaceChild(document.createTextNode(lastSelected), wrap);		
+			
+		}
+	}
+	
+	
 
   ///////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////
   (function runningDefine(){
-	document.onmouseup = wrapSelectedText;//yellowHighlighted;//getHighlightedText;
-	document.onkeyup = getHighlightedText; 
-	//document.onmousedown = removeHighlight;//InfoPane.remove;
+	document.onmouseup = wrapSelectedText;
+	document.onkeyup = wrapSelectedText;	
+	//document.onmousedown = removeWrap;	
   })();
   ///////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////
@@ -146,12 +134,44 @@
 *_________________________________________________________________
 *`````````````````````````````````````````````````````````````````
 *
-  function temp_remove(){
-	  let panes = document.querySelectorAll('.infoPane');
-	  for(let pane of panes){
+
+		if(text){
+			InfoPane.selectedText = text;
+			if (mouseEvent){
+				InfoPane.x = mouseEvent.clientX;
+				InfoPane.y = mouseEvent.clientY;
+			}
+		} 
+
+	function XremoveWrap(){
+		let wraps = document.querySelectorAll('.wrap');
+		for(let wrap of wraps){
+			//wrap.outerHTML = wrap.innerHTML;
+			wrap.insertBefore(lastSelected);
+			wrap.remove();
+			
+		}
+	}
+
+
+	function temp_remove(){
+		let panes = document.querySelectorAll('.infoPane');
+		for(let pane of panes){
 		  pane.remove();
-	  }
-  }	 
+		}
+	}	 
+  
+  	function yellowHighlighted(mouseEvent) {
+		if (window.getSelection) {
+			var sel = window.getSelection();
+			if (sel.rangeCount) {
+				var range = sel.getRangeAt(0).cloneRange();
+				range.surroundContents('<b>');
+				sel.removeAllRanges();
+				sel.addRange(range);
+			}
+		}
+	}
   
 	////////////////////////////6666666666666666666666666666666666666	
 	////////////////////////////777777777777777777777777777	
