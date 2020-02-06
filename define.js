@@ -67,7 +67,24 @@
 	  }	  
   }; 
 
-///////////////////////////////////////////////////////////////////////////////  
+/////////////////////////////////////////////////////////////////////////////// 
+
+	let lastSelected;
+	
+	function highlightAndWrap(){		
+		let highlightedWord = '';
+		let selection = window.getSelection()
+		let selectionRange = selection.getRangeAt(0);
+		let selectionText;
+		
+		if(typeof selection){
+			selectedText = selection.toString();
+		} else if (typeof document.selection && document.selection.type == 'Text') {
+			selection = document.selection.createRange();
+			selectionText = document.selection.createRange().text;
+		}
+		lastSelected = selectedText;		
+	}
   
 	function getHighlightedText(mouseEvent) {	  
 		let text = "";
@@ -79,17 +96,14 @@
 			selection = document.selection.createRange();
 			text = document.selection.createRange().text;
 		}
-	}  
-	
-	let lastSelected;
+		lastSelected = text;		
+		
+	}	
   
 	function wrapSelectedText() {
+		
 		let selection= window.getSelection().getRangeAt(0);
 		let selectedText = selection.extractContents();	
-		
-		lastSelected = selectedText;//.toString();		
-		//alert(lastSelected);		
-
 		let span = document.createElement("span");
 		span.style.backgroundColor = "yellow";
 		span.appendChild(selectedText);
@@ -114,9 +128,9 @@
   ///////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////
   (function runningDefine(){
-	document.onmouseup = wrapSelectedText;
+	document.onmouseup = getHighlightedText;//wrapSelectedText;
 	document.onkeyup = wrapSelectedText;	
-	//document.onmousedown = removeWrap;	
+	document.onmousedown = removeWrap;	
   })();
   ///////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////
