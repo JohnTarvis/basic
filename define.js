@@ -1,6 +1,6 @@
 "use strict";
 
-//////NEW/////////
+//////NEW/////////2-19
 
 (function(){
   /**
@@ -12,52 +12,49 @@
 		return;
 	}
 	window.hasRun = true;
-    
-    
     /////////////////////////////////////////////////////////////////////
-    
-    
-    let selectedID = 'defineTooltip';
-    let selectedClass = 'tooltipClass';
-	let lastSelected = '';
-
-    function testStuff(){
-        let selection = window.getSelection().getRangeAt(0);
-		let selectedText = selection.extractContents();
-        let selectionString = window.getSelection().toString;
-        let rangeText = document.selection.createRange().text;
-        if(selectedText != ''){
-            removeWrap();
-            let span = document.createElement("span");
-            span.style.backgroundColor = "yellow";
-            span.appendChild(selectedText);
-            span.id = selectedID;
-            selection.insertNode(span);
-            lastSelected = span.innerHTML;
-            
-            alert('selectionText = ' + selectedText + '\n selectionString = ' + selectedText);
-            //alert(lastSelected);
-        }
-    }
-    
     function sleep(mils){
         let currentTime = new Date().getTime();
         while(currentTime + mils >= new Date().getTime()){}
     }
-    
-///////////////////////////////////////////////////////////////////////////////////////
+    let selectedID = 'defineTooltip';
+    let selectedClass = 'tooltipClass';
+	let lastSelected;// = '';
+    function wrap(mouseEvent){
+        removeWrap();
+        let selection = window.getSelection().getRangeAt(0);
+        let selectedText = selection.extractContents();	
+        let span = document.createElement("span");
+        span.style.backgroundColor = "yellow";
+        span.appendChild(selectedText);
+        span.id = selectedID;
+        selection.insertNode(span);
+        lastSelected = span.innerHTML;
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////
 	function removeWrap(){
-        if(lastSelected != ''){
+        if(lastSelected){
             let defineTooltip = document.getElementById(selectedID);
             defineTooltip.insertAdjacentHTML('beforebegin',lastSelected);
             defineTooltip.parentNode.removeChild(defineTooltip);
-            lastSelected = '';
+            lastSelected = undefined;
         }
 	}
-  ///////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+    function wrapSelectedText() {
+        removeWrap();
+		let selection= window.getSelection().getRangeAt(0);
+		let selectedText = selection.extractContents();	
+		let span = document.createElement("span");
+		span.style.backgroundColor = "yellow";
+		span.appendChild(selectedText);
+		span.id = selectedID;		
+		selection.insertNode(span);
+	}
+///////////////////////////////////////////////////////////////////////////////
   (function runningDefine(){
-	document.onmouseup = testStuff;
-	document.onkeyup = testStuff;	
+	document.onmouseup = wrap;//wrapSelectedText;//testStuff;
+	document.onkeyup = wrap;//wrapSelectedText;//testStuff;	
   })();
   ///////////////////////////////////////////////////////////////////////////////
 
@@ -70,6 +67,85 @@
 *_________________________________________________________________
 *`````````````````````````````````````````````````````````````````
 *
+
+
+    function testStuff(mouseEvent){
+        let selection;
+        let selectionRange = window.getSelection().getRangeAt(0);
+        let selectionString = window.getSelection().toString();
+        let defineToolTip = document.getElementById(selectedID);
+        if (typeof window.getSelection){
+			selection = window.getSelection();
+			text = window.getSelection().toString();      
+		} else if (typeof document.selection && document.selection.type == "Text") {
+			selection = document.selection.createRange();
+			text = document.selection.createRange().text;
+		}
+		lastSelected = text || selection;	
+        if(lastSelected){
+            alert('inside')
+            let span = document.createElement("span");
+            span.style.backgroundColor = "yellow";
+            span.appendChild('test');
+            span.id = selectedID;
+            selection.insertNode(span);
+        }
+    }
+
+
+let lastSelected;
+	
+	function highlightAndWrap(mouseEvent){		
+		let highlightedWord = '';
+		let selection = window.getSelection()
+		let selectionRange = selection.getRangeAt(0);
+		//let selectionText;
+		
+		//let selection= window.getSelection().getRangeAt(0);
+		let selectedText = selection.extractContents();	
+		let span = document.createElement("span");
+		span.style.backgroundColor = "red";
+		span.appendChild(selectionRange);
+		span.id = 'defineTooltip'		
+		selection.insertNode(span);
+		
+		if(typeof selection){
+			selectedText = selection.toString();
+		} else if (typeof document.selection && document.selection.type == 'Text') {
+			selection = document.selection.createRange();
+			selectionText = document.selection.createRange().text;
+		}
+		lastSelected = selectedText;		
+	}
+  
+	function getHighlightedText(mouseEvent) {	  
+		let text = "";
+		let selection;
+		if (typeof window.getSelection){
+			selection = window.getSelection();
+			text = window.getSelection().toString();      
+		} else if (typeof document.selection && document.selection.type == "Text") {
+			selection = document.selection.createRange();
+			text = document.selection.createRange().text;
+		}
+		lastSelected = text;		
+		
+	}	
+  
+	function wrapSelectedText() {
+		
+		let selection= window.getSelection().getRangeAt(0);
+		let selectedText = selection.extractContents();	
+		let span = document.createElement("span");
+		span.style.backgroundColor = "yellow";
+		span.appendChild(selectedText);
+		span.id = 'defineTooltip'		
+		selection.insertNode(span);
+		
+		
+	}
+
+//////////////////////////////////////////////////////////////////////////////////
 
     function highlightSelection(mouseEvent){ 
         let selection = window.getSelection().getRangeAt(0);
