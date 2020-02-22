@@ -12,6 +12,8 @@
 		return;
 	}
 	window.hasRun = true;
+    
+    runningDefine()
     /////////////////////////////////////////////////////////////////////
     function sleep(mils){
         let currentTime = new Date().getTime();
@@ -20,16 +22,46 @@
     let selectedID = 'defineTooltip';
     let selectedClass = 'tooltipClass';
 	let lastSelected;// = '';
+    function generateLinkTag(text){
+        let linkTag = document.createElement('a');
+        linkTag.setAttribute('href',"google.com");
+        linkTag.setAttribute('title',"definition goes here");
+        linkTag.setAttribute('background-color',"#FFFFFF");
+        linkTag.setAttribute('color',"000000");
+        linkTag.setAttribute('text-decoration',"none");
+        linkTag.innerText = text;
+        return linkTag;
+    }
     function wrap(mouseEvent){
         removeWrap();
+        
         let selection = window.getSelection().getRangeAt(0);
         let selectedText = selection.extractContents();	
         let span = document.createElement("span");
         span.style.backgroundColor = "yellow";
-        span.appendChild(selectedText);
+        
+        span.appendChild(lastSelected);
+        
         span.id = selectedID;
-        selection.insertNode(span);
+        
         lastSelected = span.innerHTML;
+        span.appendChild(generateLinkTag(lastSelected));
+        
+        //window.getSelection.toString()
+    
+/*      var mydiv = document.getElementById("myDiv");
+        var aTag = document.createElement('a');
+        aTag.setAttribute('href',"yourlink.htm");
+        aTag.innerText = "link text";
+        mydiv.appendChild(aTag);
+        
+        <a href=" " title="This is some text I want to display." style="background-color:#FFFFFF;color:#000000;text-decoration:none">This link has mouseover text.</a> 
+        
+        
+        */
+        
+        selection.insertNode(span);
+        //alert(lastSelected);
     }
     ///////////////////////////////////////////////////////////////////////////////////////
 	function removeWrap(){
@@ -52,10 +84,10 @@
 		selection.insertNode(span);
 	}
 ///////////////////////////////////////////////////////////////////////////////
-  (function runningDefine(){
-	document.onmouseup = wrap;//wrapSelectedText;//testStuff;
-	document.onkeyup = wrap;//wrapSelectedText;//testStuff;	
-  })();
+  function runningDefine(){
+	document.onmouseup = wrapSelectedText;//testStuff;
+	document.onkeyup = wrapSelectedText;//testStuff;	
+  }
   ///////////////////////////////////////////////////////////////////////////////
 
 })();
