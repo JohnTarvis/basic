@@ -1,3 +1,4 @@
+
 "use strict";
 
 //////NEW/////////2-19
@@ -15,6 +16,23 @@
     
     runningDefine()
     /////////////////////////////////////////////////////////////////////
+	
+	function deleteSelection() {
+		let selection = window.getSelection();
+		selection.deleteFromDocument();
+	}
+	
+	function getSelectedText() {
+		var text = "";
+		if (window.getSelection) {
+			text = window.getSelection().toString();
+		} else if (document.selection && document.selection.type != "Control") {
+			text = document.selection.createRange().text;
+		}
+		return text;
+	}
+	
+	
     function sleep(mils){
         let currentTime = new Date().getTime();
         while(currentTime + mils >= new Date().getTime()){}
@@ -33,19 +51,56 @@
         return linkTag;
     }
     function wrap(mouseEvent){
-        removeWrap();
+        //removeWrap();
         
         let selection = window.getSelection().getRangeAt(0);
-        let selectedText = selection.extractContents();	
-        let span = document.createElement("span");
-        span.style.backgroundColor = "yellow";
+        //let selectedText = selection.extractContents();	
+		
+		//let selectedText = getSelectedText();
+		
+		//alert(getSelectedText());
+		
+		/////////////////////////////////////////////////////////////
+        //let span = document.createElement("span");
+        //span.style.backgroundColor = "yellow";        
+        //span.id = selectedID;
+		/////////////////////////////////////////////////////////////
+		
+		//span.appendChild(lastSelected);
         
-        span.appendChild(lastSelected);
+        //lastSelected = span.innerHTML;
         
-        span.id = selectedID;
-        
-        lastSelected = span.innerHTML;
-        span.appendChild(generateLinkTag(lastSelected));
+		let linkTag = generateLinkTag(getSelectedText());
+		
+		
+		
+		//alert(selectedText);
+		
+		//alert(document.selection.createRange().text);
+		
+/* 		if (typeof window.getSelection){
+			selection = window.getSelection();
+			text = window.getSelection().toString();      
+		} else if (typeof document.selection && document.selection.type == "Text") {
+			selection = document.selection.createRange();
+			text = document.selection.createRange().text;
+		} */
+		
+		//linkTag.appendChild(span);
+		
+		//deleteSelection();
+		
+		//selection.insertNode(linkTag);
+		
+		//selection.parentNode.insertAdjacentHTML('beforebegin',linkTag);
+		
+		//selection.insertAdjacentHTML('beforebegin',linkTag);
+		
+		
+		
+		deleteSelection();
+		
+		//span.appendChild(generateLinkTag(lastSelected));
         
         //window.getSelection.toString()
     
@@ -60,8 +115,13 @@
         
         */
         
-        selection.insertNode(span);
+        //selection.insertNode(span);
         //alert(lastSelected);
+		
+		
+		//alert(span);
+		
+		
     }
     ///////////////////////////////////////////////////////////////////////////////////////
 	function removeWrap(){
@@ -85,8 +145,8 @@
 	}
 ///////////////////////////////////////////////////////////////////////////////
   function runningDefine(){
-	document.onmouseup = wrapSelectedText;//testStuff;
-	document.onkeyup = wrapSelectedText;//testStuff;	
+	document.onmouseup = wrap;//wrapSelectedText;//testStuff;
+	document.onkeyup = wrap;//wrapSelectedText;//testStuff;	
   }
   ///////////////////////////////////////////////////////////////////////////////
 
@@ -99,8 +159,6 @@
 *_________________________________________________________________
 *`````````````````````````````````````````````````````````````````
 *
-
-
     function testStuff(mouseEvent){
         let selection;
         let selectionRange = window.getSelection().getRangeAt(0);
@@ -123,8 +181,6 @@
             selection.insertNode(span);
         }
     }
-
-
 let lastSelected;
 	
 	function highlightAndWrap(mouseEvent){		
@@ -176,9 +232,7 @@ let lastSelected;
 		
 		
 	}
-
 //////////////////////////////////////////////////////////////////////////////////
-
     function highlightSelection(mouseEvent){ 
         let selection = window.getSelection().getRangeAt(0);
         let selectedText = selection.toString();
