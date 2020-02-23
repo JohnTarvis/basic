@@ -1,7 +1,204 @@
 
 "use strict";
 
-//////NEW/////////2-22
+//////NEW/////////2-23
+
+//////////////////////////////////////////////////////////////////////////
+//https://www.dictionary.com/browse/grapefruit?s=t
+
+function wrapInLookupURL(text){
+	return 'https://www.dictionary.com/browse/'+
+	text + '?s=t';
+}
+
+function wrap(mouseEvent){
+	let selectionParent = getSelectionParentElement();
+	let divTag = generateDivTag(wrapInLookupURL(getSelectedText()));
+	let linkTag = generateLinkTag(getSelectedText(),'test');
+	let range = window.getSelection().getRangeAt(0);
+	let selection = window.getSelection();
+	deleteSelection();
+	range.insertNode(linkTag);
+	
+	
+}
+
+function generateDivTag(url){
+	let divTag = document.createElement('div');
+	divTag.id = "definitionPage";
+	divTag.innerHTML = '<object type="text/html" data=' + url + '></object>';
+	return divTag;
+}
+
+function generateLinkTag(text,definition){
+	let linkTag = document.createElement('a');
+	linkTag.setAttribute('href',"google.com");
+	linkTag.setAttribute('title',definition);
+	linkTag.setAttribute('background-color',"#FFFFFF");
+	linkTag.setAttribute('color',"000000");
+	linkTag.setAttribute('text-decoration',"none");
+	linkTag.innerText = text;
+	linkTag.id = 'defineToolTip';
+	return linkTag;
+}
+
+function generateSpanTag(id = 'spanID',highlight = 'yellow',elementClass = 'span'){	
+	let span = document.createElement("span");
+	span.style.backgroundColor = highlight;        
+	span.id = id;
+	span.className = elementClass;
+	return span;
+}
+
+function deleteSelection() {
+	let selection = window.getSelection();
+	selection.deleteFromDocument();
+}
+
+function getSelectedText() {
+	var text = "";
+	if (window.getSelection) {
+		text = window.getSelection().toString();
+	} else if (document.selection && document.selection.type != "Control") {
+		text = document.selection.createRange().text;
+	}
+	return text;
+}
+function load_home() {
+     document.getElementById("content").innerHTML='<object type="text/html" data="home.html" ></object>';
+}
+
+function getSelectionParentElement() {
+    var parentEl = null, sel;
+    if (window.getSelection) {
+        sel = window.getSelection();
+        if (sel.rangeCount) {
+            parentEl = sel.getRangeAt(0).commonAncestorContainer;
+            if (parentEl.nodeType != 1) {
+                parentEl = parentEl.parentNode;
+            }
+        }
+    } else if ( (sel = document.selection) && sel.type != "Control") {
+        parentEl = sel.createRange().parentElement();
+    }
+    return parentEl;
+}
+
+function sleep(mils){
+	let currentTime = new Date().getTime();
+	while(currentTime + mils >= new Date().getTime()){}
+}
+
+
+/**
+	responseHTML
+	(c) 2007-2008 xul.fr		
+	Licence Mozilla 1.1
+*/	
+
+
+/**
+	Searches for body, extracts and return the content
+	New version contributed by users
+*/
+
+
+function getBody(content) 
+{
+   test = content.toLowerCase();    // to eliminate case sensitivity
+   var x = test.indexOf("<body");
+   if(x == -1) return "";
+
+   x = test.indexOf(">", x);
+   if(x == -1) return "";
+
+   var y = test.lastIndexOf("</body>");
+   if(y == -1) y = test.lastIndexOf("</html>");
+   if(y == -1) y = content.length;    // If no HTML then just grab everything till end
+
+   return content.slice(x + 1, y);   
+} 
+
+/**
+	Loads a HTML page
+	Put the content of the body tag into the current page.
+	Arguments:
+		url of the other HTML page to load
+		id of the tag that has to hold the content
+*/		
+
+function loadHTML(url, fun, storage, param)
+{
+	var xhr = createXHR();
+	xhr.onreadystatechange=function()
+	{ 
+		if(xhr.readyState == 4)
+		{
+			//if(xhr.status == 200)
+			{
+				storage.innerHTML = getBody(xhr.responseText);
+				fun(storage, param);
+			}
+		} 
+	}; 
+
+	xhr.open("GET", url , true);
+	xhr.send(null); 
+
+} 
+
+/**
+	Callback
+	Assign directly a tag
+*/		
+
+
+function processHTML(temp, target)
+{
+	target.innerHTML = temp.innerHTML;
+}
+
+function loadWholePage(url)
+{
+	var y = document.getElementById("storage");
+	var x = document.getElementById("displayed");
+	loadHTML(url, processHTML, x, y);
+}	
+
+
+/**
+	Create responseHTML
+	for acces by DOM's methods
+*/	
+
+function processByDOM(responseHTML, target)
+{
+	target.innerHTML = "Extracted by id:<br />";
+
+	// does not work with Chrome/Safari
+	//var message = responseHTML.getElementsByTagName("div").namedItem("two").innerHTML;
+	var message = responseHTML.getElementsByTagName("div").item(1).innerHTML;
+	
+	target.innerHTML += message;
+
+	target.innerHTML += "<br />Extracted by name:<br />";
+	
+	message = responseHTML.getElementsByTagName("form").item(0);
+	target.innerHTML += message.dyn.value;
+}
+
+function accessByDOM(url)
+{
+	//var responseHTML = document.createElement("body");	// Bad for opera
+	var responseHTML = document.getElementById("storage");
+	var y = document.getElementById("displayed");
+	loadHTML(url, processByDOM, responseHTML, y);
+}
+
+
+
+
+//////////////////////////////////////////////////////////////////////////
 
 (function(){
   /**
@@ -15,42 +212,125 @@
 	window.hasRun = true;
     
     runningDefine()
-    /////////////////////////////////////////////////////////////////////
-	
-	function deleteSelection() {
-		let selection = window.getSelection();
+
+
+///////////////////////////////////////////////////////////////////////////////
+  function runningDefine(){
+	document.onmouseup = wrap;
+	document.onkeyup = wrap;
+  }
+  ///////////////////////////////////////////////////////////////////////////////
+
+})();
+
+////////////////////////////////////////////////////////////////////////////////
+//disabled
+
+
+
+/* function CurrentSelection(mouseEvent) = {
+	this.mouseEvent:mouseEvent,
+	this.wrappedInLinkTag: wrapInLinkTag();
+	this.range: window.getSelection().getRangeAt(0);
+	this.selectionText: getSelectedText(),
+	this.remove: function(){
+		let selection = window.getSeletion();
 		selection.deleteFromDocument();
+	},
+	this.wrapInLinkTag: function(){
+		let linkTag = generateLinkTag(selectionText);
+		return linkTag;
+	},
+	this.replaceRange: function(){
+		deleteSelection();
+		range.insertNode(wrappedInLinkTag);
 	}
-	
-	function getSelectedText() {
-		var text = "";
-		if (window.getSelection) {
-			text = window.getSelection().toString();
-		} else if (document.selection && document.selection.type != "Control") {
-			text = document.selection.createRange().text;
+} */
+
+
+
+//////////////////////////////////////////////////////////////////////////////////
+/*GRAVEYARD
+*_________________________________________________________________
+*`````````````````````````````````````````````````````````````````
+*
+
+
+
+function OLDwrap(mouseEvent){
+	let CurrentSelection = {
+		mouseEvent:mouseEvent,
+		//wrappedInLinkTag: wrapInLinkTag(),
+		//range: window.getSelection().getRangeAt(0),
+		selectionText: getSelectedText(),
+		remove: function(){
+			let selection = window.getSelection();
+			selection.deleteFromDocument();
+		},
+		wrapInLinkTag: function(){
+			let linkTag = generateLinkTag(getSelectedText());
+			return linkTag;
+		},
+		replaceRange: function(){
+			//deleteSelection();
+			//window.getSelection().getRangeAt(0).insertNode(this.wrapInLinkTag());
+			//let rangeParent = window.getSelection.getRangeAt(0).parentNode;
+			//rangeParent.insertAdjacentHTML('beforebegin',getSelectedText());
+			let selectionParent = getSelectionParentElement();
+			let linkTag = generateLinkTag(getSelectedText());
+			let range = window.getSelection().getRangeAt(0);
+			let selection = window.getSelection();
+			deleteSelection();
+			range.insertNode(linkTag);
+			//deleteSelection();
 		}
-		return text;
 	}
-	
-	
-    function sleep(mils){
-        let currentTime = new Date().getTime();
-        while(currentTime + mils >= new Date().getTime()){}
-    }
+	CurrentSelection.replaceRange();
+}
+
+    /////////////////////////////////////////////////////////////////////
+
     let selectedID = 'defineTooltip';
     let selectedClass = 'tooltipClass';
 	let lastSelected;// = '';
-    function generateLinkTag(text){
-        let linkTag = document.createElement('a');
-        linkTag.setAttribute('href',"google.com");
-        linkTag.setAttribute('title',"definition goes here");
-        linkTag.setAttribute('background-color',"#FFFFFF");
-        linkTag.setAttribute('color',"000000");
-        linkTag.setAttribute('text-decoration',"none");
-        linkTag.innerText = text;
-        return linkTag;
-    }
-    function wrap(mouseEvent){
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+	function removeWrap(){
+        if(lastSelected){
+            let defineTooltip = document.getElementById(selectedID);
+            defineTooltip.insertAdjacentHTML('beforebegin',lastSelected);
+            defineTooltip.parentNode.removeChild(defineTooltip);
+            lastSelected = undefined;
+        }
+	}
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+    function wrapSelectedText() {
+        removeWrap();
+		let selection= window.getSelection().getRangeAt(0);
+		let selectedText = selection.extractContents();	
+		let span = document.createElement("span");
+		span.style.backgroundColor = "yellow";
+		span.appendChild(selectedText);
+		span.id = selectedID;		
+		selection.insertNode(span);
+	}
+
+
+//let element = document.createElement("h1")
+//window.getSelection().getRangeAt(0).surroundContents(element)
+
+//window.getSelection().getRangeAt(0).deleteContents()
+
+function quickWrap(mouseEvent){
+	let selectedText = getSelectedText();
+	let linkTag = generateLinkTag(selectedText);
+	window.getSelection.getRangeAt(0).surroundContents(linkTag);	
+}
+
+    function OLDwrap(mouseEvent){
         //removeWrap();
         
         let selection = window.getSelection().getRangeAt(0);
@@ -74,17 +354,19 @@
 		
 		
 		
+
+		
+    }
+
+
+
+
+
+
 		//alert(selectedText);
 		
 		//alert(document.selection.createRange().text);
 		
-/* 		if (typeof window.getSelection){
-			selection = window.getSelection();
-			text = window.getSelection().toString();      
-		} else if (typeof document.selection && document.selection.type == "Text") {
-			selection = document.selection.createRange();
-			text = document.selection.createRange().text;
-		} */
 		
 		//linkTag.appendChild(span);
 		
@@ -98,22 +380,12 @@
 		
 		
 		
-		deleteSelection();
+		//deleteSelection();
 		
 		//span.appendChild(generateLinkTag(lastSelected));
         
         //window.getSelection.toString()
-    
-/*      var mydiv = document.getElementById("myDiv");
-        var aTag = document.createElement('a');
-        aTag.setAttribute('href',"yourlink.htm");
-        aTag.innerText = "link text";
-        mydiv.appendChild(aTag);
-        
-        <a href=" " title="This is some text I want to display." style="background-color:#FFFFFF;color:#000000;text-decoration:none">This link has mouseover text.</a> 
-        
-        
-        */
+
         
         //selection.insertNode(span);
         //alert(lastSelected);
@@ -121,44 +393,11 @@
 		
 		//alert(span);
 		
-		
-    }
-    ///////////////////////////////////////////////////////////////////////////////////////
-	function removeWrap(){
-        if(lastSelected){
-            let defineTooltip = document.getElementById(selectedID);
-            defineTooltip.insertAdjacentHTML('beforebegin',lastSelected);
-            defineTooltip.parentNode.removeChild(defineTooltip);
-            lastSelected = undefined;
-        }
-	}
-    ///////////////////////////////////////////////////////////////////////////////////////
-    function wrapSelectedText() {
-        removeWrap();
-		let selection= window.getSelection().getRangeAt(0);
-		let selectedText = selection.extractContents();	
-		let span = document.createElement("span");
-		span.style.backgroundColor = "yellow";
-		span.appendChild(selectedText);
-		span.id = selectedID;		
-		selection.insertNode(span);
-	}
-///////////////////////////////////////////////////////////////////////////////
-  function runningDefine(){
-	document.onmouseup = wrap;//wrapSelectedText;//testStuff;
-	document.onkeyup = wrap;//wrapSelectedText;//testStuff;	
-  }
-  ///////////////////////////////////////////////////////////////////////////////
-
-})();
 
 
 
-//////////////////////////////////////////////////////////////////////////////////
-/*GRAVEYARD
-*_________________________________________________________________
-*`````````````````````````````````````````````````````````````````
-*
+
+
     function testStuff(mouseEvent){
         let selection;
         let selectionRange = window.getSelection().getRangeAt(0);
