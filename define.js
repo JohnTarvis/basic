@@ -6,12 +6,15 @@
 //////////////////////////////////////////////////////////////////////////
 //https://www.dictionary.com/browse/grapefruit?s=t
 
+const ToolTipID = 'ToolTipID';
+
 function wrapInLookupURL(text){
 	return 'https://www.dictionary.com/browse/'+
 	text + '?s=t';
 }
 
 function wrap(mouseEvent){
+	unwrap();
 	let selectionParent = getSelectionParentElement();
 	let divTag = generateDivTag(wrapInLookupURL(getSelectedText()));
 	let linkTag = generateLinkTag(getSelectedText(),'test');
@@ -19,6 +22,17 @@ function wrap(mouseEvent){
 	let selection = window.getSelection();
 	deleteSelection();
 	range.insertNode(linkTag);
+}
+
+function unwrap(){
+	let linkTag = document.getElementById(ToolTipID);
+	if(linkTag){
+		let linkTagText = linkTag.innerText;
+		let textNode = document.createTextNode(linkTagText);
+		let parentNode = linkTag.parentNode;
+		parentNode.insertBefore(textNode,linkTag);
+		parentNode.removeChild(linkTag);
+	}
 }
 
 function generateDivTag(url){
@@ -36,7 +50,7 @@ function generateLinkTag(text,definition){
 	linkTag.setAttribute('color',"000000");
 	linkTag.setAttribute('text-decoration',"none");
 	linkTag.innerText = text;
-	linkTag.id = 'defineToolTip';
+	linkTag.id = ToolTipID;
 	return linkTag;
 }
 
