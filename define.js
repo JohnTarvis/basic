@@ -8,6 +8,22 @@
 
 const ToolTipID = 'ToolTipID';
 
+function testButton(){
+    let selectionParent = getSelectionParentElement();
+    let button = generateButton();
+    let parentElement = getSelectionParentElement();
+    parentElement.insertAdjacentHTML('beforebegin',button);
+}
+
+function generateButton(text){
+    let button = document.createElement('input');//('button');
+    //button.innerHTML = text;
+    button.type = 'button';
+    button.value = text;
+    //button.addEventListener('click',()=>alert('clicked'));
+    return button;
+}
+
 function wrapInLookupURL(text){
 	return 'https://www.dictionary.com/browse/'+
 	text + '?s=t';
@@ -124,8 +140,8 @@ function sleep(mils){
 
 ///////////////////////////////////////////////////////////////////////////////
   function runningDefine(){
-	document.onmouseup = wrap;
-	document.onkeyup = wrap;
+	document.onmouseup = testButton;//wrap;
+	document.onkeyup = testButton;//wrap;
   }
   ///////////////////////////////////////////////////////////////////////////////
 
