@@ -1,4 +1,3 @@
-
 "use strict";
 
 //////NEW/////////2-23
@@ -6,7 +5,28 @@
 //////////////////////////////////////////////////////////////////////////
 //https://www.dictionary.com/browse/grapefruit?s=t
 
+/* 
+	document.getElementById("myBtn").addEventListener("click", function(){
+		document.getElementById("demo").innerHTML = "Hello World";
+	}); 
+
+ */
+
 const ToolTipID = 'ToolTipID';
+
+function test(mouseEvent){
+	let button = generateButton();	
+	button.addEventListener('click',()=>{alert('test')});
+	let selectionParent = getSelectionParentElement();
+	selectionParent.appendChild(button);
+}
+
+function generateButton(){
+	let button = document.createElement('button');
+	button.innerHTML = 'click';
+	button.addEventListener('click',()=>{alert('test')});
+	return button;
+}
 
 function wrapInLookupURL(text){
 	return 'https://www.dictionary.com/browse/'+
@@ -124,8 +144,8 @@ function sleep(mils){
 
 ///////////////////////////////////////////////////////////////////////////////
   function runningDefine(){
-	document.onmouseup = wrap;
-	document.onkeyup = wrap;
+	document.onmouseup = test;
+	document.onkeyup = test;
   }
   ///////////////////////////////////////////////////////////////////////////////
 
@@ -174,14 +194,11 @@ function sleep(mils){
    test = content.toLowerCase();    // to eliminate case sensitivity
    var x = test.indexOf("<body");
    if(x == -1) return "";
-
    x = test.indexOf(">", x);
    if(x == -1) return "";
-
    var y = test.lastIndexOf("</body>");
    if(y == -1) y = test.lastIndexOf("</html>");
    if(y == -1) y = content.length;    // If no HTML then just grab everything till end
-
    return content.slice(x + 1, y);   
 }  */
 
@@ -207,10 +224,8 @@ function sleep(mils){
 			}
 		} 
 	}; 
-
 	xhr.open("GET", url , true);
 	xhr.send(null); 
-
 }  */
 
 /**
@@ -223,7 +238,6 @@ function sleep(mils){
 {
 	target.innerHTML = temp.innerHTML;
 }
-
 function loadWholePage(url)
 {
 	var y = document.getElementById("storage");
@@ -240,19 +254,16 @@ function loadWholePage(url)
 /* function processByDOM(responseHTML, target)
 {
 	target.innerHTML = "Extracted by id:<br />";
-
 	// does not work with Chrome/Safari
 	//var message = responseHTML.getElementsByTagName("div").namedItem("two").innerHTML;
 	var message = responseHTML.getElementsByTagName("div").item(1).innerHTML;
 	
 	target.innerHTML += message;
-
 	target.innerHTML += "<br />Extracted by name:<br />";
 	
 	message = responseHTML.getElementsByTagName("form").item(0);
 	target.innerHTML += message.dyn.value;
 }
-
 function accessByDOM(url)
 {
 	//var responseHTML = document.createElement("body");	// Bad for opera
@@ -267,11 +278,6 @@ function accessByDOM(url)
 *_________________________________________________________________
 *`````````````````````````````````````````````````````````````````
 *
-
-
-
-
-
 function OLDwrap(mouseEvent){
 	let CurrentSelection = {
 		mouseEvent:mouseEvent,
@@ -302,14 +308,10 @@ function OLDwrap(mouseEvent){
 	}
 	CurrentSelection.replaceRange();
 }
-
     /////////////////////////////////////////////////////////////////////
-
     let selectedID = 'defineTooltip';
     let selectedClass = 'tooltipClass';
 	let lastSelected;// = '';
-
-
     ///////////////////////////////////////////////////////////////////////////////////////
 	function removeWrap(){
         if(lastSelected){
@@ -319,8 +321,6 @@ function OLDwrap(mouseEvent){
             lastSelected = undefined;
         }
 	}
-
-
     ///////////////////////////////////////////////////////////////////////////////////////
     function wrapSelectedText() {
         removeWrap();
@@ -332,19 +332,14 @@ function OLDwrap(mouseEvent){
 		span.id = selectedID;		
 		selection.insertNode(span);
 	}
-
-
 //let element = document.createElement("h1")
 //window.getSelection().getRangeAt(0).surroundContents(element)
-
 //window.getSelection().getRangeAt(0).deleteContents()
-
 function quickWrap(mouseEvent){
 	let selectedText = getSelectedText();
 	let linkTag = generateLinkTag(selectedText);
 	window.getSelection.getRangeAt(0).surroundContents(linkTag);	
 }
-
     function OLDwrap(mouseEvent){
         //removeWrap();
         
@@ -369,15 +364,8 @@ function quickWrap(mouseEvent){
 		
 		
 		
-
 		
     }
-
-
-
-
-
-
 		//alert(selectedText);
 		
 		//alert(document.selection.createRange().text);
@@ -400,7 +388,6 @@ function quickWrap(mouseEvent){
 		//span.appendChild(generateLinkTag(lastSelected));
         
         //window.getSelection.toString()
-
         
         //selection.insertNode(span);
         //alert(lastSelected);
@@ -408,11 +395,6 @@ function quickWrap(mouseEvent){
 		
 		//alert(span);
 		
-
-
-
-
-
     function testStuff(mouseEvent){
         let selection;
         let selectionRange = window.getSelection().getRangeAt(0);
