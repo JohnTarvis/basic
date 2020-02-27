@@ -6,45 +6,44 @@
 //https://www.dictionary.com/browse/grapefruit?s=t
 
 /* 
-{
-    let range = new Range();
 
-    range.setStart(p, start.value);
-    range.setEnd(p, end.value);
 
-    // apply the selection, explained later
-    document.getSelection().removeAllRanges();
-    document.getSelection().addRange(range);
-  }; 
+  button.onclick = () => {
+    input.setRangeText("HELLO", input.selectionStart, input.selectionEnd, "end");
+    input.focus();
+  };
+ 
 
  */
 
-
-
 const ToolTipID = 'ToolTipID';
+
+
+function test(mouseEvent){
+    wrapInElement();
+}
+
+function wrapInElement(mouseEvent){
+	let button = generateButton();
+	let selectionParent = getSelectionParentElement();
+	document.body.setRangeText('<br',0,0,'end');
+	document.body.focus();
+}
+
+function wrap(mouseEvent){
+	unwrap();
+	let selectionParent = getSelectionParentElement();
+	let divTag = generateDivTag(wrapInLookupURL(getSelectedText()));
+	let linkTag = generateLinkTag(getSelectedText(),'test');
+	let range = window.getSelection().getRangeAt(0);
+	let selection = window.getSelection();
+	deleteSelection();
+	range.insertNode(linkTag);
+}
 
 function displayInDiv(text){
     let displayDiv = document.getElementById('displayDiv');
     displayDiv.innerHTML = text;
-}
-
-function test(mouseEvent){
-	/*let button = generateButton();	
-	button.addEventListener('click',()=>{alert('test')});
-	let selectionParent = getSelectionParentElement();
-	selectionParent.appendChild(button);*/
-    
-    //alert(getSelectionParentElement());
-    
-    //let selectionParent = getSelectionParentElement();
-    //let allChildren;
-    //for(let count = 0; count < selectionParent.childNodes.length; count++){
-    //    allChildren += selectionParent.childNodes[count] + '\n';
-    //}
-    //alert(allChildren);
-    
-    displayInDiv('testing 1 1 1 1');
-    
 }
 
 function generateButton(){
@@ -57,17 +56,6 @@ function generateButton(){
 function wrapInLookupURL(text){
 	return 'https://www.dictionary.com/browse/'+
 	text + '?s=t';
-}
-
-function wrap(mouseEvent){
-	unwrap();
-	let selectionParent = getSelectionParentElement();
-	let divTag = generateDivTag(wrapInLookupURL(getSelectedText()));
-	let linkTag = generateLinkTag(getSelectedText(),'test');
-	let range = window.getSelection().getRangeAt(0);
-	let selection = window.getSelection();
-	deleteSelection();
-	range.insertNode(linkTag);
 }
 
 function unwrap(){
