@@ -14,7 +14,7 @@
 
 const ToolTipID = 'ToolTipID';
 
-<<<<<<< HEAD
+
 function testButton(){
     let selectionParent = getSelectionParentElement();
     let button = generateButton();

@@ -6,19 +6,45 @@
 //https://www.dictionary.com/browse/grapefruit?s=t
 
 /* 
-	document.getElementById("myBtn").addEventListener("click", function(){
-		document.getElementById("demo").innerHTML = "Hello World";
-	}); 
+{
+    let range = new Range();
+
+    range.setStart(p, start.value);
+    range.setEnd(p, end.value);
+
+    // apply the selection, explained later
+    document.getSelection().removeAllRanges();
+    document.getSelection().addRange(range);
+  }; 
 
  */
 
+
+
 const ToolTipID = 'ToolTipID';
 
+function displayInDiv(text){
+    let displayDiv = document.getElementById('displayDiv');
+    displayDiv.innerHTML = text;
+}
+
 function test(mouseEvent){
-	let button = generateButton();	
+	/*let button = generateButton();	
 	button.addEventListener('click',()=>{alert('test')});
 	let selectionParent = getSelectionParentElement();
-	selectionParent.appendChild(button);
+	selectionParent.appendChild(button);*/
+    
+    //alert(getSelectionParentElement());
+    
+    //let selectionParent = getSelectionParentElement();
+    //let allChildren;
+    //for(let count = 0; count < selectionParent.childNodes.length; count++){
+    //    allChildren += selectionParent.childNodes[count] + '\n';
+    //}
+    //alert(allChildren);
+    
+    displayInDiv('testing 1 1 1 1');
+    
 }
 
 function generateButton(){
