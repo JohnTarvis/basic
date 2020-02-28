@@ -5,11 +5,12 @@
 const ToolTipID = 'ToolTipID';
 
 function test(mouseEvent){
-    let startContainer = getStartContainer();
-    let startContainerText = startContainer.innerHTML;
-    displayInDiv(typeof startContainer);
-    //alert(startContainerText);
-    //startContainer.style.backgroundColor = 'green';
+    let selection = window.getSelection();
+    let anchorNode = selection.anchorNode;
+    let parentElement = anchorNode.parentElement;
+    let lastChild = anchorNode.lastChild;
+    anchorNode.insertAdjacentHTML('beforeend','<br>');
+    displayInDiv(anchorNode.textContent);
 }
 
 function getStartContainer(){
