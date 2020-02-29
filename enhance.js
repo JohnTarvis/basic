@@ -1,33 +1,41 @@
 "use strict";
 
-//////NEW/////////2-23
-
-//////////////////////////////////////////////////////////////////////////
-//https://www.dictionary.com/browse/grapefruit?s=t
-
-/* 
-
-
-  button.onclick = () => {
-    input.setRangeText("HELLO", input.selectionStart, input.selectionEnd, "end");
-    input.focus();
-  };
- 
-
- */
+//2-23
 
 const ToolTipID = 'ToolTipID';
 
-
 function test(mouseEvent){
-    wrapInElement();
+    let selection = window.getSelection();
+    let anchorNode = selection.anchorNode;
+    let parentElement = anchorNode.parentElement;
+    let lastChild = anchorNode.lastChild;
+    parentElement.insertAdjacentHTML('beforeend','</div>');
+	parentElement.insertAdjacentHTML('afterbegin','<div>');
+    //displayInDiv(lastChild);
 }
 
-function wrapInElement(mouseEvent){
-	let button = generateButton();
-	let selectionParent = getSelectionParentElement();
-	document.body.setRangeText('<br',0,0,'end');
-	document.body.focus();
+function getStartContainer(){
+    let selection = document.getSelection();
+    let range = selection.getRangeAt(0);
+    let startContainer = range.startContainer;
+    return startContainer; 
+}
+
+function getStartOffset(){
+    let selection = document.getSelection();
+    let anchorOffset = selection.anchorOffset;
+    
+}
+
+function getAnchorNode(){
+    let anchorNode = window.getSelection().anchorNode;
+    return anchorNode;
+}
+
+function getOffsetFromAnchor(){
+    let selection = window.getSelection();
+    let offset = selection.anchorOffset;
+    return offset;
 }
 
 function wrap(mouseEvent){
@@ -43,7 +51,9 @@ function wrap(mouseEvent){
 
 function displayInDiv(text){
     let displayDiv = document.getElementById('displayDiv');
-    displayDiv.innerHTML = text;
+    if(displayDiv){
+        displayDiv.innerHTML = text;
+    }
 }
 
 function generateButton(){
@@ -134,11 +144,6 @@ function sleep(mils){
 	let currentTime = new Date().getTime();
 	while(currentTime + mils >= new Date().getTime()){}
 }
-
-
-
-
-
 
 //////////////////////////////////////////////////////////////////////////
 
