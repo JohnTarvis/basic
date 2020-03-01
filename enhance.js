@@ -4,13 +4,45 @@
 
 const ToolTipID = 'ToolTipID';
 
+function getSelectionDirection(){
+	let focusOffset = window.getSelection().focusOffset;
+	let focusText = window.getSelection().focusNode.parentNode.innerHTML;
+	let selectedText =	getSelectedText();
+	let direction = 0;
+	if (focusText.substring(0,focusOffset) == selectedText.substring((selectedText.length - 1) - (focusText.length - 1),  (selectedText.length - 1) - (focusText.length - 1) + focusOffset)) {
+		direction = 1;
+	} else 
+	if (focusText.substring(focusOffset) == selectedText.substring(focusOffset,focusText.length - 1)){
+		direction = -1;
+	}	
+	return direction;
+}
+
 function test(mouseEvent){
-    let selection = window.getSelection();
+    let selection = document.getSelection();
     let anchorNode = selection.anchorNode;
     let parentElement = anchorNode.parentElement;
     let lastChild = anchorNode.lastChild;
-    anchorNode.insertAdjacentHTML('beforeend','<br>');
-    displayInDiv(anchorNode.textContent);
+	let startContainer = getStartContainer();
+	
+	let selectionDirection = getSelectionDirection();
+	displayInDiv(selectionDirection);
+	
+    //parentElement.insertAdjacentHTML('beforeend','</i>');
+	//parentElement.insertAdjacentHTML('afterbegin','<i>');
+    //displayInDiv(anchorNode.textContent && getSelectedText());
+	
+	//startContainer.insertAdjacentHTML('beforebegin','<i>');
+	//startContainer.insertAdjacentHTML('afterend','</i>');
+
+/* 	displayInDiv('start container is a ' + startContainer.constructor.name + '<br>' +
+				 'parent element is a '  + parentElement.constructor.name  + '<br>' +
+				 'selection is a '       + selection.constructor.name      + '<br>' +
+				 'text is: '             + getSelectedText()               + '<br>' +
+				 'last element offset is'+ window.getSelection().focusOffset +'<br>'+
+				 'last element text: '  + window.getSelection().focusNode.parentNode.innerHTML  + '<br>' + 
+				 'direction = ' + getSelectionDirection()
+				); */
 }
 
 function getStartContainer(){
