@@ -1,97 +1,24 @@
 "use strict";
 
-//2-23
+//////NEW/////////2-23
+
+//////////////////////////////////////////////////////////////////////////
+//https://www.dictionary.com/browse/grapefruit?s=t
+
+/* 
+	document.getElementById("myBtn").addEventListener("click", function(){
+		document.getElementById("demo").innerHTML = "Hello World";
+	}); 
+
+ */
 
 const ToolTipID = 'ToolTipID';
 
-function getSelectionDirection(){
-	let focusOffset = window.getSelection().focusOffset;
-	let focusText = window.getSelection().focusNode.parentNode.innerHTML;
-	let selectedText =	getSelectedText();
-	let direction = 0;
-	if (focusText.substring(0,focusOffset) == selectedText.substring((selectedText.length - 1) - (focusText.length - 1),  (selectedText.length - 1) - (focusText.length - 1) + focusOffset)) {
-		direction = 1;
-	} else 
-	if (focusText.substring(focusOffset) == selectedText.substring(focusOffset,focusText.length - 1)){
-		direction = -1;
-	}	
-	return direction;
-}
-
 function test(mouseEvent){
-    let selection = document.getSelection();
-    let anchorNode = selection.anchorNode;
-    let parentElement = anchorNode.parentElement;
-    let lastChild = anchorNode.lastChild;
-	let startContainer = getStartContainer();
-	
-	let selectionDirection = getSelectionDirection();
-	displayInDiv(selectionDirection);
-	
-    //parentElement.insertAdjacentHTML('beforeend','</i>');
-	//parentElement.insertAdjacentHTML('afterbegin','<i>');
-    //displayInDiv(anchorNode.textContent && getSelectedText());
-	
-	//startContainer.insertAdjacentHTML('beforebegin','<i>');
-	//startContainer.insertAdjacentHTML('afterend','</i>');
-
-/* 	displayInDiv('start container is a ' + startContainer.constructor.name + '<br>' +
-				 'parent element is a '  + parentElement.constructor.name  + '<br>' +
-				 'selection is a '       + selection.constructor.name      + '<br>' +
-				 'text is: '             + getSelectedText()               + '<br>' +
-				 'last element offset is'+ window.getSelection().focusOffset +'<br>'+
-				 'last element text: '  + window.getSelection().focusNode.parentNode.innerHTML  + '<br>' + 
-				 'direction = ' + getSelectionDirection()
-				); */
-}
-
-function getStartContainer(){
-    let selection = document.getSelection();
-    let range = selection.getRangeAt(0);
-    let startContainer = range.startContainer;
-    return startContainer; 
-}
-
-function getStartOffset(){
-    let selection = document.getSelection();
-    let anchorOffset = selection.anchorOffset;
-    
-}
-
-function getAnchorNode(){
-    let anchorNode = window.getSelection().anchorNode;
-    return anchorNode;
-}
-
-function getOffsetFromAnchor(){
-    let selection = window.getSelection();
-    let offset = selection.anchorOffset;
-    return offset;
-}
-
-function wrapInElement(mouseEvent){
-	let button = generateButton();
+	let button = generateButton();	
+	button.addEventListener('click',()=>{alert('test')});
 	let selectionParent = getSelectionParentElement();
-	document.body.setRangeText('<br',0,0,'end');
-	document.body.focus();
-}
-
-function wrap(mouseEvent){
-	unwrap();
-	let selectionParent = getSelectionParentElement();
-	let divTag = generateDivTag(wrapInLookupURL(getSelectedText()));
-	let linkTag = generateLinkTag(getSelectedText(),'test');
-	let range = window.getSelection().getRangeAt(0);
-	let selection = window.getSelection();
-	deleteSelection();
-	range.insertNode(linkTag);
-}
-
-function displayInDiv(text){
-    let displayDiv = document.getElementById('displayDiv');
-    if(displayDiv){
-        displayDiv.innerHTML = text;
-    }
+	selectionParent.appendChild(button);
 }
 
 function generateButton(){
@@ -104,6 +31,17 @@ function generateButton(){
 function wrapInLookupURL(text){
 	return 'https://www.dictionary.com/browse/'+
 	text + '?s=t';
+}
+
+function wrap(mouseEvent){
+	unwrap();
+	let selectionParent = getSelectionParentElement();
+	let divTag = generateDivTag(wrapInLookupURL(getSelectedText()));
+	let linkTag = generateLinkTag(getSelectedText(),'test');
+	let range = window.getSelection().getRangeAt(0);
+	let selection = window.getSelection();
+	deleteSelection();
+	range.insertNode(linkTag);
 }
 
 function unwrap(){
@@ -182,6 +120,11 @@ function sleep(mils){
 	let currentTime = new Date().getTime();
 	while(currentTime + mils >= new Date().getTime()){}
 }
+
+
+
+
+
 
 //////////////////////////////////////////////////////////////////////////
 
