@@ -1,18 +1,9 @@
 "use strict";
 
-//////NEW/////////2-23
-
-//////////////////////////////////////////////////////////////////////////
-//https://www.dictionary.com/browse/grapefruit?s=t
-
-/* 
-	document.getElementById("myBtn").addEventListener("click", function(){
-		document.getElementById("demo").innerHTML = "Hello World";
-	}); 
-
- */
+//3-3 early
 
 const ToolTipID = 'ToolTipID';
+const testHTML = '<i>reginald</i>';
 
 function test(mouseEvent){
     let selectedText = getSelectedText();
@@ -27,10 +18,32 @@ function test(mouseEvent){
     let focusOffset = selection.focusOffset;
     let anchorOffset = selection.anchorOffset;
     
-    display(range.startContainer.textContent
-           );
+    let parentElement = focusNode.parentElement;
     
-    //alert(getHTMLOfSelection());
+    parentElement.innerHTML = testHTML;
+    
+    clearDisplay();
+    addToDisplay(parentElement.innerHTML,"parent element");
+
+    
+    //let nodeValue = focusNode.nodeValue;
+    //focusNode.nodeValue = '<i>reginald</i>';
+    //nodeValue = '<i>reginald</i>';
+    
+    //addToDisplay(nodeValue,'nodeValue');
+    
+}
+
+function clearDisplay(){
+    let displayBox = document.getElementById('displayDiv');
+    displayBox.innerHTML = '';
+}
+
+function addToDisplay(text = "default", prefix = ""){
+    let displayBox = document.getElementById('displayDiv');
+    let displayed = displayBox.innerHTML;
+    let textToDisplay = displayed + '<br>' + prefix + ' : ' + text;
+    displayBox.innerHTML = textToDisplay;
 }
 
 function display(text){
@@ -180,8 +193,17 @@ function sleep(mils){
 	}
 	window.hasRun = true;
     
-    runningDefine()
-
+    runningDefine();
+    
+    
+    let script = document.createElement("SCRIPT");
+    script.src = 'jquery-3.4.1.min.js';
+    script.type = 'text/javascript';
+    script.onload = function() {
+        let $ = window.jQuery;
+        // Use $ here...
+    };
+    document.getElementsByTagName("head")[0].appendChild(script);
 
 ///////////////////////////////////////////////////////////////////////////////
   function runningDefine(){
@@ -195,7 +217,15 @@ function sleep(mils){
 ////////////////////////////////////////////////////////////////////////////////
 //disabled
 
+//////////////////////////////////////////////////////////////////////////
+//https://www.dictionary.com/browse/grapefruit?s=t
 
+/* 
+	document.getElementById("myBtn").addEventListener("click", function(){
+		document.getElementById("demo").innerHTML = "Hello World";
+	}); 
+
+ */
 
 /* function CurrentSelection(mouseEvent) = {
 	this.mouseEvent:mouseEvent,
