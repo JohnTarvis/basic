@@ -15,11 +15,52 @@
 const ToolTipID = 'ToolTipID';
 
 function test(mouseEvent){
-	let button = generateButton();	
-	button.addEventListener('click',()=>{alert('test')});
-	let selectionParent = getSelectionParentElement();
-	selectionParent.appendChild(button);
+    let selectedText = getSelectedText();
+	let selection = window.getSelection();
+    let range = selection.getRangeAt(0);
+    let focusNode = selection.focusNode;
+    let anchorNode = selection.anchorNode;
+    
+    let focusText = focusNode.textContent;
+    let anchorText = anchorNode.textContent;
+    
+    let focusOffset = selection.focusOffset;
+    let anchorOffset = selection.anchorOffset;
+    
+    display(range.startContainer.textContent
+           );
+    
+    //alert(getHTMLOfSelection());
 }
+
+function display(text){
+    let displayBox = document.getElementById('displayDiv');
+    displayBox.innerHTML = text;
+}
+
+function getHTMLOfSelection () {
+    var range;
+    if (document.selection && document.selection.createRange) {
+        range = document.selection.createRange();
+        return range.htmlText;
+    }
+    else if (window.getSelection) {
+        var selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+            range = selection.getRangeAt(0);
+            var clonedSelection = range.cloneContents();
+            var div = document.createElement('div');
+            div.appendChild(clonedSelection);
+            return div.innerHTML;
+        }
+        else {
+            return '';
+        }
+    }
+    else {
+        return '';
+    }
+} ///-try to get the specific elements of the range
 
 function generateButton(){
 	let button = document.createElement('button');
