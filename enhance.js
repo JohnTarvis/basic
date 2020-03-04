@@ -1,5 +1,6 @@
 "use strict";
 
+<<<<<<< HEAD
 //3-1
 
 const ToolTipID = 'ToolTipID';
@@ -66,25 +67,90 @@ function getOffsetFromAnchor(){
     let selection = window.getSelection();
     let offset = selection.anchorOffset;
     return offset;
-}
+=======
+//3-3 early
 
-function wrap(mouseEvent){
-	unwrap();
-	let selectionParent = getSelectionParentElement();
-	let divTag = generateDivTag(wrapInLookupURL(getSelectedText()));
-	let linkTag = generateLinkTag(getSelectedText(),'test');
-	let range = window.getSelection().getRangeAt(0);
+const ToolTipID = 'ToolTipID';
+const testHTML = '<i>reginald</i>';
+
+function test(mouseEvent){
+    let selectedText = getSelectedText();
 	let selection = window.getSelection();
-	deleteSelection();
-	range.insertNode(linkTag);
+    let range = selection.getRangeAt(0);
+    let focusNode = selection.focusNode;
+    let anchorNode = selection.anchorNode;
+    
+    let focusText = focusNode.textContent;
+    let anchorText = anchorNode.textContent;
+    
+    let focusOffset = selection.focusOffset;
+    let anchorOffset = selection.anchorOffset;
+    
+    let parentElement = focusNode.parentElement;
+    
+    parentElement.innerHTML = testHTML;
+    
+    clearDisplay();
+    addToDisplay(parentElement.innerHTML,"parent element");
+
+    
+    //let nodeValue = focusNode.nodeValue;
+    //focusNode.nodeValue = '<i>reginald</i>';
+    //nodeValue = '<i>reginald</i>';
+    
+    //addToDisplay(nodeValue,'nodeValue');
+    
 }
 
+function clearDisplay(){
+    let displayBox = document.getElementById('displayDiv');
+    displayBox.innerHTML = '';
+>>>>>>> 016426b6b47db48899f27b961ec2a829cfdbf00f
+}
+
+function addToDisplay(text = "default", prefix = ""){
+    let displayBox = document.getElementById('displayDiv');
+    let displayed = displayBox.innerHTML;
+    let textToDisplay = displayed + '<br>' + prefix + ' : ' + text;
+    displayBox.innerHTML = textToDisplay;
+}
+
+<<<<<<< HEAD
 function displayInDiv(text){
     let displayDiv = document.getElementById('displayDiv');
     if(displayDiv){
         displayDiv.innerHTML = text;
     }
+=======
+function display(text){
+    let displayBox = document.getElementById('displayDiv');
+    displayBox.innerHTML = text;
+>>>>>>> 016426b6b47db48899f27b961ec2a829cfdbf00f
 }
+
+function getHTMLOfSelection () {
+    var range;
+    if (document.selection && document.selection.createRange) {
+        range = document.selection.createRange();
+        return range.htmlText;
+    }
+    else if (window.getSelection) {
+        var selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+            range = selection.getRangeAt(0);
+            var clonedSelection = range.cloneContents();
+            var div = document.createElement('div');
+            div.appendChild(clonedSelection);
+            return div.innerHTML;
+        }
+        else {
+            return '';
+        }
+    }
+    else {
+        return '';
+    }
+} ///-try to get the specific elements of the range
 
 function generateButton(){
 	let button = document.createElement('button');
@@ -96,6 +162,17 @@ function generateButton(){
 function wrapInLookupURL(text){
 	return 'https://www.dictionary.com/browse/'+
 	text + '?s=t';
+}
+
+function wrap(mouseEvent){
+	unwrap();
+	let selectionParent = getSelectionParentElement();
+	let divTag = generateDivTag(wrapInLookupURL(getSelectedText()));
+	let linkTag = generateLinkTag(getSelectedText(),'test');
+	let range = window.getSelection().getRangeAt(0);
+	let selection = window.getSelection();
+	deleteSelection();
+	range.insertNode(linkTag);
 }
 
 function unwrap(){
@@ -188,8 +265,17 @@ function sleep(mils){
 	}
 	window.hasRun = true;
     
-    runningDefine()
-
+    runningDefine();
+    
+    
+    let script = document.createElement("SCRIPT");
+    script.src = 'jquery-3.4.1.min.js';
+    script.type = 'text/javascript';
+    script.onload = function() {
+        let $ = window.jQuery;
+        // Use $ here...
+    };
+    document.getElementsByTagName("head")[0].appendChild(script);
 
 ///////////////////////////////////////////////////////////////////////////////
   function runningDefine(){
@@ -203,7 +289,15 @@ function sleep(mils){
 ////////////////////////////////////////////////////////////////////////////////
 //disabled
 
+//////////////////////////////////////////////////////////////////////////
+//https://www.dictionary.com/browse/grapefruit?s=t
 
+/* 
+	document.getElementById("myBtn").addEventListener("click", function(){
+		document.getElementById("demo").innerHTML = "Hello World";
+	}); 
+
+ */
 
 /* function CurrentSelection(mouseEvent) = {
 	this.mouseEvent:mouseEvent,
