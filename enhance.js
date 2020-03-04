@@ -1,79 +1,13 @@
 "use strict";
 
-<<<<<<< HEAD
 //3-1
 
 const ToolTipID = 'ToolTipID';
 
-
+var css = "body { border: 20px dotted pink; }";
 
 function test(mouseEvent){
-    let selection = document.getSelection();
-	let range = selection.getRangeAt(0);
-    let anchorNode = selection.anchorNode;
-	let focusNode = selection.focusNode;
-    let parentElement = anchorNode.parentElement;
-    let lastChild = anchorNode.lastChild;
-	let startContainer = range.startContainer;
-	
-	
-	displayInDiv(getHTMLOfSelection());	
-
-}
-
-function getHTMLOfSelection () {
-	var range;
-	if (document.selection && document.selection.createRange) {
-		range = document.selection.createRange();
-		return range.htmlText;
-	}
-	else if (window.getSelection) {
-		var selection = window.getSelection();
-		if (selection.rangeCount > 0) {
-			range = selection.getRangeAt(0);
-			var clonedSelection = range.cloneContents();
-			var div = document.createElement('div');
-			div.appendChild(clonedSelection);
-			return div.innerHTML;
-		}
-		else {
-			return '';
-		}
-	}
-	else {
-		return '';
-	}
-}
-
-function getStartContainer(){
-    let selection = document.getSelection();
-    let range = selection.getRangeAt(0);
-    let startContainer = range.startContainer;
-    return startContainer; 
-}
-
-function getStartOffset(){
-    let selection = document.getSelection();
-    let anchorOffset = selection.anchorOffset;
     
-}
-
-function getAnchorNode(){
-    let anchorNode = window.getSelection().anchorNode;
-    return anchorNode;
-}
-
-function getOffsetFromAnchor(){
-    let selection = window.getSelection();
-    let offset = selection.anchorOffset;
-    return offset;
-=======
-//3-3 early
-
-const ToolTipID = 'ToolTipID';
-const testHTML = '<i>reginald</i>';
-
-function test(mouseEvent){
     let selectedText = getSelectedText();
 	let selection = window.getSelection();
     let range = selection.getRangeAt(0);
@@ -88,24 +22,19 @@ function test(mouseEvent){
     
     let parentElement = focusNode.parentElement;
     
-    parentElement.innerHTML = testHTML;
-    
     clearDisplay();
-    addToDisplay(parentElement.innerHTML,"parent element");
-
+    //addToDisplay(parentElement.innerHTML,"parent element");
     
-    //let nodeValue = focusNode.nodeValue;
-    //focusNode.nodeValue = '<i>reginald</i>';
-    //nodeValue = '<i>reginald</i>';
+    //browser.tabs.insertCSS(css);
     
-    //addToDisplay(nodeValue,'nodeValue');
+    addToDisplay(JSON.stringify(browser.runtime.PlatformArch));
     
 }
 
 function clearDisplay(){
     let displayBox = document.getElementById('displayDiv');
     displayBox.innerHTML = '';
->>>>>>> 016426b6b47db48899f27b961ec2a829cfdbf00f
+
 }
 
 function addToDisplay(text = "default", prefix = ""){
@@ -114,43 +43,6 @@ function addToDisplay(text = "default", prefix = ""){
     let textToDisplay = displayed + '<br>' + prefix + ' : ' + text;
     displayBox.innerHTML = textToDisplay;
 }
-
-<<<<<<< HEAD
-function displayInDiv(text){
-    let displayDiv = document.getElementById('displayDiv');
-    if(displayDiv){
-        displayDiv.innerHTML = text;
-    }
-=======
-function display(text){
-    let displayBox = document.getElementById('displayDiv');
-    displayBox.innerHTML = text;
->>>>>>> 016426b6b47db48899f27b961ec2a829cfdbf00f
-}
-
-function getHTMLOfSelection () {
-    var range;
-    if (document.selection && document.selection.createRange) {
-        range = document.selection.createRange();
-        return range.htmlText;
-    }
-    else if (window.getSelection) {
-        var selection = window.getSelection();
-        if (selection.rangeCount > 0) {
-            range = selection.getRangeAt(0);
-            var clonedSelection = range.cloneContents();
-            var div = document.createElement('div');
-            div.appendChild(clonedSelection);
-            return div.innerHTML;
-        }
-        else {
-            return '';
-        }
-    }
-    else {
-        return '';
-    }
-} ///-try to get the specific elements of the range
 
 function generateButton(){
 	let button = document.createElement('button');
@@ -213,10 +105,6 @@ function generateSpanTag(id = 'spanID',highlight = 'yellow',elementClass = 'span
 	return span;
 }
 
-function deleteSelection() {
-	let selection = window.getSelection();
-	selection.deleteFromDocument();
-}
 
 function getSelectedText() {
 	var text = "";
@@ -227,32 +115,29 @@ function getSelectedText() {
 	}
 	return text;
 }
-function load_home() {
-     document.getElementById("content").innerHTML='<object type="text/html" data="home.html" ></object>';
-}
-
-function getSelectionParentElement() {
-    var parentEl = null, sel;
-    if (window.getSelection) {
-        sel = window.getSelection();
-        if (sel.rangeCount) {
-            parentEl = sel.getRangeAt(0).commonAncestorContainer;
-            if (parentEl.nodeType != 1) {
-                parentEl = parentEl.parentNode;
-            }
-        }
-    } else if ( (sel = document.selection) && sel.type != "Control") {
-        parentEl = sel.createRange().parentElement();
-    }
-    return parentEl;
-}
 
 function sleep(mils){
 	let currentTime = new Date().getTime();
 	while(currentTime + mils >= new Date().getTime()){}
 }
 
+function load_jQuery(){
+    let script = document.createElement("SCRIPT");
+    script.src = 'jquery-3.4.1.min.js';
+    script.type = 'text/javascript';
+    script.onload = function() {
+        let $ = window.jQuery;
+        // Use $ here...
+    };
+    document.getElementsByTagName("head")[0].appendChild(script);
+}
+
 //////////////////////////////////////////////////////////////////////////
+
+function runningDefine(){
+    document.onmouseup = test;
+	document.onkeyup = test;
+}
 
 (function(){
   /**
@@ -265,381 +150,25 @@ function sleep(mils){
 	}
 	window.hasRun = true;
     
+    load_jQuery();
+    
     runningDefine();
-    
-    
-    let script = document.createElement("SCRIPT");
-    script.src = 'jquery-3.4.1.min.js';
-    script.type = 'text/javascript';
-    script.onload = function() {
-        let $ = window.jQuery;
-        // Use $ here...
-    };
-    document.getElementsByTagName("head")[0].appendChild(script);
-
-///////////////////////////////////////////////////////////////////////////////
-  function runningDefine(){
-	document.onmouseup = test;
-	document.onkeyup = test;
-  }
-  ///////////////////////////////////////////////////////////////////////////////
 
 })();
 
 ////////////////////////////////////////////////////////////////////////////////
 //disabled
 
-//////////////////////////////////////////////////////////////////////////
-//https://www.dictionary.com/browse/grapefruit?s=t
-
-/* 
-	document.getElementById("myBtn").addEventListener("click", function(){
-		document.getElementById("demo").innerHTML = "Hello World";
-	}); 
-
- */
-
-/* function CurrentSelection(mouseEvent) = {
-	this.mouseEvent:mouseEvent,
-	this.wrappedInLinkTag: wrapInLinkTag();
-	this.range: window.getSelection().getRangeAt(0);
-	this.selectionText: getSelectedText(),
-	this.remove: function(){
-		let selection = window.getSeletion();
-		selection.deleteFromDocument();
-	},
-	this.wrapInLinkTag: function(){
-		let linkTag = generateLinkTag(selectionText);
-		return linkTag;
-	},
-	this.replaceRange: function(){
-		deleteSelection();
-		range.insertNode(wrappedInLinkTag);
-	}
-} */
-
-
-/**
-	responseHTML
-	(c) 2007-2008 xul.fr		
-	Licence Mozilla 1.1
-*/	
-
-
-/**
-	Searches for body, extracts and return the content
-	New version contributed by users
-*/
-
-
-/* function getBody(content) 
-{
-   test = content.toLowerCase();    // to eliminate case sensitivity
-   var x = test.indexOf("<body");
-   if(x == -1) return "";
-   x = test.indexOf(">", x);
-   if(x == -1) return "";
-   var y = test.lastIndexOf("</body>");
-   if(y == -1) y = test.lastIndexOf("</html>");
-   if(y == -1) y = content.length;    // If no HTML then just grab everything till end
-   return content.slice(x + 1, y);   
-}  */
-
-/**
-	Loads a HTML page
-	Put the content of the body tag into the current page.
-	Arguments:
-		url of the other HTML page to load
-		id of the tag that has to hold the content
-*/		
-
-/* function loadHTML(url, fun, storage, param)
-{
-	var xhr = createXHR();
-	xhr.onreadystatechange=function()
-	{ 
-		if(xhr.readyState == 4)
-		{
-			//if(xhr.status == 200)
-			{
-				storage.innerHTML = getBody(xhr.responseText);
-				fun(storage, param);
-			}
-		} 
-	}; 
-	xhr.open("GET", url , true);
-	xhr.send(null); 
-}  */
-
-/**
-	Callback
-	Assign directly a tag
-*/		
-
-
-/* function processHTML(temp, target)
-{
-	target.innerHTML = temp.innerHTML;
-}
-function loadWholePage(url)
-{
-	var y = document.getElementById("storage");
-	var x = document.getElementById("displayed");
-	loadHTML(url, processHTML, x, y);
-}	 */
-
-
-/**
-	Create responseHTML
-	for acces by DOM's methods
-*/	
-
-/* function processByDOM(responseHTML, target)
-{
-	target.innerHTML = "Extracted by id:<br />";
-	// does not work with Chrome/Safari
-	//var message = responseHTML.getElementsByTagName("div").namedItem("two").innerHTML;
-	var message = responseHTML.getElementsByTagName("div").item(1).innerHTML;
-	
-	target.innerHTML += message;
-	target.innerHTML += "<br />Extracted by name:<br />";
-	
-	message = responseHTML.getElementsByTagName("form").item(0);
-	target.innerHTML += message.dyn.value;
-}
-function accessByDOM(url)
-{
-	//var responseHTML = document.createElement("body");	// Bad for opera
-	var responseHTML = document.getElementById("storage");
-	var y = document.getElementById("displayed");
-	loadHTML(url, processByDOM, responseHTML, y);
-}
- */
-
 //////////////////////////////////////////////////////////////////////////////////
 /*GRAVEYARD
 *_________________________________________________________________
 *`````````````````````````````````````````````````````````````````
 *
-function OLDwrap(mouseEvent){
-	let CurrentSelection = {
-		mouseEvent:mouseEvent,
-		//wrappedInLinkTag: wrapInLinkTag(),
-		//range: window.getSelection().getRangeAt(0),
-		selectionText: getSelectedText(),
-		remove: function(){
-			let selection = window.getSelection();
-			selection.deleteFromDocument();
-		},
-		wrapInLinkTag: function(){
-			let linkTag = generateLinkTag(getSelectedText());
-			return linkTag;
-		},
-		replaceRange: function(){
-			//deleteSelection();
-			//window.getSelection().getRangeAt(0).insertNode(this.wrapInLinkTag());
-			//let rangeParent = window.getSelection.getRangeAt(0).parentNode;
-			//rangeParent.insertAdjacentHTML('beforebegin',getSelectedText());
-			let selectionParent = getSelectionParentElement();
-			let linkTag = generateLinkTag(getSelectedText());
-			let range = window.getSelection().getRangeAt(0);
-			let selection = window.getSelection();
-			deleteSelection();
-			range.insertNode(linkTag);
-			//deleteSelection();
-		}
-	}
-	CurrentSelection.replaceRange();
-}
-    /////////////////////////////////////////////////////////////////////
-    let selectedID = 'defineTooltip';
-    let selectedClass = 'tooltipClass';
-	let lastSelected;// = '';
-    ///////////////////////////////////////////////////////////////////////////////////////
-	function removeWrap(){
-        if(lastSelected){
-            let defineTooltip = document.getElementById(selectedID);
-            defineTooltip.insertAdjacentHTML('beforebegin',lastSelected);
-            defineTooltip.parentNode.removeChild(defineTooltip);
-            lastSelected = undefined;
-        }
-	}
-    ///////////////////////////////////////////////////////////////////////////////////////
-    function wrapSelectedText() {
-        removeWrap();
-		let selection= window.getSelection().getRangeAt(0);
-		let selectedText = selection.extractContents();	
-		let span = document.createElement("span");
-		span.style.backgroundColor = "yellow";
-		span.appendChild(selectedText);
-		span.id = selectedID;		
-		selection.insertNode(span);
-	}
-//let element = document.createElement("h1")
-//window.getSelection().getRangeAt(0).surroundContents(element)
-//window.getSelection().getRangeAt(0).deleteContents()
-function quickWrap(mouseEvent){
-	let selectedText = getSelectedText();
-	let linkTag = generateLinkTag(selectedText);
-	window.getSelection.getRangeAt(0).surroundContents(linkTag);	
-}
-    function OLDwrap(mouseEvent){
-        //removeWrap();
-        
-        let selection = window.getSelection().getRangeAt(0);
-        //let selectedText = selection.extractContents();	
-		
-		//let selectedText = getSelectedText();
-		
-		//alert(getSelectedText());
-		
-		/////////////////////////////////////////////////////////////
-        //let span = document.createElement("span");
-        //span.style.backgroundColor = "yellow";        
-        //span.id = selectedID;
-		/////////////////////////////////////////////////////////////
-		
-		//span.appendChild(lastSelected);
-        
-        //lastSelected = span.innerHTML;
-        
-		let linkTag = generateLinkTag(getSelectedText());
-		
-		
-		
-		
-    }
-		//alert(selectedText);
-		
-		//alert(document.selection.createRange().text);
-		
-		
-		//linkTag.appendChild(span);
-		
-		//deleteSelection();
-		
-		//selection.insertNode(linkTag);
-		
-		//selection.parentNode.insertAdjacentHTML('beforebegin',linkTag);
-		
-		//selection.insertAdjacentHTML('beforebegin',linkTag);
-		
-		
-		
-		//deleteSelection();
-		
-		//span.appendChild(generateLinkTag(lastSelected));
-        
-        //window.getSelection.toString()
-        
-        //selection.insertNode(span);
-        //alert(lastSelected);
-		
-		
-		//alert(span);
-		
-    function testStuff(mouseEvent){
-        let selection;
-        let selectionRange = window.getSelection().getRangeAt(0);
-        let selectionString = window.getSelection().toString();
-        let defineToolTip = document.getElementById(selectedID);
-        if (typeof window.getSelection){
-			selection = window.getSelection();
-			text = window.getSelection().toString();      
-		} else if (typeof document.selection && document.selection.type == "Text") {
-			selection = document.selection.createRange();
-			text = document.selection.createRange().text;
-		}
-		lastSelected = text || selection;	
-        if(lastSelected){
-            alert('inside')
-            let span = document.createElement("span");
-            span.style.backgroundColor = "yellow";
-            span.appendChild('test');
-            span.id = selectedID;
-            selection.insertNode(span);
-        }
-    }
-let lastSelected;
-	
-	function highlightAndWrap(mouseEvent){		
-		let highlightedWord = '';
-		let selection = window.getSelection()
-		let selectionRange = selection.getRangeAt(0);
-		//let selectionText;
-		
-		//let selection= window.getSelection().getRangeAt(0);
-		let selectedText = selection.extractContents();	
-		let span = document.createElement("span");
-		span.style.backgroundColor = "red";
-		span.appendChild(selectionRange);
-		span.id = 'defineTooltip'		
-		selection.insertNode(span);
-		
-		if(typeof selection){
-			selectedText = selection.toString();
-		} else if (typeof document.selection && document.selection.type == 'Text') {
-			selection = document.selection.createRange();
-			selectionText = document.selection.createRange().text;
-		}
-		lastSelected = selectedText;		
-	}
-  
-	function getHighlightedText(mouseEvent) {	  
-		let text = "";
-		let selection;
-		if (typeof window.getSelection){
-			selection = window.getSelection();
-			text = window.getSelection().toString();      
-		} else if (typeof document.selection && document.selection.type == "Text") {
-			selection = document.selection.createRange();
-			text = document.selection.createRange().text;
-		}
-		lastSelected = text;		
-		
-	}	
-  
-	function wrapSelectedText() {
-		
-		let selection= window.getSelection().getRangeAt(0);
-		let selectedText = selection.extractContents();	
-		let span = document.createElement("span");
-		span.style.backgroundColor = "yellow";
-		span.appendChild(selectedText);
-		span.id = 'defineTooltip'		
-		selection.insertNode(span);
-		
-		
-	}
-//////////////////////////////////////////////////////////////////////////////////
-    function highlightSelection(mouseEvent){ 
-        let selection = window.getSelection().getRangeAt(0);
-        let selectedText = selection.toString();
-        let selectionFragment = selection.extractContents();
-        let span = document.createElement('span');
-        span.style.backgroundColor = 'green';
-        span.appendChild(selectionFragment);
-        span.id = 'greenHighlight';
-        selection.insertNode(span);
-        lastHTML = span.innerHTML;
-    }
-  
-	////////////////////////////6666666666666666666666666666666666666	
-	////////////////////////////777777777777777777777777777	
-	////////////////////////////888888888888888888888		
-	////////////////////////////999999999999
-	////////////////////////////00000000000
-	////////////////////////////------
+
+
 	
 	
 	
-	*/
+*/
 	
 	
-	
-	////////////////////////////1111111111111111111111111111111111111111!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////////////////////////////////////
-	
-	////////////////////!!!!!!!!!!!!!!
