@@ -23,11 +23,9 @@ function test(mouseEvent){
     let parentElement = focusNode.parentElement;
     
     clearDisplay();
-    //addToDisplay(parentElement.innerHTML,"parent element");
     
-    //browser.tabs.insertCSS(css);
     
-    addToDisplay(JSON.stringify(browser.runtime.PlatformArch));
+    //browser.tabs.insertCSS({code: CSS});
     
 }
 
@@ -152,7 +150,7 @@ function runningDefine(){
     
     load_jQuery();
     
-    runningDefine();
+    //runningDefine();
 
 })();
 
