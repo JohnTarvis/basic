@@ -1,17 +1,47 @@
 "use strict";
 
-//2-23
+//3-1
 
 const ToolTipID = 'ToolTipID';
 
+
+
 function test(mouseEvent){
-    let selection = window.getSelection();
+    let selection = document.getSelection();
+	let range = selection.getRangeAt(0);
     let anchorNode = selection.anchorNode;
+	let focusNode = selection.focusNode;
     let parentElement = anchorNode.parentElement;
     let lastChild = anchorNode.lastChild;
-    parentElement.insertAdjacentHTML('beforeend','</div>');
-	parentElement.insertAdjacentHTML('afterbegin','<div>');
-    //displayInDiv(lastChild);
+	let startContainer = range.startContainer;
+	
+	
+	displayInDiv(getHTMLOfSelection());	
+
+}
+
+function getHTMLOfSelection () {
+	var range;
+	if (document.selection && document.selection.createRange) {
+		range = document.selection.createRange();
+		return range.htmlText;
+	}
+	else if (window.getSelection) {
+		var selection = window.getSelection();
+		if (selection.rangeCount > 0) {
+			range = selection.getRangeAt(0);
+			var clonedSelection = range.cloneContents();
+			var div = document.createElement('div');
+			div.appendChild(clonedSelection);
+			return div.innerHTML;
+		}
+		else {
+			return '';
+		}
+	}
+	else {
+		return '';
+	}
 }
 
 function getStartContainer(){
