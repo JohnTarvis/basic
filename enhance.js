@@ -21,11 +21,10 @@ function test(mouseEvent){
     let anchorOffset = selection.anchorOffset;
     
     let parentElement = focusNode.parentElement;
-    
+	
     clearDisplay();
     
-    
-    //browser.tabs.insertCSS({code: CSS});
+    browser.tabs.insertCSS({code: CSS});
     
 }
 
@@ -151,6 +150,8 @@ function runningDefine(){
     load_jQuery();
     
     //runningDefine();
+	
+	browser.tabs.insertCSS({code: CSS});
 
 })();
 
@@ -162,18 +163,8 @@ function runningDefine(){
 *_________________________________________________________________
 *`````````````````````````````````````````````````````````````````
 *
-<<<<<<< HEAD
-	
-	
-	
-*/
-=======
 
 
-	
-	
-	
+
 */
 	
-	
->>>>>>> 7e954a73e5528d58c26dfb5c77998bc54ca27dbd

@@ -10,7 +10,8 @@
     },
 
     "permissions": [
-        "activeTab"
+        "activeTab",
+		"tabs"
     ],
 
     "content_scripts": [
@@ -23,6 +24,12 @@
     "background": {
         "scripts": ["background.js"]
     },
+	
+	
+	"page_action": {
+		"default_icon": "icons/icoQuickDef-32.png",
+		"browser_style": true
+	},
 
     "browser_action": {
         "default_icon": "icons/icoQuickDef-32.png",
