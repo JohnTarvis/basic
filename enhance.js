@@ -151,7 +151,7 @@ function runningDefine(){
     
     //runningDefine();
 	
-	browser.tabs.insertCSS({code: CSS});
+	//browser.tabs.insertCSS({code: CSS});
 
 })();
 
