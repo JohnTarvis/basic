@@ -2,29 +2,60 @@
 
 //3-1
 
-const ToolTipID = 'ToolTipID';
+const toolTip_ID = 'toolTip_ID';
+const copyButton_ID = 'copyButton_id';
+const OLDcopyButtonImageURL = 'icons/copyButtonIcon.png';
+const copyButtonImageURL = "url('icons/copyButtonIcon.png')";
 
-var css = "body { border: 20px dotted pink; }";
+//var css = "body { border: 20px dotted pink; }";
+
+function setupCSS(){
+    let sheet = window.document.styleSheets[0];
+    //sheet.insertRule('p { background-color: green; }', sheet.cssRules.length);
+    sheet.insertRule('.' + copyButton_ID + '{ background-image : ' + 'icons/copyButtonIcon }', sheet.cssRules.length);
+}
+
+
 
 function test(mouseEvent){
     
-    let selectedText = getSelectedText();
+    //let selectedText = getSelectedText();
 	let selection = window.getSelection();
-    let range = selection.getRangeAt(0);
+    //let range = selection.getRangeAt(0);
     let focusNode = selection.focusNode;
-    let anchorNode = selection.anchorNode;
+    //let anchorNode = selection.anchorNode;
     
-    let focusText = focusNode.textContent;
-    let anchorText = anchorNode.textContent;
+    //let focusText = focusNode.textContent;
+    //let anchorText = anchorNode.textContent;
     
     let focusOffset = selection.focusOffset;
+    
     let anchorOffset = selection.anchorOffset;
     
     let parentElement = focusNode.parentElement;
+    
+    
+    
+    //setupCSS();
+    
+    let testButton = generateButton(copyButton_ID);
+    
+    testButton.style.height = '10px';
+    testButton.style.width = '10px';
+    
+    testButton.style.backgroundImage = copyButtonImageURL;
+    
+    //document.body.style.backgroundImage = "url('icons/copyButtonIcon.png')"//copyButtonImageURL;
+    
+    //testButton.backgroundImage = "url('icons/copyButtonIcon.png')";//copyButtonImageURL;
+    
+    //parentElement.insertAdjacentHTML('beforeend',testButton);
 	
+    parentElement.appendChild(testButton);
+    
     clearDisplay();
     
-    browser.tabs.insertCSS({code: CSS});
+    //browser.tabs.insertCSS({code: CSS});
     
 }
 
@@ -41,10 +72,11 @@ function addToDisplay(text = "default", prefix = ""){
     displayBox.innerHTML = textToDisplay;
 }
 
-function generateButton(){
+function generateButton(id){
 	let button = document.createElement('button');
-	button.innerHTML = 'click';
+	//button.innerHTML = 'click';
 	button.addEventListener('click',()=>{alert('test')});
+    button.id = id;
 	return button;
 }
 
@@ -65,7 +97,7 @@ function wrap(mouseEvent){
 }
 
 function unwrap(){
-	let linkTag = document.getElementById(ToolTipID);
+	let linkTag = document.getElementById(toolTip_ID);
 	if(linkTag){
 		let linkTagText = linkTag.innerText;
 		let textNode = document.createTextNode(linkTagText);
@@ -90,7 +122,7 @@ function generateLinkTag(text,definition){
 	linkTag.setAttribute('color',"000000");
 	linkTag.setAttribute('text-decoration',"none");
 	linkTag.innerText = text;
-	linkTag.id = ToolTipID;
+	linkTag.id = toolTip_ID;
 	return linkTag;
 }
 
@@ -147,9 +179,13 @@ function runningDefine(){
 	}
 	window.hasRun = true;
     
-    load_jQuery();
+    //test();
     
-    //runningDefine();
+    //testCSS();
+    
+    //load_jQuery();
+    
+    runningDefine();
 	
 	//browser.tabs.insertCSS({code: CSS});
 

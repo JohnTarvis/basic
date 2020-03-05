@@ -15,6 +15,8 @@ var css = "body { border: 20px dotted pink; }";
 	}
 	window.hasRun = true;
 	
-	browser.tabs.insertCSS({code: CSS});
+	browser.tabs.insertCSS({code: css});
+    
+    
 
 })();
