@@ -4,8 +4,7 @@
 
 const toolTip_ID = 'toolTip_ID';
 const copyButton_ID = 'copyButton_id';
-const OLDcopyButtonImageURL = 'icons/copyButtonIcon.png';
-const copyButtonImageURL = "url('icons/copyButtonIcon25.png')";
+const copyButtonImageURL = "url('icons/copyButtonIcon21-26.png')";
 
 //var css = "body { border: 20px dotted pink; }";
 
@@ -15,9 +14,31 @@ function setupCSS(){
     sheet.insertRule('.' + copyButton_ID + '{ background-image : ' + 'icons/copyButtonIcon }', sheet.cssRules.length);
 };
 
-function test(e){
-	copyToClipboard('copied by js');	
+const copyToClipboard = str => {
+	const el = document.createElement('textarea');
+	el.value = str;
+	document.body.appendChild(el);
+	el.select();
+	document.execCommand('copy');
+	document.body.removeChild(el);
+};
+
+function copySelectionText(){
+    let copysuccess // var to check whether execCommand successfully executed
+    try{
+        copysuccess = document.execCommand("copy") // run command to copy selected text to clipboard
+    } catch(e){
+        copysuccess = false
+    }
+    return copysuccess
 }
+
+function generateButton(id){
+	let button = document.createElement('button');
+	//button.addEventListener('click',()=>{copyToClipboard(getSelectedText())});
+    button.id = id;
+	return button;
+};
 
 function test(mouseEvent){	
 	let selection = window.getSelection();    
@@ -25,27 +46,18 @@ function test(mouseEvent){
     let focusOffset = selection.focusOffset;    
     let anchorOffset = selection.anchorOffset;    
     let parentElement = focusNode.parentElement;  
-
 	let currentCopyButton = document.getElementById(copyButton_ID);
 	if(currentCopyButton != null){currentCopyButton.parentNode.removeChild(currentCopyButton);}
 	if(!document.getElementById(copyButton_ID)){
-		let testButton = generateButton(copyButton_ID);    
-		testButton.style.height = '20px';    
-		testButton.style.width = '5px';	
-		testButton.style.backgroundImage = copyButtonImageURL;	
-		testButton.style.backgroundSize = '100%';	
-		parentElement.appendChild(testButton);    
+		let copyButton = generateButton(copyButton_ID);  
+		copyButton.style.width = '5px';			
+		copyButton.style.height = '24px';    
+		copyButton.style.backgroundSize = '100%';	
+		copyButton.style.backgroundImage = copyButtonImageURL;	
+		copyButton.addEventListener('click',copySelectionText);
+		parentElement.appendChild(copyButton);    
 		clearDisplay();    
 	}
-};
-
-const copyToClipboard = str => {
-  const el = document.createElement('textarea');
-  el.value = str;
-  document.body.appendChild(el);
-  el.select();
-  document.execCommand('copy');
-  document.body.removeChild(el);
 };
 
 function test2(e){
@@ -69,8 +81,8 @@ function generateDivTag(id){
 };
 
 function clearDisplay(){
-    let displayBox = document.getElementById('displayDiv');
-    displayBox.innerHTML = '';
+    let displayBox = document.getElementById('displayBox');
+    displayBox.innerHTML = ':)';
 
 };
 
@@ -79,14 +91,6 @@ function addToDisplay(text = "default", prefix = ""){
     let displayed = displayBox.innerHTML;
     let textToDisplay = displayed + '<br>' + prefix + ' : ' + text;
     displayBox.innerHTML = textToDisplay;
-};
-
-function generateButton(id){
-	let button = document.createElement('button');
-	//button.innerHTML = 'click';
-	button.addEventListener('click',()=>{copyToClipboard(getSelectedText())});
-    button.id = id;
-	return button;
 };
 
 function generateLinkTag(text,definition){
@@ -110,7 +114,7 @@ function generateSpanTag(id = 'spanID',highlight = 'yellow',elementClass = 'span
 };
 
 
-function getSelectedText() {
+function getSelectionText() {
 	var text = "";
 	if (window.getSelection) {
 		text = window.getSelection().toString();
