@@ -5,7 +5,7 @@
 const toolTip_ID = 'toolTip_ID';
 const copyButton_ID = 'copyButton_id';
 const OLDcopyButtonImageURL = 'icons/copyButtonIcon.png';
-const copyButtonImageURL = "url('icons/copyButtonIcon.png')";
+const copyButtonImageURL = "url('icons/copyButtonIcon25.png')";
 
 //var css = "body { border: 20px dotted pink; }";
 
@@ -18,15 +18,10 @@ function setupCSS(){
 
 
 function test(mouseEvent){
-    
-    //let selectedText = getSelectedText();
+	
 	let selection = window.getSelection();
-    //let range = selection.getRangeAt(0);
-    let focusNode = selection.focusNode;
-    //let anchorNode = selection.anchorNode;
     
-    //let focusText = focusNode.textContent;
-    //let anchorText = anchorNode.textContent;
+	let focusNode = selection.focusNode;
     
     let focusOffset = selection.focusOffset;
     
@@ -34,28 +29,19 @@ function test(mouseEvent){
     
     let parentElement = focusNode.parentElement;
     
-    
-    
-    //setupCSS();
-    
     let testButton = generateButton(copyButton_ID);
     
     testButton.style.height = '10px';
-    testButton.style.width = '10px';
     
+	testButton.style.width = '5px';
+	
     testButton.style.backgroundImage = copyButtonImageURL;
-    
-    //document.body.style.backgroundImage = "url('icons/copyButtonIcon.png')"//copyButtonImageURL;
-    
-    //testButton.backgroundImage = "url('icons/copyButtonIcon.png')";//copyButtonImageURL;
-    
-    //parentElement.insertAdjacentHTML('beforeend',testButton);
+	
+	testButton.style.backgroundSize = '100%';
 	
     parentElement.appendChild(testButton);
     
     clearDisplay();
-    
-    //browser.tabs.insertCSS({code: CSS});
     
 }
 
