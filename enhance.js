@@ -13,92 +13,81 @@ function setupCSS(){
     let sheet = window.document.styleSheets[0];
     //sheet.insertRule('p { background-color: green; }', sheet.cssRules.length);
     sheet.insertRule('.' + copyButton_ID + '{ background-image : ' + 'icons/copyButtonIcon }', sheet.cssRules.length);
+};
+
+function test(e){
+	copyToClipboard('copied by js');	
 }
 
+function test(mouseEvent){	
+	let selection = window.getSelection();    
+	let focusNode = selection.focusNode;    
+    let focusOffset = selection.focusOffset;    
+    let anchorOffset = selection.anchorOffset;    
+    let parentElement = focusNode.parentElement;  
 
+	let currentCopyButton = document.getElementById(copyButton_ID);
+	if(currentCopyButton != null){currentCopyButton.parentNode.removeChild(currentCopyButton);}
+	if(!document.getElementById(copyButton_ID)){
+		let testButton = generateButton(copyButton_ID);    
+		testButton.style.height = '20px';    
+		testButton.style.width = '5px';	
+		testButton.style.backgroundImage = copyButtonImageURL;	
+		testButton.style.backgroundSize = '100%';	
+		parentElement.appendChild(testButton);    
+		clearDisplay();    
+	}
+};
 
-function test(mouseEvent){
-	
+const copyToClipboard = str => {
+  const el = document.createElement('textarea');
+  el.value = str;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+};
+
+function test2(e){
 	let selection = window.getSelection();
-    
 	let focusNode = selection.focusNode;
-    
-    let focusOffset = selection.focusOffset;
-    
-    let anchorOffset = selection.anchorOffset;
-    
-    let parentElement = focusNode.parentElement;
-    
-    let testButton = generateButton(copyButton_ID);
-    
-    testButton.style.height = '10px';
-    
-	testButton.style.width = '5px';
+	let parentElement = focusNode.parentElement;
+	let div = generateDivTag('test');
+	div.style.height = '10px';
+	div.style.width = '10px';
+	div.style.backgroundSize = '100%';
+	div.innerHTML = '_';
+	div.style.backgroundImage = copyButtonImageURL;
+	parentElement.appendChild(div);
 	
-    testButton.style.backgroundImage = copyButtonImageURL;
-	
-	testButton.style.backgroundSize = '100%';
-	
-    parentElement.appendChild(testButton);
-    
-    clearDisplay();
-    
-}
+};
+
+function generateDivTag(id){
+	let divTag = document.createElement('div');
+	divTag.id = id;
+	return divTag;
+};
 
 function clearDisplay(){
     let displayBox = document.getElementById('displayDiv');
     displayBox.innerHTML = '';
 
-}
+};
 
 function addToDisplay(text = "default", prefix = ""){
     let displayBox = document.getElementById('displayDiv');
     let displayed = displayBox.innerHTML;
     let textToDisplay = displayed + '<br>' + prefix + ' : ' + text;
     displayBox.innerHTML = textToDisplay;
-}
+};
 
 function generateButton(id){
 	let button = document.createElement('button');
 	//button.innerHTML = 'click';
-	button.addEventListener('click',()=>{alert('test')});
+	button.addEventListener('click',()=>{copyToClipboard(getSelectedText())});
     button.id = id;
 	return button;
-}
-
-function wrapInLookupURL(text){
-	return 'https://www.dictionary.com/browse/'+
-	text + '?s=t';
-}
-
-function wrap(mouseEvent){
-	unwrap();
-	let selectionParent = getSelectionParentElement();
-	let divTag = generateDivTag(wrapInLookupURL(getSelectedText()));
-	let linkTag = generateLinkTag(getSelectedText(),'test');
-	let range = window.getSelection().getRangeAt(0);
-	let selection = window.getSelection();
-	deleteSelection();
-	range.insertNode(linkTag);
-}
-
-function unwrap(){
-	let linkTag = document.getElementById(toolTip_ID);
-	if(linkTag){
-		let linkTagText = linkTag.innerText;
-		let textNode = document.createTextNode(linkTagText);
-		let parentNode = linkTag.parentNode;
-		parentNode.insertBefore(textNode,linkTag);
-		parentNode.removeChild(linkTag);
-	}
-}
-
-function generateDivTag(url){
-	let divTag = document.createElement('div');
-	divTag.id = "definitionPage";
-	divTag.innerHTML = '<object type="text/html" data=' + url + '></object>';
-	return divTag;
-}
+};
 
 function generateLinkTag(text,definition){
 	let linkTag = document.createElement('a');
@@ -110,7 +99,7 @@ function generateLinkTag(text,definition){
 	linkTag.innerText = text;
 	linkTag.id = toolTip_ID;
 	return linkTag;
-}
+};
 
 function generateSpanTag(id = 'spanID',highlight = 'yellow',elementClass = 'span'){	
 	let span = document.createElement("span");
@@ -118,7 +107,7 @@ function generateSpanTag(id = 'spanID',highlight = 'yellow',elementClass = 'span
 	span.id = id;
 	span.className = elementClass;
 	return span;
-}
+};
 
 
 function getSelectedText() {
@@ -129,12 +118,12 @@ function getSelectedText() {
 		text = document.selection.createRange().text;
 	}
 	return text;
-}
+};
 
 function sleep(mils){
 	let currentTime = new Date().getTime();
 	while(currentTime + mils >= new Date().getTime()){}
-}
+};
 
 function load_jQuery(){
     let script = document.createElement("SCRIPT");
@@ -145,7 +134,7 @@ function load_jQuery(){
         // Use $ here...
     };
     document.getElementsByTagName("head")[0].appendChild(script);
-}
+};
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -186,7 +175,40 @@ function runningDefine(){
 *`````````````````````````````````````````````````````````````````
 *
 
+function generateDivTag(url){
+	let divTag = document.createElement('div');
+	divTag.id = "definitionPage";
+	divTag.innerHTML = '<object type="text/html" data=' + url + '></object>';
+	return divTag;
+}
 
+
+function wrapInLookupURL(text){
+	return 'https://www.dictionary.com/browse/'+
+	text + '?s=t';
+}
+
+function wrap(mouseEvent){
+	unwrap();
+	let selectionParent = getSelectionParentElement();
+	let divTag = generateDivTag(wrapInLookupURL(getSelectedText()));
+	let linkTag = generateLinkTag(getSelectedText(),'test');
+	let range = window.getSelection().getRangeAt(0);
+	let selection = window.getSelection();
+	deleteSelection();
+	range.insertNode(linkTag);
+}
+
+function unwrap(){
+	let linkTag = document.getElementById(toolTip_ID);
+	if(linkTag){
+		let linkTagText = linkTag.innerText;
+		let textNode = document.createTextNode(linkTagText);
+		let parentNode = linkTag.parentNode;
+		parentNode.insertBefore(textNode,linkTag);
+		parentNode.removeChild(linkTag);
+	}
+}
 
 */
 	
