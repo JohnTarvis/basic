@@ -8,11 +8,71 @@ const copyButtonImageURL = "url('icons/copyButtonIcon21-26.png')";
 
 //var css = "body { border: 20px dotted pink; }";
 
+function copy(){
+    document.execCommand('copy');
+}
+
+function removeElementByID(id){
+    let element = document.getElementById(id);
+    element.parentNode.removeChild(element);
+}
+
+function elementExistsWithID(id){
+    if(document.getElementById(id)){
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function removeCurrentCopyButton(currentCopyButtonID = copyButton_ID){
+    if (elementExistsWithID(currentCopyButtonID)){
+        removeElementByID(currentCopyButtonID);
+        return true;
+    } else {return false;}
+}
+
+function getSelection(){
+    let selection = window.getSelection ? window.getSelection() : 
+        document.selection && document.selection.type != 'Control' ? document.selection.createRange() :
+            null;
+    return selection;
+}
+
+function appendCopyButton(ev){
+    let copyButtonRemoved = removeCurrentCopyButton();
+    let copyButton = generateCopyButton();
+    
+    let selection = getSelection();
+    
+    let focusNode;// = selection.focusNode ? selection.focusNode : document.getSelection().focusNode;   
+    let focusParent;// = focusNode ? focusNode.parentElement : document.getSelection().focusNode;
+    
+    if(selection) {} else alert('null selection');
+}
+
+function generateCopyButton(id = copyButton_ID){
+    let copyButton = generateButton(id);  
+    copyButton.style.width = '5px';			
+    copyButton.style.height = '24px';    
+    copyButton.style.backgroundSize = '100%';	
+    copyButton.style.backgroundImage = copyButtonImageURL;	
+    copyButton.addEventListener('click',copyToClipboard);
+    return copyButton;
+}
+
+function generateButton(id){
+	let button = document.createElement('button');
+    button.id = id;
+	return button;
+}
+//////////////////////////////////////////////////////////////////////
+
 function setupCSS(){
     let sheet = window.document.styleSheets[0];
     //sheet.insertRule('p { background-color: green; }', sheet.cssRules.length);
     sheet.insertRule('.' + copyButton_ID + '{ background-image : ' + 'icons/copyButtonIcon }', sheet.cssRules.length);
-};
+}
 
 const copyToClipboard = str => {
 	const el = document.createElement('textarea');
@@ -21,7 +81,7 @@ const copyToClipboard = str => {
 	el.select();
 	document.execCommand('copy');
 	document.body.removeChild(el);
-};
+}
 
 function copySelectionText(){
     let copysuccess // var to check whether execCommand successfully executed
@@ -33,65 +93,29 @@ function copySelectionText(){
     return copysuccess
 }
 
-function generateButton(id){
-	let button = document.createElement('button');
-	//button.addEventListener('click',()=>{copyToClipboard(getSelectedText())});
-    button.id = id;
-	return button;
-};
 
-function test(mouseEvent){	
-	let selection = window.getSelection();    
-	let focusNode = selection.focusNode;    
-    let focusOffset = selection.focusOffset;    
-    let anchorOffset = selection.anchorOffset;    
-    let parentElement = focusNode.parentElement;  
-	let currentCopyButton = document.getElementById(copyButton_ID);
-	if(currentCopyButton != null){currentCopyButton.parentNode.removeChild(currentCopyButton);}
-	if(!document.getElementById(copyButton_ID)){
-		let copyButton = generateButton(copyButton_ID);  
-		copyButton.style.width = '5px';			
-		copyButton.style.height = '24px';    
-		copyButton.style.backgroundSize = '100%';	
-		copyButton.style.backgroundImage = copyButtonImageURL;	
-		copyButton.addEventListener('click',copySelectionText);
-		parentElement.appendChild(copyButton);    
-		clearDisplay();    
-	}
-};
 
-function test2(e){
-	let selection = window.getSelection();
-	let focusNode = selection.focusNode;
-	let parentElement = focusNode.parentElement;
-	let div = generateDivTag('test');
-	div.style.height = '10px';
-	div.style.width = '10px';
-	div.style.backgroundSize = '100%';
-	div.innerHTML = '_';
-	div.style.backgroundImage = copyButtonImageURL;
-	parentElement.appendChild(div);
-	
-};
+/////////////
+
 
 function generateDivTag(id){
 	let divTag = document.createElement('div');
 	divTag.id = id;
 	return divTag;
-};
+}
 
-function clearDisplay(){
-    let displayBox = document.getElementById('displayBox');
-    displayBox.innerHTML = ':)';
+function clearYellowBox(){
+    let theYellowBox = document.getElementById('theYellowBox');
+    theYellowBox.innerHTML = ':)';
 
-};
+}
 
-function addToDisplay(text = "default", prefix = ""){
-    let displayBox = document.getElementById('displayDiv');
-    let displayed = displayBox.innerHTML;
-    let textToDisplay = displayed + '<br>' + prefix + ' : ' + text;
-    displayBox.innerHTML = textToDisplay;
-};
+function addToYellowBox(text = "default", prefix = ""){
+    let theYellowBox = document.getElementById('theYellowBox');
+    let YellowBoxed = theYellowBox.innerHTML;
+    let textToYellowBox = YellowBoxed + '<br>' + prefix + ' : ' + text;
+    theYellowBox.innerHTML = textToYellowBox;
+}
 
 function generateLinkTag(text,definition){
 	let linkTag = document.createElement('a');
@@ -105,7 +129,13 @@ function generateLinkTag(text,definition){
 	return linkTag;
 };
 
-function generateSpanTag(id = 'spanID',highlight = 'yellow',elementClass = 'span'){	
+function generateTextField(){
+    let textField = document.createElement("INPUT");
+    textField.setAttribute("type", "text");
+    return textField;
+}
+
+function generateSpanTag(id = 'spanID',highlight = 'Yellow',elementClass = 'span'){	
 	let span = document.createElement("span");
 	span.style.backgroundColor = highlight;        
 	span.id = id;
@@ -122,12 +152,12 @@ function getSelectionText() {
 		text = document.selection.createRange().text;
 	}
 	return text;
-};
+}
 
 function sleep(mils){
 	let currentTime = new Date().getTime();
 	while(currentTime + mils >= new Date().getTime()){}
-};
+}
 
 function load_jQuery(){
     let script = document.createElement("SCRIPT");
@@ -142,31 +172,28 @@ function load_jQuery(){
 
 //////////////////////////////////////////////////////////////////////////
 
-function runningDefine(){
-    document.onmouseup = test;
-	document.onkeyup = test;
+function TESTING_FUNCTION(arg){
+    alert('intf');
+    if (copySelectionText()){
+        alert(true);
+    } else {
+        alert(false);
+    }
+}
+function mouseUpFunction(inFunction = TESTING_FUNCTION){
+    document.onmouseup = inFunction;
+	document.onkeyup = inFunction;
 }
 
 (function(){
-  /**
-   * Check and set a global guard variable.
-   * If this content script is injected into the same page again,
-   * it will do nothing next time.
-   */
+
 	if (window.hasRun) {
 		return;
 	}
 	window.hasRun = true;
     
-    //test();
-    
-    //testCSS();
-    
-    //load_jQuery();
-    
-    runningDefine();
+    mouseUpFunction(appendCopyButton);
 	
-	//browser.tabs.insertCSS({code: CSS});
 
 })();
 
@@ -178,6 +205,41 @@ function runningDefine(){
 *_________________________________________________________________
 *`````````````````````````````````````````````````````````````````
 *
+
+function selectionTest1(mouseEvent){	
+	let selection = window.getSelection();  
+    addToYellowBox(selection.focusNode.parentElement.textContent)
+	let focusNode = selection.focusNode;    
+    let focusOffset = selection.focusOffset;    
+    let anchorOffset = selection.anchorOffset;    
+    let parentElement = focusNode.parentElement;  
+	let currentCopyButton = document.getElementById(copyButton_ID);
+	if(currentCopyButton != null){currentCopyButton.parentNode.removeChild(currentCopyButton);}
+	if(!document.getElementById(copyButton_ID)){
+		let copyButton = generateButton(copyButton_ID);  
+		copyButton.style.width = '5px';			
+		copyButton.style.height = '24px';    
+		copyButton.style.backgroundSize = '100%';	
+		copyButton.style.backgroundImage = copyButtonImageURL;	
+		copyButton.addEventListener('click',copySelectionText);
+		parentElement.appendChild(copyButton);    
+		clearYellowBox();    
+	}
+}
+
+function selectionTest2(Event){
+	let selection = window.getSelection();
+	let focusNode = selection.focusNode;
+	let parentElement = focusNode.parentElement;
+	let div = generateDivTag('test');
+	div.style.height = '10px';
+	div.style.width = '10px';
+	div.style.backgroundSize = '100%';
+	div.innerHTML = '_';
+	div.style.backgroundImage = copyButtonImageURL;
+	parentElement.appendChild(div);
+	
+}
 
 function generateDivTag(url){
 	let divTag = document.createElement('div');
