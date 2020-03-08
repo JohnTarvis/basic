@@ -6,56 +6,37 @@ const toolTip_ID = 'toolTip_ID';
 const copyButton_ID = 'copyButton_id';
 const copyButtonImageURL = "url('icons/copyButtonIcon21-26.png')";
 
-//var css = "body { border: 20px dotted pink; }";
+(function(){
+	if (window.hasRun) {
+		return;
+	}
+	window.hasRun = true;
+    mouseUpFunction();
+})();
 
-/* var Pastry = {
-  // initialize the pastry
-  init: function (type, flavor, levels, price, occasion) {
-    this.type = type;
-    this.flavor = flavor;
-    this.levels = levels;
-    this.price = price;
-    this.occasion = occasion;
-  },
-  ...
-  
-  
-  
-  
-  
-  
-  
-      let copysuccess // var to check whether execCommand successfully executed
-    try{
-        copysuccess = document.execCommand("copy") // run command to copy selected text to clipboard
-    } catch(e){
-        copysuccess = false
-    }
-    return copysuccess
-} */
-
-let TESTING_FUNCTION = arg =>{
+function TESTING_FUNCTION(){
     let selection = new Selection();
-	alert(selection.getText());
+	selection.appendCopyButton();
+}
+
+function mouseUpFunction(inFunction = TESTING_FUNCTION){
+    document.onmouseup = inFunction;
+	document.onkeyup = inFunction;
 }
 
 function Selection(){
 	this.windowSelection = window.getSelection();
 	this.documentSelection = document.selection;
-	if(this.windowSelection)
-		alert('true');
-	else 
-		alert(false);
 	if(this.windowSelection){
-		this.text = windowSelection.toString();
-		this.focusNode = windowSelection.focusNode;
-		this.focusOffset = windowSelection.focusNode;
-		this.anchorNode = windowSelection.anchorNode;
-		this.anchorOffset = windowSelection.anchorOffset;
-		this.parentElement = windowSelection.parentElement;
+		this.text = this.windowSelection.toString();
+		this.focusNode = this.windowSelection.focusNode;
+		this.focusOffset = this.windowSelection.focusNode;
+		this.anchorNode = this.windowSelection.anchorNode;
+		this.anchorOffset = this.windowSelection.anchorOffset;
+		this.parentElement = this.windowSelection.parentElement;
 	}
 	if(this.documentSelection){
-		this.text = documentSelection.text;
+		this.text = this.documentSelection.text;
 	}
 	this.getText = function(){
 		if(this.text) 
@@ -76,69 +57,41 @@ function Selection(){
 	this.appendCopyButton = function(id = copyButton_ID){
 		removeElementByID(id);
 		if(this.parentElement){
-			let copyButton = generateButton(id);
+			let copyButton = generateButton(id, this.copyToClipboard);
 			copyButton.style.width = '5px';
 			copyButton.style.height = '24px';
 			copyButton.style.backgroundSize = '100%';
 			copyButton.style.backgroundImage = copyButtonImageURL;
-			copyButton.addEventListener('click',this.copyToClipboard);
-		} else addToYellowBox('could not copy');
+			this.parentElement.appendChild(copyButton);
+		} else addToYellowBox('could not append to parent');
 	}
+	
+	
 	
 }
 
-let OLDSelection = {
-	init: function (e) {
-		this.windowSelection = window.getSelection();
-		this.documentSelection = document.selection;
-		if(this.windowSelection){
-			this.text = windowSelection.toString();
-			this.focusNode = windowSelection.focusNode;
-			this.focusOffset = windowSelection.focusNode;
-			this.anchorNode = windowSelection.anchorNode;
-			this.anchorOffset = windowSelection.anchorOffset;
-			this.parentElement = windowSelection.parentElement;
-		}
-		if(this.documentSelection){
-			this.text = documentSelection.text;
-		}
-	},
-	getText : function(){
-		if(this.text) 
-			return this.text;
-		else 
-			return 'ERROR: no text';
-		},
-	copyToClipboard : ()=>{
-		let copysuccess; // var to check whether execCommand successfully executed
-		try{
-			copysuccess = document.execCommand('copy'); // run command to copy selected text to clipboard
-		} catch(e){
-			copysuccess = false;
-			addToYellowBox('failed to copy');
-		}
-		return copysuccess;
-	},
-	appendCopyButton : function(id = copyButton_ID){
-		removeElementByID(id);
-		if(this.parentElement){
-			let copyButton = generateButton(id);
-			copyButton.style.width = '5px';
-			copyButton.style.height = '24px';
-			copyButton.style.backgroundSize = '100%';
-			copyButton.style.backgroundImage = copyButtonImageURL;
-			copyButton.addEventListener('click',this.copyToClipboard);
-		} else addToYellowBox('could not copy');
-	}
+function generateButton(idInDOM = 'unnamed button', responseFunction=()=>alert('unassigned button'),action = 'click', classInDOM = 'EZbutton' ){
+	let DOM = document.createElement('button');
+	DOM.addEventListener(action,responseFunction);
+	DOM.id = idInDOM;
+	DOM.className = classInDOM;
+	return {
+		DOM,
+		DOM.id,
+		DOM.classInDOM
+	};
 }
 
-function copy(){
-    document.execCommand('copy');
+function generateButton(id, inFunction, action = 'click'){
+	let button = document.createElement('button');
+    button.id = id;
+	button.addEventListener(action,inFunction);
+	return button;
 }
 
 function removeElementByID(id){
     let element = document.getElementById(id);
-    element.parentNode.removeChild(element);
+	if(element)element.parentNode.removeChild(element);
 }
 
 function elementExistsWithID(id){
@@ -163,23 +116,7 @@ function getSelection(){
     return selection;
 }
 
-function appendCopyButton(ev){
-    let copyButtonRemoved = removeCurrentCopyButton();
-    let copyButton = generateCopyButton();
 
-    let selection = getSelection();
-
-    let focusNode;// = selection.focusNode ? selection.focusNode : document.getSelection().focusNode;
-    let focusParent;// = focusNode ? focusNode.parentElement : document.getSelection().focusNode;
-
-    if(selection) {} else alert('null selection');
-}
-
-function generateButton(id){
-	let button = document.createElement('button');
-    button.id = id;
-	return button;
-}
 
 function setupCSS(){
     let sheet = window.document.styleSheets[0];
@@ -268,23 +205,7 @@ function load_jQuery(){
     document.getElementsByTagName("head")[0].appendChild(script);
 };
 
-function mouseUpFunction(inFunction = TESTING_FUNCTION){
-    document.onmouseup = inFunction;
-	document.onkeyup = inFunction;
-}
 
-(function(){
-
-	if (window.hasRun) {
-		return;
-	}
-	window.hasRun = true;
-
-    mouseUpFunction();
-
-
-
-})();
 
 ////////////////////////////////////////////////////////////////////////////////
 //disabled
@@ -294,6 +215,69 @@ function mouseUpFunction(inFunction = TESTING_FUNCTION){
 *_________________________________________________________________
 *`````````````````````````````````````````````````````````````````
 *
+
+function copy(){
+    document.execCommand('copy');
+}
+
+
+let OLDSelection = {
+	init: function (e) {
+		this.windowSelection = window.getSelection();
+		this.documentSelection = document.selection;
+		if(this.windowSelection){
+			this.text = windowSelection.toString();
+			this.focusNode = windowSelection.focusNode;
+			this.focusOffset = windowSelection.focusNode;
+			this.anchorNode = windowSelection.anchorNode;
+			this.anchorOffset = windowSelection.anchorOffset;
+			this.parentElement = windowSelection.parentElement;
+		}
+		if(this.documentSelection){
+			this.text = documentSelection.text;
+		}
+	},
+	getText : function(){
+		if(this.text) 
+			return this.text;
+		else 
+			return 'ERROR: no text';
+		},
+	copyToClipboard : ()=>{
+		let copysuccess; // var to check whether execCommand successfully executed
+		try{
+			copysuccess = document.execCommand('copy'); // run command to copy selected text to clipboard
+		} catch(e){
+			copysuccess = false;
+			addToYellowBox('failed to copy');
+		}
+		return copysuccess;
+	},
+	appendCopyButton : function(id = copyButton_ID){
+		removeElementByID(id);
+		if(this.parentElement){
+			let copyButton = generateButton(id);
+			copyButton.style.width = '5px';
+			copyButton.style.height = '24px';
+			copyButton.style.backgroundSize = '100%';
+			copyButton.style.backgroundImage = copyButtonImageURL;
+			copyButton.addEventListener('click',this.copyToClipboard);
+		} else addToYellowBox('could not copy');
+	}
+}
+
+
+function appendCopyButton(ev){
+    let copyButtonRemoved = removeCurrentCopyButton();
+    let copyButton = generateCopyButton();
+
+    let selection = getSelection();
+
+    let focusNode;// = selection.focusNode ? selection.focusNode : document.getSelection().focusNode;
+    let focusParent;// = focusNode ? focusNode.parentElement : document.getSelection().focusNode;
+
+    if(selection) {} else alert('null selection');
+}
 
 function selectionTest1(mouseEvent){
 	let selection = window.getSelection();
