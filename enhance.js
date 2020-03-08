@@ -16,7 +16,7 @@ const copyButtonImageURL = "url('icons/copyButtonIcon21-26.png')";
 
 function TESTING_FUNCTION(){
     let selection = new Selection();
-	selection.appendCopyButton();
+	//selection.TEST();
 }
 
 function mouseUpFunction(inFunction = TESTING_FUNCTION){
@@ -25,8 +25,12 @@ function mouseUpFunction(inFunction = TESTING_FUNCTION){
 }
 
 function Selection(){
+	this.TEST =()=> alert('RIGHT');
 	this.windowSelection = window.getSelection();
 	this.documentSelection = document.selection;
+	
+
+	
 	if(this.windowSelection){
 		this.text = this.windowSelection.toString();
 		this.focusNode = this.windowSelection.focusNode;
@@ -54,20 +58,26 @@ function Selection(){
 		}
 		return copysuccess;
 	}
-	this.appendCopyButton = function(id = copyButton_ID){
-		removeElementByID(id);
-		if(this.parentElement){
-			let copyButton = generateButton(id, this.copyToClipboard);
-			copyButton.style.width = '5px';
-			copyButton.style.height = '24px';
-			copyButton.style.backgroundSize = '100%';
-			copyButton.style.backgroundImage = copyButtonImageURL;
-			this.parentElement.appendChild(copyButton);
-		} else addToYellowBox('could not append to parent');
+	removeElementByID(copyButton_ID);
+	this.copyButton = generateButton(copyButton_ID,this.copyToClipboard);
+	this.copyButton.style.width = '5px';
+	this.copyButton.style.height = '24px';
+	this.copyButton.style.backgroundSize = '100%';
+	this.copyButton.style.backgroundImage = copyButtonImageURL;
+	
+	this.focusNode = this.windowSelection.focusNode;
+	this.focusOffset = this.windowSelection.focusOffset;
+	if(focusNode.parentElement){
+		this.parentElement = this.focusNode.parentElement;
+	} else {
+		addToYellowBox('No Parent Node');
 	}
-	
-	
-	
+	if(this.parentElement){
+		this.parentElement.appendChild(copyButton);
+	} else {
+		addToYellowBox('COULD NOT MAKE COPY BUTTON');
+	}
+	return this;
 }
 
 function generateButton(idInDOM = 'unnamed button', responseFunction=()=>alert('unassigned button'),action = 'click', classInDOM = 'EZbutton' ){
@@ -75,18 +85,7 @@ function generateButton(idInDOM = 'unnamed button', responseFunction=()=>alert('
 	DOM.addEventListener(action,responseFunction);
 	DOM.id = idInDOM;
 	DOM.className = classInDOM;
-	return {
-		DOM,
-		DOM.id,
-		DOM.classInDOM
-	};
-}
-
-function generateButton(id, inFunction, action = 'click'){
-	let button = document.createElement('button');
-    button.id = id;
-	button.addEventListener(action,inFunction);
-	return button;
+	return DOM;
 }
 
 function removeElementByID(id){
@@ -116,7 +115,12 @@ function getSelection(){
     return selection;
 }
 
-
+function generateButton0(id, inFunction, action = 'click'){
+	let button = document.createElement('button');
+    button.id = id;
+	button.addEventListener(action,inFunction);
+	return button;
+}
 
 function setupCSS(){
     let sheet = window.document.styleSheets[0];
