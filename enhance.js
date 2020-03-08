@@ -34,7 +34,60 @@ const copyButtonImageURL = "url('icons/copyButtonIcon21-26.png')";
     return copysuccess
 } */
 
-let selection = {
+let TESTING_FUNCTION = arg =>{
+    let selection = new Selection();
+	alert(selection.getText());
+}
+
+function Selection(){
+	this.windowSelection = window.getSelection();
+	this.documentSelection = document.selection;
+	if(this.windowSelection)
+		alert('true');
+	else 
+		alert(false);
+	if(this.windowSelection){
+		this.text = windowSelection.toString();
+		this.focusNode = windowSelection.focusNode;
+		this.focusOffset = windowSelection.focusNode;
+		this.anchorNode = windowSelection.anchorNode;
+		this.anchorOffset = windowSelection.anchorOffset;
+		this.parentElement = windowSelection.parentElement;
+	}
+	if(this.documentSelection){
+		this.text = documentSelection.text;
+	}
+	this.getText = function(){
+		if(this.text) 
+			return this.text;
+		else 
+			return 'ERROR: no text';
+	}
+	this.copyToClipboard = function(){
+		let copysuccess; // var to check whether execCommand successfully executed
+		try{
+			copysuccess = document.execCommand('copy'); // run command to copy selected text to clipboard
+		} catch(e){
+			copysuccess = false;
+			addToYellowBox('failed to copy');
+		}
+		return copysuccess;
+	}
+	this.appendCopyButton = function(id = copyButton_ID){
+		removeElementByID(id);
+		if(this.parentElement){
+			let copyButton = generateButton(id);
+			copyButton.style.width = '5px';
+			copyButton.style.height = '24px';
+			copyButton.style.backgroundSize = '100%';
+			copyButton.style.backgroundImage = copyButtonImageURL;
+			copyButton.addEventListener('click',this.copyToClipboard);
+		} else addToYellowBox('could not copy');
+	}
+	
+}
+
+let OLDSelection = {
 	init: function (e) {
 		this.windowSelection = window.getSelection();
 		this.documentSelection = document.selection;
@@ -79,17 +132,6 @@ let selection = {
 	}
 }
 
-
-/* function generateCopyButton(id = copyButton_ID){
-    let copyButton = generateButton(id);
-    copyButton.style.width = '5px';
-    copyButton.style.height = '24px';
-    copyButton.style.backgroundSize = '100%';
-    copyButton.style.backgroundImage = copyButtonImageURL;
-    copyButton.addEventListener('click',copyToClipboard);
-    return copyButton;
-}
- */
 function copy(){
     document.execCommand('copy');
 }
@@ -133,28 +175,17 @@ function appendCopyButton(ev){
     if(selection) {} else alert('null selection');
 }
 
-
 function generateButton(id){
 	let button = document.createElement('button');
     button.id = id;
 	return button;
 }
-//////////////////////////////////////////////////////////////////////
 
 function setupCSS(){
     let sheet = window.document.styleSheets[0];
     //sheet.insertRule('p { background-color: green; }', sheet.cssRules.length);
     sheet.insertRule('.' + copyButton_ID + '{ background-image : ' + 'icons/copyButtonIcon }', sheet.cssRules.length);
 }
-
-/* const copyToClipboard = str => {
-	const el = document.createElement('textarea');
-	el.value = str;
-	document.body.appendChild(el);
-	el.select();
-	document.execCommand('copy');
-	document.body.removeChild(el);
-} */
 
 function copySelectionText(){
     let copysuccess // var to check whether execCommand successfully executed
@@ -165,11 +196,6 @@ function copySelectionText(){
     }
     return copysuccess
 }
-
-
-
-/////////////
-
 
 function generateDivTag(id){
 	let divTag = document.createElement('div');
@@ -216,7 +242,6 @@ function generateSpanTag(id = 'spanID',highlight = 'Yellow',elementClass = 'span
 	return span;
 };
 
-
 function getSelectionText() {
 	var text = "";
 	if (window.getSelection) {
@@ -243,11 +268,6 @@ function load_jQuery(){
     document.getElementsByTagName("head")[0].appendChild(script);
 };
 
-//////////////////////////////////////////////////////////////////////////
-
-let TESTING_FUNCTION = arg =>{
-    let selection = new selection();
-}
 function mouseUpFunction(inFunction = TESTING_FUNCTION){
     document.onmouseup = inFunction;
 	document.onkeyup = inFunction;
