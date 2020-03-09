@@ -1,6 +1,6 @@
 "use strict";
 
-//3-1
+//MAKE OWN COPY FUNCTION FOR BUTTON
 
 const toolTip_ID = 'toolTip_ID';
 const copyButton_ID = 'copyButton_id';
@@ -16,6 +16,8 @@ const copyButtonImageURL = "url('icons/copyButtonIcon21-26.png')";
 
 function TESTING_FUNCTION(){
     let selection = new Selection();
+	selection.appendCopyButton();
+	
 	//selection.TEST();
 }
 
@@ -25,12 +27,83 @@ function mouseUpFunction(inFunction = TESTING_FUNCTION){
 }
 
 function Selection(){
-	this.TEST =()=> alert('RIGHT');
+	this.TEST =()=> alert('WORKING');
 	this.windowSelection = window.getSelection();
 	this.documentSelection = document.selection;
+	if(!!this.windowSelection){
+		this.text = this.windowSelection.toString();
+		this.focusNode = this.windowSelection.focusNode;
+		this.focusOffset = this.windowSelection.focusNode;
+		this.anchorNode = this.windowSelection.anchorNode;
+		this.anchorOffset = this.windowSelection.anchorOffset;
+		this.parentElement = this.windowSelection.parentElement;
+	}
+	if(!!this.documentSelection){
+		this.text = this.documentSelection.text;
+	}
+	this.getText = function(){
+		if(!!this.text) 
+			return this.text;
+		else 
+			return 'ERROR: no text';
+	}
+	this.copyToClipboard = function(){
+		let copysuccess; // var to check whether execCommand successfully executed
+		try{
+			copysuccess = document.execCommand('copy'); // run command to copy selected text to clipboard
+		} catch(e){
+			copysuccess = false;
+			addToYellowBox(e.toString(),'failed to copy :');
+		}
+		return copysuccess;
+	}
+	removeElementByID(copyButton_ID);
+	this.copyButton = generateButton(copyButton_ID,this.copyToClipboard);
+	this.copyButton.style.width = '5px';
+	this.copyButton.style.height = '24px';
+	this.copyButton.style.backgroundSize = '100%';
+	this.copyButton.style.backgroundImage = copyButtonImageURL;
 	
+	this.focusNode = this.windowSelection.focusNode;
+	this.focusOffset = this.windowSelection.focusOffset;
+	if(!!this.focusNode.parentElement){
+		this.parentElement = this.focusNode.parentElement;
+	} else {
+		addToYellowBox('No Parent Node');
+	}
+	if(!!this.parentElement){
+		this.parentElement.appendChild(this.copyButton);
+	} else {
+		addToYellowBox('COULD NOT MAKE COPY BUTTON');
+	}
+	//this.isNotEmpty = () => 
+	return this;
+}
+function SelectionIndex(){
+	this.index = [];
+	this.add = function(selection){
+		this.index[index.length] = selection;
+	}
+	this.returnAt = function(at){
+		let corrected = at < 0 || at >= this.index.length ? 0 : at;
+	}
+	this.returnLast = function(back = 0){
+		let corrected = this.index.length - back - 1;
+		if(corrected < 0)corrected = 0;		
+		if(corrected > this.index.length - 1)corrected = this.index.length - 1;
+		return this.index[corrected];
+	}
+	this.returnFirst = function(forward = 0){
+		let corrected = forward <= this.index.length ? forward : this.index.length - 1;
+		corrected = corrected < 0 ? 0 : corrected;
+		return this.index[corrected];
+	}		
+}
 
-	
+function Selection_SetAside(){
+	this.TEST =()=> alert('WORKING');
+	this.windowSelection = window.getSelection();
+	this.documentSelection = document.selection;
 	if(this.windowSelection){
 		this.text = this.windowSelection.toString();
 		this.focusNode = this.windowSelection.focusNode;
@@ -54,7 +127,7 @@ function Selection(){
 			copysuccess = document.execCommand('copy'); // run command to copy selected text to clipboard
 		} catch(e){
 			copysuccess = false;
-			addToYellowBox('failed to copy');
+			addToYellowBox(e.toString(),'failed to copy :');
 		}
 		return copysuccess;
 	}
@@ -67,13 +140,13 @@ function Selection(){
 	
 	this.focusNode = this.windowSelection.focusNode;
 	this.focusOffset = this.windowSelection.focusOffset;
-	if(focusNode.parentElement){
+	if(this.focusNode.parentElement){
 		this.parentElement = this.focusNode.parentElement;
 	} else {
 		addToYellowBox('No Parent Node');
 	}
 	if(this.parentElement){
-		this.parentElement.appendChild(copyButton);
+		this.parentElement.appendChild(this.copyButton);
 	} else {
 		addToYellowBox('COULD NOT MAKE COPY BUTTON');
 	}
@@ -150,7 +223,7 @@ function clearYellowBox(){
 
 }
 
-function addToYellowBox(text = "default", prefix = ""){
+function addToYellowBox(text = "...", prefix = ""){
     let theYellowBox = document.getElementById('theYellowBox');
     let YellowBoxed = theYellowBox.innerHTML;
     let textToYellowBox = YellowBoxed + '<br>' + prefix + ' : ' + text;
