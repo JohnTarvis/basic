@@ -14,9 +14,11 @@ const copyButtonImageURL = "url('icons/copyButtonIcon21-26.png')";
     mouseUpFunction();
 })();
 
+let selections = new SelectionIndex();
 function TESTING_FUNCTION(){
-    let selection = new Selection();
-	selection.appendCopyButton();
+    selections.add(new Selection());
+	let currentSelection = selections.back(1);
+	
 	
 	//selection.TEST();
 }
@@ -98,6 +100,7 @@ function SelectionIndex(){
 		corrected = corrected < 0 ? 0 : corrected;
 		return this.index[corrected];
 	}		
+	return this;
 }
 
 function Selection_SetAside(){
