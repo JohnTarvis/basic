@@ -14,13 +14,12 @@ const copyButtonImageURL = "url('icons/copyButtonIcon21-26.png')";
     mouseUpFunction();
 })();
 
-let selections = new SelectionIndex();
+let selection;
 function TESTING_FUNCTION(){
-    selections.add(new Selection());
-	let currentSelection = selections.back(1);
-	
-	
-	//selection.TEST();
+    let currentSelection = new Selection();
+    if(currentSelection.hasText){
+        selection = new Selection();
+    }
 }
 
 function mouseUpFunction(inFunction = TESTING_FUNCTION){
@@ -49,7 +48,11 @@ function Selection(){
 		else 
 			return 'ERROR: no text';
 	}
+    this.hasText = function(){
+        return !!this.text;
+    }
 	this.copyToClipboard = function(){
+        addToYellowBox('copied');
 		let copysuccess; // var to check whether execCommand successfully executed
 		try{
 			copysuccess = document.execCommand('copy'); // run command to copy selected text to clipboard
@@ -84,7 +87,7 @@ function Selection(){
 function SelectionIndex(){
 	this.index = [];
 	this.add = function(selection){
-		this.index[index.length] = selection;
+		this.index[this.index.length] = selection;
 	}
 	this.returnAt = function(at){
 		let corrected = at < 0 || at >= this.index.length ? 0 : at;
