@@ -11,10 +11,15 @@ const copyButtonImageURL = "url('icons/copyButtonIcon21-26.png')";
 		return;
 	}
 	window.hasRun = true;
-    mouseUpFunction();
+    mouseUpFunction(getSelection);
 })();
 
 let selection;
+function getSelection(){
+	let newSelection = new Selection();
+	if (newSelection.hasText()) selection = newSelection;
+}
+
 function TESTING_FUNCTION(){
     let currentSelection = new Selection();
     if(currentSelection.hasText){
@@ -53,9 +58,10 @@ function Selection(){
     }
 	this.copyToClipboard = function(){
         addToYellowBox('copied');
-		let copysuccess; // var to check whether execCommand successfully executed
+		let copysuccess; 
 		try{
 			copysuccess = document.execCommand('copy'); // run command to copy selected text to clipboard
+			addToYellowBox(this.text);
 		} catch(e){
 			copysuccess = false;
 			addToYellowBox(e.toString(),'failed to copy :');
@@ -81,7 +87,6 @@ function Selection(){
 	} else {
 		addToYellowBox('COULD NOT MAKE COPY BUTTON');
 	}
-	//this.isNotEmpty = () => 
 	return this;
 }
 function SelectionIndex(){
@@ -106,58 +111,6 @@ function SelectionIndex(){
 	return this;
 }
 
-function Selection_SetAside(){
-	this.TEST =()=> alert('WORKING');
-	this.windowSelection = window.getSelection();
-	this.documentSelection = document.selection;
-	if(this.windowSelection){
-		this.text = this.windowSelection.toString();
-		this.focusNode = this.windowSelection.focusNode;
-		this.focusOffset = this.windowSelection.focusNode;
-		this.anchorNode = this.windowSelection.anchorNode;
-		this.anchorOffset = this.windowSelection.anchorOffset;
-		this.parentElement = this.windowSelection.parentElement;
-	}
-	if(this.documentSelection){
-		this.text = this.documentSelection.text;
-	}
-	this.getText = function(){
-		if(this.text) 
-			return this.text;
-		else 
-			return 'ERROR: no text';
-	}
-	this.copyToClipboard = function(){
-		let copysuccess; // var to check whether execCommand successfully executed
-		try{
-			copysuccess = document.execCommand('copy'); // run command to copy selected text to clipboard
-		} catch(e){
-			copysuccess = false;
-			addToYellowBox(e.toString(),'failed to copy :');
-		}
-		return copysuccess;
-	}
-	removeElementByID(copyButton_ID);
-	this.copyButton = generateButton(copyButton_ID,this.copyToClipboard);
-	this.copyButton.style.width = '5px';
-	this.copyButton.style.height = '24px';
-	this.copyButton.style.backgroundSize = '100%';
-	this.copyButton.style.backgroundImage = copyButtonImageURL;
-	
-	this.focusNode = this.windowSelection.focusNode;
-	this.focusOffset = this.windowSelection.focusOffset;
-	if(this.focusNode.parentElement){
-		this.parentElement = this.focusNode.parentElement;
-	} else {
-		addToYellowBox('No Parent Node');
-	}
-	if(this.parentElement){
-		this.parentElement.appendChild(this.copyButton);
-	} else {
-		addToYellowBox('COULD NOT MAKE COPY BUTTON');
-	}
-	return this;
-}
 
 function generateButton(idInDOM = 'unnamed button', responseFunction=()=>alert('unassigned button'),action = 'click', classInDOM = 'EZbutton' ){
 	let DOM = document.createElement('button');
@@ -187,13 +140,6 @@ function removeCurrentCopyButton(currentCopyButtonID = copyButton_ID){
     } else {return false;}
 }
 
-function getSelection(){
-    let selection = window.getSelection ? window.getSelection() :
-        document.selection && document.selection.type != 'Control' ? document.selection.createRange() :
-            null;
-    return selection;
-}
-
 function generateButton0(id, inFunction, action = 'click'){
 	let button = document.createElement('button');
     button.id = id;
@@ -203,18 +149,17 @@ function generateButton0(id, inFunction, action = 'click'){
 
 function setupCSS(){
     let sheet = window.document.styleSheets[0];
-    //sheet.insertRule('p { background-color: green; }', sheet.cssRules.length);
     sheet.insertRule('.' + copyButton_ID + '{ background-image : ' + 'icons/copyButtonIcon }', sheet.cssRules.length);
 }
 
 function copySelectionText(){
-    let copysuccess // var to check whether execCommand successfully executed
+    let copysuccess;
     try{
-        copysuccess = document.execCommand("copy") // run command to copy selected text to clipboard
+        copysuccess = document.execCommand("copy");
     } catch(e){
-        copysuccess = false
+        copysuccess = false;
     }
-    return copysuccess
+    return copysuccess;
 }
 
 function generateDivTag(id){
@@ -298,6 +243,68 @@ function load_jQuery(){
 *_________________________________________________________________
 *`````````````````````````````````````````````````````````````````
 *
+
+function getSelection(){
+    let selection = window.getSelection ? window.getSelection() :
+        document.selection && document.selection.type != 'Control' ? document.selection.createRange() :
+            null;
+    return selection;
+}
+
+
+function Selection_SetAside(){
+	this.TEST =()=> alert('WORKING');
+	this.windowSelection = window.getSelection();
+	this.documentSelection = document.selection;
+	if(this.windowSelection){
+		this.text = this.windowSelection.toString();
+		this.focusNode = this.windowSelection.focusNode;
+		this.focusOffset = this.windowSelection.focusNode;
+		this.anchorNode = this.windowSelection.anchorNode;
+		this.anchorOffset = this.windowSelection.anchorOffset;
+		this.parentElement = this.windowSelection.parentElement;
+	}
+	if(this.documentSelection){
+		this.text = this.documentSelection.text;
+	}
+	this.getText = function(){
+		if(this.text) 
+			return this.text;
+		else 
+			return 'ERROR: no text';
+	}
+	this.copyToClipboard = function(){
+		let copysuccess; // var to check whether execCommand successfully executed
+		try{
+			copysuccess = document.execCommand('copy'); // run command to copy selected text to clipboard
+		} catch(e){
+			copysuccess = false;
+			addToYellowBox(e.toString(),'failed to copy :');
+		}
+		return copysuccess;
+	}
+	removeElementByID(copyButton_ID);
+	this.copyButton = generateButton(copyButton_ID,this.copyToClipboard);
+	this.copyButton.style.width = '5px';
+	this.copyButton.style.height = '24px';
+	this.copyButton.style.backgroundSize = '100%';
+	this.copyButton.style.backgroundImage = copyButtonImageURL;
+	
+	this.focusNode = this.windowSelection.focusNode;
+	this.focusOffset = this.windowSelection.focusOffset;
+	if(this.focusNode.parentElement){
+		this.parentElement = this.focusNode.parentElement;
+	} else {
+		addToYellowBox('No Parent Node');
+	}
+	if(this.parentElement){
+		this.parentElement.appendChild(this.copyButton);
+	} else {
+		addToYellowBox('COULD NOT MAKE COPY BUTTON');
+	}
+	return this;
+}
+
 
 function copy(){
     document.execCommand('copy');
