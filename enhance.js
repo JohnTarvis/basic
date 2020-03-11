@@ -1,6 +1,6 @@
 "use strict";
 
-//MAKE OWN COPY FUNCTION FOR BUTTON
+//try without object
 
 const EZbutton_className = 'EZbutton';
 const toolTip_id = 'toolTip_id';
@@ -26,15 +26,14 @@ function getSelection(){
 }
 
 function TESTING_FUNCTION(){
-    //getSelection();
+    //selection = new Selection();
+	
+	//document.getElementById(copyButton_id).addEventListener('click',BUTTONTEST);
+
 	let button = document.createElement('button');
-	button.addEventListener('click',()=>alert('click'));
-	window.getSelection().focusNode.parentElement.appendChild(button);	
-	let here = document.getElementById('here');
-	here.appendChild(button);
-	
-	//getSelection();
-	
+	button.id = 'BTN';
+	document.getElementById('here').appendChild(button);
+	document.getElementById('BTN').addEventListener('click',BUTTONTEST);
 
 }
 
@@ -56,6 +55,7 @@ function Selection(){
 	}
 	else if(!!this.documentSelection){
 		this.text = this.documentSelection.text;
+		addToYellowBox('from document');
 	}
 	this.getText = function(){
 		if(!!this.text) 
@@ -82,10 +82,10 @@ function Selection(){
 	removeElementByID(copyButton_id);
     
 	this.copyButton = document.createElement('button');
-	this.copyButton.addEventListener('click',BUTTONTEST);
 	this.copyButton.id = copyButton_id;
 	this.copyButton.className = EZbutton_className;
 	
+	//this.copyButton.addEventListener('click',BUTTONTEST);
     //this.copyButton = generateButton('click',BUTTONTEST,copyButton_id);
     
 	this.copyButton.style.width = '5px';
@@ -105,6 +105,9 @@ function Selection(){
 	} else {
 		addToYellowBox('COULD NOT MAKE COPY BUTTON');
 	}
+	
+	//document.getElementById(copyButton_id).addEventListener('click',BUTTONTEST);
+	
 	return this;
 }
 function SelectionIndex(){
@@ -129,7 +132,6 @@ function SelectionIndex(){
 	return this;
 }
 
-
 function generateButton(action, responseFunction, id = 'NO_id', className = 'EZbutton' ){
 	let button = document.createElement('button');
 	button.addEventListener(action,responseFunction);
@@ -140,7 +142,7 @@ function generateButton(action, responseFunction, id = 'NO_id', className = 'EZb
 
 function removeElementByID(id){
     let element = document.getElementById(id);
-	if(element)element.parentNode.removeChild(element);
+	if(!!element)element.parentNode.removeChild(element);
 }
 
 function elementExistsWithID(id){
@@ -168,6 +170,16 @@ function generateButton0(id, inFunction, action = 'click'){
 function setupCSS(){
     let sheet = window.document.styleSheets[0];
     sheet.insertRule('.' + copyButton_id + '{ background-image : ' + 'icons/copyButtonIcon }', sheet.cssRules.length);
+}
+
+function getSelectionText() {
+	var text = "";
+	if (window.getSelection) {
+		text = window.getSelection().toString();
+	} else if (document.selection && document.selection.type != "Control") {
+		text = document.selection.createRange().text;
+	}
+	return text;
 }
 
 function copySelectionText(){
@@ -224,16 +236,6 @@ function generateSpanTag(id = 'spanID',highlight = 'Yellow',elementClass = 'span
 	span.className = elementClass;
 	return span;
 };
-
-function getSelectionText() {
-	var text = "";
-	if (window.getSelection) {
-		text = window.getSelection().toString();
-	} else if (document.selection && document.selection.type != "Control") {
-		text = document.selection.createRange().text;
-	}
-	return text;
-}
 
 function sleep(mils){
 	let currentTime = new Date().getTime();
