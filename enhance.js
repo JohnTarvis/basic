@@ -2,6 +2,7 @@
 
 //MAKE OWN COPY FUNCTION FOR BUTTON
 
+const EZbutton_className = 'EZbutton';
 const toolTip_id = 'toolTip_id';
 const copyButton_id = 'copyButton_id';
 const copyButtonImageURL = "url('icons/copyButtonIcon21-26.png')";
@@ -15,7 +16,7 @@ const copyButtonImageURL = "url('icons/copyButtonIcon21-26.png')";
 })();
 
 function BUTTONTEST(){
-    addToYellowBox('BUTTON LISTENING');
+    addToYellowBox('LISTENING');
 }
 
 let selection;
@@ -26,10 +27,15 @@ function getSelection(){
 
 function TESTING_FUNCTION(){
     //getSelection();
-    //alert(!!document.getElementById(copyButton_id));
-    let button = document.createElement('button');
-    button.addEventListener('click',BUTTONTEST);
-    document.body.appendChild(button);
+	let button = document.createElement('button');
+	button.addEventListener('click',()=>alert('click'));
+	window.getSelection().focusNode.parentElement.appendChild(button);	
+	let here = document.getElementById('here');
+	here.appendChild(button);
+	
+	//getSelection();
+	
+
 }
 
 function mouseUpFunction(inFunction = TESTING_FUNCTION){
@@ -38,7 +44,6 @@ function mouseUpFunction(inFunction = TESTING_FUNCTION){
 }
 
 function Selection(){
-	this.TEST =()=> alert('WORKING');
 	this.windowSelection = window.getSelection();
 	this.documentSelection = document.selection;
 	if(!!this.windowSelection){
@@ -76,8 +81,12 @@ function Selection(){
 	}
 	removeElementByID(copyButton_id);
     
-	//this.copyButton = generateButton(copyButton_id,this.copyToClipboard);
-    this.copyButton = generateButton('click',BUTTONTEST,copyButton_id);
+	this.copyButton = document.createElement('button');
+	this.copyButton.addEventListener('click',BUTTONTEST);
+	this.copyButton.id = copyButton_id;
+	this.copyButton.className = EZbutton_className;
+	
+    //this.copyButton = generateButton('click',BUTTONTEST,copyButton_id);
     
 	this.copyButton.style.width = '5px';
 	this.copyButton.style.height = '24px';
