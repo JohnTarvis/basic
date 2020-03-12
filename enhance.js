@@ -25,43 +25,31 @@ function mouseUpFunction(inFunction = MAIN_TEST){
 	document.onkeyup = inFunction;
 }
 
+let testObject;
 function MAIN_TEST(){
     
-//    if(elementExistsWithID('TBTN'))
-//        addToYellowBox('tbtn exists');
-//    else
-//        addToYellowBox('tbtn does NOT exist');
-//    
-//    removeElementByID('TBTN');
-//    
-//    let button = document.createElement('button');
-//    button.id = 'TBTN';
-//    button.addEventListener('click',TEST1);
-//    button.style.width = '50px';
-//    button.style.height = '50px';
-//    button.style.backgroundColor = 'teal';
-//    window.getSelection().focusNode.parentElement.appendChild(button);
-    
-    let testObject = new TestObject();
-    
-    //window.getSelection().focusNode.parentElement.appendChild(testObject.testButton);
-    
-    document.getElementById('here').appendChild(testObject.testButton);
-    
-    //addToYellowBox(!!testObject.testButton);
-    
-}
-
-function TEST1(){
-    addToYellowBox('clicked');
-}
-
-function TEST2(){
-    addToYellowBox('button in object clicked');
+    //let testObject = new TestObject();    
+    //document.getElementById('here').appendChild(testObject.testButton);	
+	
+	
+	//removeElementByID('BTN');
+	//testObject = new TestObject();
+	
+	//alert(!!"d");
+	
+	let text = getSelectionText();
+	if(!!text){
+		removeElementByID('BTN');
+		testObject = new TestObject();		
+	}    
 }
 
 function TestObject(){
+	
+	//removeElementByID('BTN');
+	
     this.testButton = document.createElement('button');
+	this.testButton.id = 'BTN';
     this.testButton.style.width = '50px';
     this.testButton.style.height = '50px';
     this.testButton.style.backgroundColor = 'teal';
@@ -70,6 +58,27 @@ function TestObject(){
     this.click = function(){
         addToYellowBox('button in object clicked with object function');
     }
+	
+	this.testButton.addEventListener('click',this.click);
+	
+	getHere().appendChild(this.testButton);
+}
+
+function getHere(){
+	return document.getElementById("here");
+}
+
+function CLICK_TEST1(){
+    addToYellowBox('clicked');
+}
+
+function CLICK_TEST2(){
+    addToYellowBox('button in object clicked');
+}
+
+function removeElementByID(id){
+    let element = document.getElementById(id);
+	if(!!element)element.parentNode.removeChild(element);
 }
 
 function getSelection(){
@@ -123,7 +132,7 @@ function Selection(){
 	this.copyButton.style.backgroundSize = '100%';
 	this.copyButton.style.backgroundImage = copyButtonImageURL;
     
-    //this.copyButton.addEventListener('click',TEST2);///<--------------------
+    //this.copyButton.addEventListener('click',CLICK_TEST2);///<--------------------
 	
 	this.focusNode = this.windowSelection.focusNode;
 	this.focusOffset = this.windowSelection.focusOffset;
@@ -166,11 +175,6 @@ function generateButton(action, responseFunction, id = 'NO_id', className = 'EZb
 	button.id = id;
 	button.className = className;
 	return button;
-}
-
-function removeElementByID(id){
-    let element = document.getElementById(id);
-	if(!!element)element.parentNode.removeChild(element);
 }
 
 function elementExistsWithID(id){
@@ -236,10 +240,12 @@ function clearYellowBox(){
 }
 
 function addToYellowBox(text = "...", prefix = ""){
-    let theYellowBox = document.getElementById('theYellowBox');
-    let theYellowBox_innerHTML = theYellowBox.innerHTML;
-    let textToYellowBox = theYellowBox_innerHTML + '<br>' + prefix + ' : ' + text;
-    theYellowBox.innerHTML = textToYellowBox;
+	if(!!document.getElementById('theYellowBox')){
+		let theYellowBox = document.getElementById('theYellowBox');
+		let theYellowBox_innerHTML = theYellowBox.innerHTML;
+		let textToYellowBox = theYellowBox_innerHTML + '<br>' + prefix + ' : ' + text;
+		theYellowBox.innerHTML = textToYellowBox;
+	}
 }
 
 function generateLinkTag(text,definition){
@@ -420,7 +426,7 @@ function appendCopyButton(ev){
     if(selection) {} else alert('null selection');
 }
 
-function selectionTest1(mouseEvent){
+function selectionCLICK_TEST1(mouseEvent){
 	let selection = window.getSelection();
     addToYellowBox(selection.focusNode.parentElement.textContent)
 	let focusNode = selection.focusNode;
@@ -441,7 +447,7 @@ function selectionTest1(mouseEvent){
 	}
 }
 
-function selectionTest2(Event){
+function selectionCLICK_TEST2(Event){
 	let selection = window.getSelection();
 	let focusNode = selection.focusNode;
 	let parentElement = focusNode.parentElement;
