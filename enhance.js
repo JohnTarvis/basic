@@ -20,6 +20,20 @@ let selection;
     addToYellowBox('``````````````````````````');
 })();
 
+
+function MAIN_TEST(){	
+	getSelection();
+    //selection.TEST();
+    selection.assignCopyButton();
+}
+
+function getSelection(){
+    let nSelection = new Selection();
+    if(!!nSelection.text || !selection){
+        selection = nSelection;
+    }	
+}
+
 function mouseUpFunction(inFunction = MAIN_TEST){
     document.onmouseup = inFunction;
 	document.onkeyup = inFunction;
@@ -28,33 +42,6 @@ function mouseUpFunction(inFunction = MAIN_TEST){
 function removeElementById(id){
     let element = document.getElementById(id);
 	if(!!element)element.parentNode.removeChild(element);
-}
-
-let testObject;
-function MAIN_TEST(){	
-	let text = getSelectionText();
-	if(!!text){
-		if(!document.getElementById('BTN')){
-			removeElementById('BTN');
-			testObject = new TestObject();
-		}
-	}    
-}
-
-function TestObject(){	
-
-	this.testButton = document.createElement('button');
-	this.testButton.id = 'BTN';
-	this.testButton.style.width = '50px';
-	this.testButton.style.height = '50px';
-	this.testButton.style.backgroundColor = 'teal';
-	this.testButton.addEventListener('click',this.click);
-	this.click = function(){
-		addToYellowBox('button in object clicked with object function');
-	}	
-	this.testButton.addEventListener('click',this.click);
-	getHere().appendChild(this.testButton);
-
 }
 
 function getHere(){
@@ -69,10 +56,6 @@ function CLICK_TEST2(){
     addToYellowBox('button in object clicked');
 }
 
-function getSelection(){
-	let newSelection = new Selection();
-	if (newSelection.hasText()) selection = newSelection;
-}
 function Selection(){
     this.TEST = () => addToYellowBox("He's alive, Jim");
 	this.windowSelection = window.getSelection();
@@ -83,8 +66,9 @@ function Selection(){
 		this.focusOffset = this.windowSelection.focusNode;
 		this.anchorNode = this.windowSelection.anchorNode;
 		this.anchorOffset = this.windowSelection.anchorOffset;
-		this.parentElement = this.windowSelection.parentElement;
-	}
+		this.FocusNode_ParentElement = this.focusNode.parentElement;
+        addToYellowBox('windowSelection exists');
+	}    
 	else if(!!this.documentSelection){
 		this.text = this.documentSelection.text;
 		addToYellowBox('from document');
@@ -110,31 +94,36 @@ function Selection(){
 		}
 		return copysuccess;
 	}
-	removeElementById(copyButton_id);
+	//removeElementById(copyButton_id);
     
-	this.copyButton = document.createElement('button');
-	this.copyButton.id = copyButton_id;
-	this.copyButton.className = EZbutton_className;
-	this.copyButton.style.width = '5px';
-	this.copyButton.style.height = '24px';
-	this.copyButton.style.backgroundSize = '100%';
-	this.copyButton.style.backgroundImage = copyButtonImageURL;
+	this.createCopyButton = function(){
+        //addToYellowBox('creating copy button');
+        this.copyButton = document.createElement('button');
+        this.copyButton.id = copyButton_id;
+        this.copyButton.className = EZbutton_className;
+        this.copyButton.style.width = '5px';
+        this.copyButton.style.height = '24px';
+        this.copyButton.style.backgroundSize = '100%';
+        this.copyButton.style.backgroundImage = copyButtonImageURL;
+        this.copyButton.addEventListener('click',this.copyToClipboard);
+    }
     
-    //this.copyButton.addEventListener('click',CLICK_TEST2);///<--------------------
-	
-	this.focusNode = this.windowSelection.focusNode;
-	this.focusOffset = this.windowSelection.focusOffset;
-	if(!!this.focusNode.parentElement){
-		this.parentElement = this.focusNode.parentElement;
-	} else {
-		addToYellowBox('No Parent Node');
-	}
-	if(!!this.parentElement){
-		this.parentElement.appendChild(this.copyButton);
-	} else {
-		addToYellowBox('COULD NOT MAKE COPY BUTTON');
-	}
+    this.assignCopyButton = function(){
+        if(!elementExistsWithID(copyButton_id)){
+            addToYellowBox(copyButton_id + ' does NOT exist');
+            this.createCopyButton();
+            this.FocusNode_ParentElement.appendChild(document.getElementById(copyButton_id));   
+        } 
+        if(!!this.FocusNode_ParentElement){
+            //addToYellowBox('parent element' + ' DOES exist');
+            this.FocusNode_ParentElement.appendChild(document.getElementById(copyButton_id));   
+            addToYellowBox(!!document.getElementById(copyButton_id) ? 'button exists' : 'button does NOT exist');
+        } else {
+            addToYellowBox('no parent node');
+        }
+    }    
 }
+////////////////////////////////////////////////////////////////////////////////////////////
 function SelectionIndex(){
 	this.index = [];
 	this.add = function(selection){
@@ -166,13 +155,6 @@ function generateButton(action, responseFunction, id = 'NO_id', className = 'EZb
 }
 
 function elementExistsWithID(id){
-    
-//    if(document.getElementById(id)){
-//        return true;
-//    } else {
-//        return false;
-//    }
-    
     return !!document.getElementById(id);
 }
 
@@ -224,7 +206,6 @@ function generateDivTag(id){
 function clearYellowBox(){
     let theYellowBox = document.getElementById('theYellowBox');
     theYellowBox.innerHTML = ':)';
-
 }
 
 function addToYellowBox(text = "...", prefix = ""){
@@ -288,6 +269,51 @@ function load_jQuery(){
 *_________________________________________________________________
 *`````````````````````````````````````````````````````````````````
 *
+
+
+//	if(!!this.focusNode.parentElement){
+//		this.parentElement = this.focusNode.parentElement;
+//	} else {
+//		addToYellowBox('No Parent Node');
+//	}
+//	if(!!this.parentElement){
+//		this.parentElement.appendChild(this.copyButton);
+//	} else {
+//		addToYellowBox('COULD NOT MAKE COPY BUTTON');
+//	}
+
+function TestObject(){	
+
+	this.testButton = document.createElement('button');
+	this.testButton.id = 'BTN';
+	this.testButton.style.width = '50px';
+	this.testButton.style.height = '50px';
+	this.testButton.style.backgroundColor = 'teal';
+	this.testButton.addEventListener('click',this.click);
+	this.click = function(){
+		addToYellowBox('button in object clicked with object function');
+	}	
+	this.testButton.addEventListener('click',this.click);
+	getHere().appendChild(this.testButton);
+
+}
+
+let testObject;
+let copyButton = document.createElement('button');
+copyButton.id = 'BTN';
+copyButton.style.width = '50px';
+copyButton.style.height = '50px';
+copyButton.style.backgroundColor = 'teal';
+copyButton.addEventListener('click',()=>{addToYellowBox('button was clicked');});
+getHere().appendChild(copyButton);
+function MAIN_TEST(){	
+	let text = getSelectionText();
+	if(!!text){ 
+        document.getElementById(window.getSelection()
+                                .focusNode.parentElement
+                                .appendChild(document.getElementById('BTN')));
+	}    
+}
 
 function getSelection(){
     let selection = window.getSelection ? window.getSelection() :
