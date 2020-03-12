@@ -25,43 +25,36 @@ function mouseUpFunction(inFunction = MAIN_TEST){
 	document.onkeyup = inFunction;
 }
 
+function removeElementById(id){
+    let element = document.getElementById(id);
+	if(!!element)element.parentNode.removeChild(element);
+}
+
 let testObject;
-function MAIN_TEST(){
-    
-    //let testObject = new TestObject();    
-    //document.getElementById('here').appendChild(testObject.testButton);	
-	
-	
-	//removeElementByID('BTN');
-	//testObject = new TestObject();
-	
-	//alert(!!"d");
-	
+function MAIN_TEST(){	
 	let text = getSelectionText();
 	if(!!text){
-		removeElementByID('BTN');
-		testObject = new TestObject();		
+		if(!document.getElementById('BTN')){
+			removeElementById('BTN');
+			testObject = new TestObject();
+		}
 	}    
 }
 
-function TestObject(){
-	
-	//removeElementByID('BTN');
-	
-    this.testButton = document.createElement('button');
+function TestObject(){	
+
+	this.testButton = document.createElement('button');
 	this.testButton.id = 'BTN';
-    this.testButton.style.width = '50px';
-    this.testButton.style.height = '50px';
-    this.testButton.style.backgroundColor = 'teal';
-    this.testButton.addEventListener('click',this.click);
-    
-    this.click = function(){
-        addToYellowBox('button in object clicked with object function');
-    }
-	
+	this.testButton.style.width = '50px';
+	this.testButton.style.height = '50px';
+	this.testButton.style.backgroundColor = 'teal';
 	this.testButton.addEventListener('click',this.click);
-	
+	this.click = function(){
+		addToYellowBox('button in object clicked with object function');
+	}	
+	this.testButton.addEventListener('click',this.click);
 	getHere().appendChild(this.testButton);
+
 }
 
 function getHere(){
@@ -74,11 +67,6 @@ function CLICK_TEST1(){
 
 function CLICK_TEST2(){
     addToYellowBox('button in object clicked');
-}
-
-function removeElementByID(id){
-    let element = document.getElementById(id);
-	if(!!element)element.parentNode.removeChild(element);
 }
 
 function getSelection(){
@@ -122,7 +110,7 @@ function Selection(){
 		}
 		return copysuccess;
 	}
-	removeElementByID(copyButton_id);
+	removeElementById(copyButton_id);
     
 	this.copyButton = document.createElement('button');
 	this.copyButton.id = copyButton_id;
@@ -190,7 +178,7 @@ function elementExistsWithID(id){
 
 function removeCurrentCopyButton(currentCopyButtonID = copyButton_id){
     if (elementExistsWithID(currentCopyButtonID)){
-        removeElementByID(currentCopyButtonID);
+        removeElementById(currentCopyButtonID);
         return true;
     } else {return false;}
 }
@@ -340,7 +328,7 @@ function Selection_SetAside(){
 		}
 		return copysuccess;
 	}
-	removeElementByID(copyButton_id);
+	removeElementById(copyButton_id);
 	this.copyButton = generateButton(copyButton_id,this.copyToClipboard);
 	this.copyButton.style.width = '5px';
 	this.copyButton.style.height = '24px';
@@ -401,7 +389,7 @@ let OLDSelection = {
 		return copysuccess;
 	},
 	appendCopyButton : function(id = copyButton_id){
-		removeElementByID(id);
+		removeElementById(id);
 		if(this.parentElement){
 			let copyButton = generateButton(id);
 			copyButton.style.width = '5px';
