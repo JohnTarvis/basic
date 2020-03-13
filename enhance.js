@@ -30,8 +30,7 @@ function MAIN_TEST(){
 
 function ezButtons(){
 	this.copyButton = new CopyButton();
-	
-	
+
 	this.mouseUp(mouseEvent){
 		this.selection = new Selection();
 		if(!!this.selection.text)this.appendCopyButton();
@@ -44,7 +43,6 @@ function ezButtons(){
 	}
 	
 }
-
 /*may be redundant to have a class wrapper for a dom element*/
 function Button(action = "click",
 				responseFunction = () => addToYellowBox("clicked"), 
