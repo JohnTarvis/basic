@@ -20,12 +20,28 @@ let selection;
     addToYellowBox('``````````````````````````');
 })();
 
-
+let ezbuttons = new ezButtons();
 function MAIN_TEST(){	
-	//getSelection();
-    //selection.TEST();
-    //selection.assignCopyButton();
 	
+	
+	
+}
+
+
+function ezButtons(){
+	this.copyButton = new CopyButton();
+	
+	
+	this.mouseUp(mouseEvent){
+		this.selection = new Selection();
+		if(!!this.selection.text)this.appendCopyButton();
+	}
+	
+	this.appendCopyButton(){
+		if(!!this.selection){
+			this.selection.focusNode_ParentElement.appendChild(this.copyButton.DOM_Button);
+		} else {addToYellowBox('could NOT find selection');}
+	}
 	
 }
 
