@@ -7,66 +7,78 @@ const toolTip_id = 'toolTip_id';
 const copyButton_id = 'copyButton_id';
 const copyButtonImageURL = "url('icons/copyButtonIcon21-26.png')";
 let selection;
+let ezbuttons;
 
-(function(){
+
+(function main(){
 	if (window.hasRun) {
 		return;
 	}
 	window.hasRun = true;
-    mouseUpFunction();
     
     addToYellowBox('__________________________');
     addToYellowBox('EZB starting up..','(^__~)');
     addToYellowBox('``````````````````````````');
+	
+	ezbuttons = new ezButtons();
+	
+	mouseUpFunction();//ezbuttons.mouseUp);
 })();
-
-let ezbuttons = new ezButtons();
 function MAIN_TEST(){	
 	
+	addToYellowBox("MAIN_TEST");
 	
+	ezbuttons.mouseUp();
 	
 }
 
-
 function ezButtons(){
 	this.copyButton = new CopyButton();
-
-	this.mouseUp(mouseEvent){
+	this.mouseUp = function(mouseEvent){
+		addToYellowBox("in mouseup");
 		this.selection = new Selection();
-		if(!!this.selection.text)this.appendCopyButton();
+		if(!!this.selection.text)
+			this.appendCopyButton();
+		else
+			addToYellowBox("no text");
 	}
-	
-	this.appendCopyButton(){
+	this.appendCopyButton = function(){
 		if(!!this.selection){
-			this.selection.focusNode_ParentElement.appendChild(this.copyButton.DOM_Button);
-		} else {addToYellowBox('could NOT find selection');}
+			this.selection.focusNode_ParentElement.appendChild(this.copyButton.DOM);
+		} else {
+			addToYellowBox('could NOT find selection');
+		}
 	}
-	
 }
 /*may be redundant to have a class wrapper for a dom element*/
 function Button(action = "click",
 				responseFunction = () => addToYellowBox("clicked"), 
-				className = "DOM_Button", 
-				id = "DOM_Button"){
+				className = "DOM", 
+				id = "DOM"){
 	
-	this.DOM_Button = document.createElement('button');
-	this.DOM_Button.addEventListener(action,responseFunction);
-	this.DOM_Button.className = className;
-	this.DOM_Button.id = id;	
+	this.DOM = document.createElement('button');
+	this.DOM.addEventListener(action,responseFunction);
+	this.DOM.className = className;
+	this.DOM.id = id;	
 }
 
 function CopyButton(){
 	this.button = new Button("click", copySelectionText, "button", "copyButton");
+	this.DOM = this.button.DOM;
+	this.DOM.style.width = '5px';
+	this.DOM.style.height = '24px';
+	this.DOM.style.backgroundSize = '100%';
+	this.DOM.style.backgroundImage = copyButtonImageURL;
 }
 
 function Selection(){
-	this.text = "``===---__EZB COULD NOT RETRIEVE__---===``";
+	this.text = "``=--___EZB COULD NOT RETRIEVE___--=``";
 	if (!!window.getSelection()) {
 		this.windowSelection = window.getSelection();
 		this.text = window.getSelection().toString();
-		this.focusNode = windowSelection.focusNode;
+		this.focusNode = this.windowSelection.focusNode;
 		this.focusNode_ParentElement = this.focusNode.parentElement;
-		this.focusOffset = windowSelection.focusOffset;
+		this.focusOffset = this.windowSelection.focusOffset;
 	} else if (document.selection && document.selection.type != "Control") {
 		this.text = document.selection.createRange().text;
 	}
@@ -100,14 +112,6 @@ function CLICK_TEST1(){
 function CLICK_TEST2(){
     addToYellowBox('button in object clicked');
 }
-//////////////////////////////////////////
-
-
-
-
-
-
-
 
 function getSelectionText() {
 	var text = "";
@@ -118,6 +122,7 @@ function getSelectionText() {
 	}
 	return text;
 }
+
 function copySelectionText(){
     let copysuccess;
     try{
@@ -128,9 +133,6 @@ function copySelectionText(){
     return copysuccess;
 }
 
-
-
-///////////////////////////////////////////////////
 function Selection_SetAside(){
     this.TEST = () => addToYellowBox("He's alive, Jim");
 	this.windowSelection = window.getSelection();
@@ -202,7 +204,7 @@ function Selection_SetAside(){
         }
     }    
 }
-////////////////////////////////////////////////////////////////////////////////////////////
+
 function SelectionIndex(){
 	this.index = [];
 	this.add = function(selection){
@@ -248,10 +250,6 @@ function setupCSS(){
     let sheet = window.document.styleSheets[0];
     sheet.insertRule('.' + copyButton_id + '{ background-image : ' + 'icons/copyButtonIcon }', sheet.cssRules.length);
 }
-
-
-
-
 
 function generateDivTag(id){
 	let divTag = document.createElement('div');
