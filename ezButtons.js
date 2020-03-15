@@ -26,13 +26,102 @@ let layout;
 //--------------------------------|_______|---------------------------|~~
 ///```````````````````````````````````````````````````````````````````|~
 
+function MAIN_TEST(){	
+	
+	addToYellowBox("MAIN_TEST");
+	
+	function test22(){addToYellowBox("22");}
+	
+	let button = new DOM_Button(test22,"TEST_BUTTON","tb");
+	
+	//getHere().appendChild(button.DOM);
+	
+	button.test();
+	
+	button.DOM.style.height = "30px";
+	button.DOM.style.width  = "40px";
+	button.DOM.style.background = "teal";
+	
+	button.setDimensions("40px","44px");
+	button.setBackgroundColor("blue");
+	
+	button.setClickListener(testAlert);
+	
+	getHere().appendChild(button.DOM);
+	function testAlert(){
+		//alert("it worked");	
+	}
+	
+}
+
+class DOM_ELEMENT{
+	constructor(type = 'p',className = 'dom_element',id = 'dom_element'){
+		this.type = type;
+		this.className = className;
+		this.id = id;
+		this.instantiate();
+	}
+	
+	instantiate(){
+		this.DOM = document.createElement(this.type);
+		this.DOM.id = this.id;
+		this.DOM.className = this.className;
+	}
+	
+	remove(){
+		document.getElementById(this.id).parentElement.
+		removeChild(document.getElementById(this.id));		
+	}	
+}
+
+class DOM_Button extends DOM_ELEMENT{
+	constructor(clickResponse,className = "dom_button",id = "dom_button"){
+		super("button",className,id);
+		this.type = "button";
+		this.clickResponse = clickResponse;
+		this.className = className;
+		this.id = id;
+				
+	}
+	
+	instantiate(){
+		super.instantiate();
+		this.DOM.addEventListener("click",this.clickResponse);
+		
+	}
+	
+	remove(){
+		super.remove();
+	}
+	
+	setClickListener(response){
+		this.removeEventListener("click",this.clickResponse,false);
+		this.removeEventListener("click",response,false);
+		this.addEventListener("click",response);
+	}
+	
+	setDimensions(width, height){
+		this.DOM.style.width = width;
+		this.DOM.style.height = height;
+	}
+	
+	setBackgroundColor(color){
+		this.DOM.style.backgroundColor = color;
+	}
+	
+	test(){
+		//alert("created button");
+	}
+	
+}
+
 function Selection(){
 	this.text = "``=--___EZB COULD NOT RETRIEVE___--=``";
 	if (!!window.getSelection()) {
 		this.windowSelection = window.getSelection();
 		this.text = window.getSelection().toString();
 		this.focusNode = this.windowSelection.focusNode;
-		this.focusNode_ParentElement = this.focusNode.parentElement;
+		if(!!this.focusNode)this.focusNode_ParentElement = this.focusNode.parentElement;
 		this.focusOffset = this.windowSelection.focusOffset;
 	} else if (document.selection && document.selection.type != "Control") {
 		this.text = document.selection.createRange().text;
@@ -44,9 +133,20 @@ function Layout(){
 	this.copyButton = new CopyButton();
 	this.appendCopyButton = () => {
 		if(!!this.selection){
-			this.selection.focusNode_ParentElement.appendChild(this.copyButton.DOM);
+			//addToYellowBox(this.selection.focusNode_ParentElement.children.length);
+			//this.selection.focusNode_ParentElement.appendChild(this.copyButton.DOM);
+			
+			//selection.focusNode_ParentElement.outerHTML = //insert_Element_In_Element_At_Position(this.copyButton.DOM,this.selection.focusNode_ParentElement,this.selection.focusOffset);
+			
+			//getHere().insertChildAtIndex(this.copyButton.DOM,3);
 			//this.selection.focusNode_ParentElement.insertBefore(this.copyButton.DOM, 
-			//this.selection.focusNode_ParentElement.children[2]);
+			//this.selection.focusNode_ParentElement.children[3]);
+			
+			
+			this.selection.focusNode_ParentElement.innerHTML = this.selection.focusNode_ParentElement.innerHTML.insertSubStringAt(this.copyButton.DOM.outerHTML,this.selection.focusOffset); 
+			
+			
+			
 		} else {
 			addToYellowBox('could NOT find selection');
 		}
@@ -71,6 +171,11 @@ function Button(action = "click",
 	this.DOM.addEventListener(action,responseFunction);
 	this.DOM.className = className;
 	this.DOM.id = id;	
+	
+	this.remove = function(){
+		buttonElement = document.getElementById(this.DOM.id)
+		buttonElement.parentElement.removeChild(buttonElement);
+	}
 }
 
 function CopyButton(){
@@ -121,6 +226,20 @@ function getHere(){
 	return document.getElementById("here");
 }
 
+function insert_Element_In_Element_At_Position(elementToInsert,elementToReceive,atPosition){
+	let elementToReceive_innerHTML = elementToReceive.innerHTML;
+	let receiveLength = elementToReceive_innerHTML.length;
+	addToYellowBox(receiveLength);
+
+	if(atPosition >= receiveLength || atPosition < 0)atPosition = 0;
+	let before = elementToReceive_innerHTML.substring(0,atPosition);
+	let end = elementToReceive_innerHTML.substring(atPosition);
+	let fullHTML = before + elementToInsert + end;
+	
+	addToYellowBox(fullHTML);
+	return fullHTML;	
+}
+
 function CLICK_TEST1(){
     addToYellowBox('clicked');
 }
@@ -166,7 +285,9 @@ function sleep(mils){
 	
 	layout = new Layout();
 	
-	set_Register_Mouse_Up_On_Document(layout.mouseUp);//layout.mouseUp);
+	//set_Register_Mouse_Up_On_Document(layout.mouseUp);//layout.mouseUp);
+	
+	MAIN_TEST();
 })();
 
 ///_____________________________________________________________________|~
@@ -175,12 +296,36 @@ function sleep(mils){
 //--------------------------------|____|--------------------------------|~~
 ///`````````````````````````````````````````````````````````````````````|~
 
-function MAIN_TEST(){	
+
+
+///_____________________________________________________________________|~
+//--------------------------------|`````````|--------------------------------|~~
+//--------------------------------|ADDITIONS|--------------------------------|~~~
+//--------------------------------|_________|--------------------------------|~~
+///`````````````````````````````````````````````````````````````````````|~
+
+if (!String.prototype.insertSubStringAt) {
+    String.prototype.insertSubStringAt = function(substr,index) {
+        return this.slice(0, index) + substr + this.slice(index);
+    };
+}
+
+
+Element.prototype.insertChildAtIndex = function(child, index) {
+  if (!index) index = 0
+  if (index >= this.children.length) {
+    this.appendChild(child)
+  } else {
+    this.insertBefore(child, this.children[index])
+  }
+}
+
+function testElement(){
 	
-	addToYellowBox("MAIN_TEST");
-	
-	layout.mouseUp();
-	
+	var child = document.createElement('div')
+	var parent = document.body
+	parent.insertChildAtIndex(child, 2)
+
 }
 
 ///_________________________________________________________________________|~
