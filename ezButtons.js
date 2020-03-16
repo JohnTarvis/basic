@@ -50,7 +50,7 @@ function Layout_SetAside(){
 	this.appendCopyButton = () => {
 		if(!!this.selection){
 			if(!!this.copyButton){
-				this.copyButton.remove();
+				this.copyButton.removeFromDOM();
 				this.copyButton = new CopyButton();
 			}
 			this.selection.focusNode_ParentElement.innerHTML = this.selection.focusNode_ParentElement.innerHTML.insertSubStringAt(this.copyButton.DOM.outerHTML,this.selection.focusOffset); 
@@ -72,12 +72,18 @@ class Layout{
 	constructor(){
 		this.selection = new DOM_Selection();
 		this.copyButton = new DOM_Button(this.selection.copyToClipBoard,"ezCopy","ezCopy");
+        this.copyButton.DOM.style.backgroundColor = "red";
+        this.copyButton.DOM.style.width = '5px';
+        this.copyButton.DOM.style.height = '24px';
+        this.copyButton.DOM.style.backgroundSize = '100%';
+        this.copyButton.DOM.style.backgroundImage = copyButtonImageURL;
 	}	
-	appendCopyButton(){
+    appendCopyButton = () => {
+	//appendCopyButton(){
 		if(!!this.selection){
 			if(!!this.copyButton){
-				this.copyButton.remove();
-				this.copyButton = new CopyButton();
+				this.copyButton.removeFromDOM();
+				this.copyButton = new DOM_Button(this.selection.copyToClipBoard,"ezCopy","ezCopy");
 			}
 			this.selection.focusNode_ParentElement.innerHTML = 
 			this.selection.focusNode_ParentElement.innerHTML.insertSubStringAt(
@@ -86,7 +92,7 @@ class Layout{
 		} else 
 			addToYellowBox("could NOT find selection");
 	}
-	mouseUp(){
+	mouseUp = () => {
 		this.selection = new DOM_Selection();
 		if(!!this.selection.text)
 			this.appendCopyButton();
@@ -110,8 +116,10 @@ class DOM_ELEMENT{
 	}
 	
 	removeFromDOM(){
-		document.getElementById(this.id).parentElement.
-		removeChild(document.getElementById(this.id));		
+        if(!!document.getElementById(this.id)){
+            document.getElementById(this.id).parentElement.
+            removeChild(document.getElementById(this.id));	
+        }
 	}	
 }
 
@@ -316,11 +324,11 @@ function sleep(mils){
 	
 	//element.TEST();
 	
-	//layout = new Layout();
+	layout = new Layout();
 	
-	//set_Register_Mouse_Up_On_Document(layout.mouseUp);//layout.mouseUp);
+	set_Register_Mouse_Up_On_Document(layout.mouseUp);//layout.mouseUp);
 	
-	MAIN_TEST();
+	//MAIN_TEST();
 	
 	
 })();
