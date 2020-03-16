@@ -26,7 +26,7 @@ let layout;
 //--------------------------------|_______|---------------------------|~~
 ///```````````````````````````````````````````````````````````````````|~
 
-class testClass {
+class TestClass {
 	constructor(){
 		this.tempA = 3;
 		this.tempB = 4;		
@@ -38,8 +38,8 @@ class testClass {
 		addToYellowBox(this.tempA + this.tempB);
 	}
 	addAndMultiply(){
-		
-		
+		this.multiply();
+		this.add();		
 	}
 	
 }
@@ -174,29 +174,9 @@ class DOM_Selection{
 
 function MAIN_TEST(){	
 	
-	addToYellowBox("MAIN_TEST");
+	let to = new TestClass();
 	
-	function test22(){addToYellowBox("22");}
-	
-	let button = new DOM_Button(test22,"TEST_BUTTON","tb");
-	
-	//getHere().appendChild(button.DOM);
-	
-	button.test();
-	
-	button.DOM.style.height = "30px";
-	button.DOM.style.width  = "40px";
-	button.DOM.style.background = "teal";
-	
-	button.setDimensions("40px","44px");
-	button.setBackgroundColor("blue");
-	
-	button.setClickListener(testAlert);
-	
-	getHere().appendChild(button.DOM);
-	function testAlert(){
-		//alert("it worked");	
-	}
+	to.addAndMultiply();
 	
 }
 
@@ -332,15 +312,17 @@ function sleep(mils){
     addToYellowBox('EZB starting up..','(^__~)');
     addToYellowBox('``````````````````````````');
 	
-	let element = document.createElement("p");
+	//let element = document.createElement("p");
 	
-	element.TEST();
+	//element.TEST();
 	
 	//layout = new Layout();
 	
 	//set_Register_Mouse_Up_On_Document(layout.mouseUp);//layout.mouseUp);
 	
-	//MAIN_TEST();
+	MAIN_TEST();
+	
+	
 })();
 
 ///_____________________________________________________________________|~
