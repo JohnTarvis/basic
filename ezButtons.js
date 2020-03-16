@@ -26,6 +26,134 @@ let layout;
 //--------------------------------|_______|---------------------------|~~
 ///```````````````````````````````````````````````````````````````````|~
 
+function Layout_SetAside(){
+	this.selection = new Selection();
+	this.copyButton = new CopyButton();
+	this.appendCopyButton = () => {
+		if(!!this.selection){
+			if(!!this.copyButton){
+				this.copyButton.remove();
+				this.copyButton = new CopyButton();
+			}
+			this.selection.focusNode_ParentElement.innerHTML = this.selection.focusNode_ParentElement.innerHTML.insertSubStringAt(this.copyButton.DOM.outerHTML,this.selection.focusOffset); 
+		} else {
+			addToYellowBox('could NOT find selection');
+		}
+	}
+	this.mouseUp = (mouseEvent) => {
+		//receives mouse event on document("in mouseup");
+		this.selection = new Selection();
+		if(!!this.selection.text)
+			this.appendCopyButton();
+		else
+			addToYellowBox("no text");
+	}
+}
+
+class Layout{
+	constructor(){
+		this.selection = new DOM_Selection();
+		this.copyButton = new DOM_Button(this.selection.copyToClipBoard,"ezCopy","ezCopy");
+	}	
+	appendCopyButton(){
+		if(!!this.selection){
+			if(!!this.copyButton){
+				this.copyButton.remove();
+				this.copyButton = new CopyButton();
+			}
+			this.selection.focusNode_ParentElement.innerHTML = 
+			this.selection.focusNode_ParentElement.innerHTML.insertSubStringAt(
+			this.copyButton.DOM.outerHTML,
+			this.selection.focusOffset); 
+		} else 
+			addToYellowBox("could NOT find selection");
+	}
+	mouseUp(){
+		this.selection = new DOM_Selection();
+		if(!!this.selection.text)
+			appendCopyButton();
+		else
+			addToYellowBox("no text");			
+	}
+}
+
+class DOM_ELEMENT{
+	constructor(type = 'p',className = 'dom_element',id = 'dom_element'){
+		this.type = type;
+		this.className = className;
+		this.id = id;
+		this.instantiate();
+	}
+	
+	instantiate(){
+		this.DOM = document.createElement(this.type);
+		this.DOM.id = this.id;
+		this.DOM.className = this.className;
+	}
+	
+	removeFromDOM(){
+		document.getElementById(this.id).parentElement.
+		removeChild(document.getElementById(this.id));		
+	}	
+}
+
+class DOM_Button extends DOM_ELEMENT{
+		constructor(clickResponse = () => addToYellowBox("no function"), 
+					className = "dom_button",
+					id = "dom_button"){
+		super("button",className,id);
+		this.type = "button";
+		this.clickResponse = clickResponse;
+		this.DOM.addEventListener("click",this.clickResponse);
+	}
+	
+	setClickListener(response){
+		this.DOM.removeEventListener("click",this.clickResponse,false);
+		this.DOM.removeEventListener("click",response,false);
+		this.DOM.addEventListener("click",response);
+		this.clickResponse = response;
+	}
+	
+	setDimensions(width, height){
+		this.DOM.style.width = width;
+		this.DOM.style.height = height;
+	}
+	
+	setBackgroundColor(color){
+		this.DOM.style.backgroundColor = color;
+	}
+	
+	test(){
+		addToYellowBox("created DOM button");
+	}
+	
+}
+
+class DOM_Selection{
+	constructor(){
+		this.text = "``=--___EZB COULD NOT RETRIEVE___--=``";
+		if (!!window.getSelection()) {
+			this.windowSelection = window.getSelection();
+			this.text = window.getSelection().toString();
+			this.focusNode = this.windowSelection.focusNode;
+			if(!!this.focusNode)this.focusNode_ParentElement = this.focusNode.parentElement;
+			this.focusOffset = this.windowSelection.focusOffset;
+		} else if (document.selection && document.selection.type != "Control") {
+			this.text = document.selection.createRange().text;
+		}			
+	}
+	
+	copyToClipBoard(){		
+		let copysuccess;
+		try{
+			copysuccess = document.execCommand("copy");
+		} catch(e){
+			copysuccess = false;
+		}
+		return copysuccess;
+	}
+}
+
 function MAIN_TEST(){	
 	
 	addToYellowBox("MAIN_TEST");
@@ -54,68 +182,7 @@ function MAIN_TEST(){
 	
 }
 
-class DOM_ELEMENT{
-	constructor(type = 'p',className = 'dom_element',id = 'dom_element'){
-		this.type = type;
-		this.className = className;
-		this.id = id;
-		this.instantiate();
-	}
-	
-	instantiate(){
-		this.DOM = document.createElement(this.type);
-		this.DOM.id = this.id;
-		this.DOM.className = this.className;
-	}
-	
-	remove(){
-		document.getElementById(this.id).parentElement.
-		removeChild(document.getElementById(this.id));		
-	}	
-}
-
-class DOM_Button extends DOM_ELEMENT{
-	constructor(clickResponse,className = "dom_button",id = "dom_button"){
-		super("button",className,id);
-		this.type = "button";
-		this.clickResponse = clickResponse;
-		this.className = className;
-		this.id = id;
-				
-	}
-	
-	instantiate(){
-		super.instantiate();
-		this.DOM.addEventListener("click",this.clickResponse);
-		
-	}
-	
-	remove(){
-		super.remove();
-	}
-	
-	setClickListener(response){
-		this.removeEventListener("click",this.clickResponse,false);
-		this.removeEventListener("click",response,false);
-		this.addEventListener("click",response);
-	}
-	
-	setDimensions(width, height){
-		this.DOM.style.width = width;
-		this.DOM.style.height = height;
-	}
-	
-	setBackgroundColor(color){
-		this.DOM.style.backgroundColor = color;
-	}
-	
-	test(){
-		//alert("created button");
-	}
-	
-}
-
-function Selection(){
+function Selection_SetAside(){
 	this.text = "``=--___EZB COULD NOT RETRIEVE___--=``";
 	if (!!window.getSelection()) {
 		this.windowSelection = window.getSelection();
@@ -126,40 +193,6 @@ function Selection(){
 	} else if (document.selection && document.selection.type != "Control") {
 		this.text = document.selection.createRange().text;
 	}
-}
-
-function Layout(){
-	this.selection = new Selection();
-	this.copyButton = new CopyButton();
-	this.appendCopyButton = () => {
-		if(!!this.selection){
-			//addToYellowBox(this.selection.focusNode_ParentElement.children.length);
-			//this.selection.focusNode_ParentElement.appendChild(this.copyButton.DOM);
-			
-			//selection.focusNode_ParentElement.outerHTML = //insert_Element_In_Element_At_Position(this.copyButton.DOM,this.selection.focusNode_ParentElement,this.selection.focusOffset);
-			
-			//getHere().insertChildAtIndex(this.copyButton.DOM,3);
-			//this.selection.focusNode_ParentElement.insertBefore(this.copyButton.DOM, 
-			//this.selection.focusNode_ParentElement.children[3]);
-			
-			
-			this.selection.focusNode_ParentElement.innerHTML = this.selection.focusNode_ParentElement.innerHTML.insertSubStringAt(this.copyButton.DOM.outerHTML,this.selection.focusOffset); 
-			
-			
-			
-		} else {
-			addToYellowBox('could NOT find selection');
-		}
-	}
-	this.mouseUp = (mouseEvent) => {
-		//receives mouse event on document("in mouseup");
-		this.selection = new Selection();
-		if(!!this.selection.text)
-			this.appendCopyButton();
-		else
-			addToYellowBox("no text");
-	}
-
 }
 
 function Button(action = "click",
@@ -178,7 +211,7 @@ function Button(action = "click",
 	}
 }
 
-function CopyButton(){
+function CopyButton_SetAside(){
 	this.copySelectionText = () =>{		
 		let copysuccess;
 		try{
@@ -206,15 +239,13 @@ function copySelectionText(){
     return copysuccess;
 }
 
-
-
 ///_____________________________________________________________________|~
 //--------------------------------|`````````|---------------------------|~~
 //--------------------------------|FUNCTIONS|---------------------------|~~~
 //--------------------------------|_________|---------------------------|~~
 ///`````````````````````````````````````````````````````````````````````|~
 
-function    set_Register_Mouse_Up_On_Document(
+function set_Register_Mouse_Up_On_Document(
             callback =()=>{
                 addToYellowBox("NO CALLBACK FOR MOUSEUP");
             }){
@@ -309,7 +340,6 @@ if (!String.prototype.insertSubStringAt) {
         return this.slice(0, index) + substr + this.slice(index);
     };
 }
-
 
 Element.prototype.insertChildAtIndex = function(child, index) {
   if (!index) index = 0
