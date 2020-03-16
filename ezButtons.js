@@ -26,6 +26,24 @@ let layout;
 //--------------------------------|_______|---------------------------|~~
 ///```````````````````````````````````````````````````````````````````|~
 
+class testClass {
+	constructor(){
+		this.tempA = 3;
+		this.tempB = 4;		
+	}
+	multiply(){
+		addToYellowBox(this.tempA * this.tempB);
+	}
+	add(){
+		addToYellowBox(this.tempA + this.tempB);
+	}
+	addAndMultiply(){
+		
+		
+	}
+	
+}
+
 function Layout_SetAside(){
 	this.selection = new Selection();
 	this.copyButton = new CopyButton();
@@ -71,7 +89,7 @@ class Layout{
 	mouseUp(){
 		this.selection = new DOM_Selection();
 		if(!!this.selection.text)
-			appendCopyButton();
+			this.appendCopyButton();
 		else
 			addToYellowBox("no text");			
 	}
@@ -314,9 +332,13 @@ function sleep(mils){
     addToYellowBox('EZB starting up..','(^__~)');
     addToYellowBox('``````````````````````````');
 	
-	layout = new Layout();
+	let element = document.createElement("p");
 	
-	set_Register_Mouse_Up_On_Document(layout.mouseUp);//layout.mouseUp);
+	element.TEST();
+	
+	//layout = new Layout();
+	
+	//set_Register_Mouse_Up_On_Document(layout.mouseUp);//layout.mouseUp);
 	
 	//MAIN_TEST();
 })();
@@ -339,6 +361,10 @@ if (!String.prototype.insertSubStringAt) {
     String.prototype.insertSubStringAt = function(substr,index) {
         return this.slice(0, index) + substr + this.slice(index);
     };
+}
+
+Element.prototype.TEST = function(){
+	addToYellowBox("element tested");
 }
 
 Element.prototype.insertChildAtIndex = function(child, index) {
