@@ -214,12 +214,12 @@ function copySelectionText(){
 //--------------------------------|_________|---------------------------|~~
 ///`````````````````````````````````````````````````````````````````````|~
 
-function set_Register_Mouse_Up_On_Document(
-	callback =()=>{
-		addToYellowBox("NO CALLBACK FOR MOUSEUP");
-	}){
-    document.onmouseup = callback;
-	document.onkeyup = callback;
+function    set_Register_Mouse_Up_On_Document(
+            callback =()=>{
+                addToYellowBox("NO CALLBACK FOR MOUSEUP");
+            }){
+            document.onmouseup = callback;
+            document.onkeyup = callback;
 }
 
 function getHere(){
@@ -285,9 +285,9 @@ function sleep(mils){
 	
 	layout = new Layout();
 	
-	//set_Register_Mouse_Up_On_Document(layout.mouseUp);//layout.mouseUp);
+	set_Register_Mouse_Up_On_Document(layout.mouseUp);//layout.mouseUp);
 	
-	MAIN_TEST();
+	//MAIN_TEST();
 })();
 
 ///_____________________________________________________________________|~
