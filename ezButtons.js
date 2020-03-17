@@ -26,60 +26,40 @@ let layout;
 //--------------------------------|_______|---------------------------|~~
 ///```````````````````````````````````````````````````````````````````|~
 
-function Layout_SetAside(){
-	this.selection = new Selection();
-	this.copyButton = new CopyButton();
-	this.appendCopyButton = () => {
-		if(!!this.selection){
-			if(!!this.copyButton){
-				this.copyButton.removeFromDOM();
-				this.copyButton = new CopyButton();
-			}
-			this.selection.focusNode_ParentElement.innerHTML = this.selection.focusNode_ParentElement.innerHTML.insertSubStringAt(this.copyButton.DOM.outerHTML,this.selection.focusOffset); 
-		} else {
-			addToYellowBox('could NOT find selection');
-		}
-	}
-	this.mouseUp = (mouseEvent) => {
-		//receives mouse event on document("in mouseup");
-		this.selection = new Selection();
-		if(!!this.selection.text)
-			this.appendCopyButton();
-		else
-			addToYellowBox("no text");
-	}
-}
-
 class Layout{
 	constructor(){
 		this.selection = new DOM_Selection();
-		this.copyButton = new DOM_Button(this.selection.copyToClipBoard,"ezCopy","ezCopy");
-        this.copyButton.DOM.style.backgroundColor = "red";
-        this.copyButton.DOM.style.width = '5px';
-        this.copyButton.DOM.style.height = '24px';
-        this.copyButton.DOM.style.backgroundSize = '100%';
-        this.copyButton.DOM.style.backgroundImage = copyButtonImageURL;
 	}	
     appendCopyButton = () => {
-	//appendCopyButton(){
 		if(!!this.selection){
 			if(!!this.copyButton){
 				this.copyButton.removeFromDOM();
 				this.copyButton = new DOM_Button(this.selection.copyToClipBoard,"ezCopy","ezCopy");
-			}
+			} 
+			this.copyButton = new DOM_Button(this.selection.copyToClipBoard,"ezCopy","ezCopy");
+			this.copyButton.DOM.style.backgroundColor = "red";
+			this.copyButton.DOM.style.width = '5px';
+			this.copyButton.DOM.style.height = '24px';
+			this.copyButton.DOM.style.backgroundSize = '100%';
+			this.copyButton.DOM.style.backgroundImage = copyButtonImageURL;
+			
 			this.selection.focusNode_ParentElement.innerHTML = 
-			this.selection.focusNode_ParentElement.innerHTML.insertSubStringAt(
-			this.copyButton.DOM.outerHTML,
-			this.selection.focusOffset); 
+				this.selection.focusNode_ParentElement.innerHTML.insertSubStringAt(
+				this.copyButton.DOM.outerHTML,
+				this.selection.focusOffset); 
 		} else 
 			addToYellowBox("could NOT find selection");
 	}
-	mouseUp = () => {
-		this.selection = new DOM_Selection();
-		if(!!this.selection.text)
-			this.appendCopyButton();
-		else
-			addToYellowBox("no text");			
+	mouseUp = mouseEvent => {
+		//addToYellowBox(mouseEvent.target.id,"target id : ");
+		let mouseTargetId = mouseEvent.target.id;
+		if(!!this.copyButton && mouseTargetId != this.copyButton.DOM.id){
+			this.selection = new DOM_Selection();
+			if(!!this.selection.text)
+				this.appendCopyButton();
+			else
+				addToYellowBox("no text");			
+		}
 	}
 }
 
@@ -164,23 +144,6 @@ class DOM_Selection{
 
 function MAIN_TEST(){	
 	
-	let to = new TestClass();
-	
-	to.addAndMultiply();
-	
-}
-
-function Selection_SetAside(){
-	this.text = "``=--___EZB COULD NOT RETRIEVE___--=``";
-	if (!!window.getSelection()) {
-		this.windowSelection = window.getSelection();
-		this.text = window.getSelection().toString();
-		this.focusNode = this.windowSelection.focusNode;
-		if(!!this.focusNode)this.focusNode_ParentElement = this.focusNode.parentElement;
-		this.focusOffset = this.windowSelection.focusOffset;
-	} else if (document.selection && document.selection.type != "Control") {
-		this.text = document.selection.createRange().text;
-	}
 }
 
 function Button(action = "click",
@@ -198,7 +161,6 @@ function Button(action = "click",
 		buttonElement.parentElement.removeChild(buttonElement);
 	}
 }
-
 
 ///_____________________________________________________________________|~
 //--------------------------------|`````````|---------------------------|~~
@@ -326,6 +288,42 @@ function testElement(){
 //--------------------------------|DISABLED|--------------------------------|~~~
 //--------------------------------|________|--------------------------------|~~
 ///`````````````````````````````````````````````````````````````````````````|~
+
+// function Layout_SetAside(){
+	// this.selection = new Selection();
+	// this.copyButton = new CopyButton();
+	// this.appendCopyButton = () => {
+		// if(!!this.selection){
+			// if(!!this.copyButton){
+				// this.copyButton.removeFromDOM();
+				// this.copyButton = new CopyButton();
+			// }
+			// this.selection.focusNode_ParentElement.innerHTML = this.selection.focusNode_ParentElement.innerHTML.insertSubStringAt(this.copyButton.DOM.outerHTML,this.selection.focusOffset); 
+		// } else {
+			// addToYellowBox('could NOT find selection');
+		// }
+	// }
+	// this.mouseUp = (mouseEvent) => {
+		// this.selection = new Selection();
+		// if(!!this.selection.text)
+			// this.appendCopyButton();
+		// else
+			// addToYellowBox("no text");
+	// }
+// }
+
+// function Selection_SetAside(){
+	// this.text = "``=--___EZB COULD NOT RETRIEVE___--=``";
+	// if (!!window.getSelection()) {
+		// this.windowSelection = window.getSelection();
+		// this.text = window.getSelection().toString();
+		// this.focusNode = this.windowSelection.focusNode;
+		// if(!!this.focusNode)this.focusNode_ParentElement = this.focusNode.parentElement;
+		// this.focusOffset = this.windowSelection.focusOffset;
+	// } else if (document.selection && document.selection.type != "Control") {
+		// this.text = document.selection.createRange().text;
+	// }
+// }
 
 // class TestClass {
 	// constructor(){
