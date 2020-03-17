@@ -171,6 +171,59 @@ function load_jQuery(){
 
 
 
+// function Layout_SetAside(){
+	// this.selection = new Selection();
+	// this.copyButton = new CopyButton();
+	// this.appendCopyButton = () => {
+		// if(!!this.selection){
+			// if(!!this.copyButton){
+				// this.copyButton.removeFromDOM();
+				// this.copyButton = new CopyButton();
+			// }
+			// this.selection.focusNode_ParentElement.innerHTML = this.selection.focusNode_ParentElement.innerHTML.insertSubStringAt(this.copyButton.DOM.outerHTML,this.selection.focusOffset); 
+		// } else {
+			// addToYellowBox('could NOT find selection');
+		// }
+	// }
+	// this.mouseUp = (mouseEvent) => {
+		// this.selection = new Selection();
+		// if(!!this.selection.text)
+			// this.appendCopyButton();
+		// else
+			// addToYellowBox("no text");
+	// }
+// }
+
+// function Selection_SetAside(){
+	// this.text = "``=--___EZB COULD NOT RETRIEVE___--=``";
+	// if (!!window.getSelection()) {
+		// this.windowSelection = window.getSelection();
+		// this.text = window.getSelection().toString();
+		// this.focusNode = this.windowSelection.focusNode;
+		// if(!!this.focusNode)this.focusNode_ParentElement = this.focusNode.parentElement;
+		// this.focusOffset = this.windowSelection.focusOffset;
+	// } else if (document.selection && document.selection.type != "Control") {
+		// this.text = document.selection.createRange().text;
+	// }
+// }
+
+// class TestClass {
+	// constructor(){
+		// this.tempA = 3;
+		// this.tempB = 4;		
+	// }
+	// multiply(){
+		// addToYellowBox(this.tempA * this.tempB);
+	// }
+	// add(){
+		// addToYellowBox(this.tempA + this.tempB);
+	// }
+	// addAndMultiply(){
+		// this.multiply();
+		// this.add();		
+	// }
+//}
+
 
 //////////////////////////////////////////////////////////////////////////////////
 /*GRAVEYARD
@@ -266,14 +319,14 @@ function Selection_SetAside(){
 //		addToYellowBox('COULD NOT MAKE COPY BUTTON');
 //	}
 
-function TestObject(){	
-
-	this.testButton = document.createElement('button');
-	this.testButton.id = 'BTN';
-	this.testButton.style.width = '50px';
-	this.testButton.style.height = '50px';
-	this.testButton.style.backgroundColor = 'teal';
-	this.testButton.addEventListener('click',this.click);
+//function TestObject(){	
+//
+//	this.testButton = document.createElement('button');
+//	this.testButton.id = 'BTN';
+//	this.testButton.style.width = '50px';
+//	this.testButton.style.height = '50px';
+//	this.testButton.style.backgroundColor = 'teal';
+//	this.testButton.addEventListener('click',this.click);
 	this.click = function(){
 		addToYellowBox('button in object clicked with object function');
 	}	
