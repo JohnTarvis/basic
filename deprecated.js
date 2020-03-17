@@ -1,3 +1,34 @@
+
+function CopyButton_SetAside(){
+	this.copySelectionText = () =>{		
+		let copysuccess;
+		try{
+			copysuccess = document.execCommand("copy");
+		} catch(e){
+			copysuccess = false;
+		}
+		return copysuccess;
+	}
+	this.button = new Button("click", this.copySelectionText, "button", "copyButton");
+	this.DOM = this.button.DOM;
+	this.DOM.style.width = '5px';
+	this.DOM.style.height = '24px';
+	this.DOM.style.backgroundSize = '100%';
+	this.DOM.style.backgroundImage = copyButtonImageURL;
+}
+
+function copySelectionText(){
+    let copysuccess;
+    try{
+        copysuccess = document.execCommand("copy");
+    } catch(e){
+        copysuccess = false;
+    }
+    return copysuccess;
+}
+
+
+
 function getSelection(){
 	let nSelection = new Selection();
 	if(!!nSelection.text || !selection){

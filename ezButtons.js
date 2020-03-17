@@ -26,31 +26,13 @@ let layout;
 //--------------------------------|_______|---------------------------|~~
 ///```````````````````````````````````````````````````````````````````|~
 
-class TestClass {
-	constructor(){
-		this.tempA = 3;
-		this.tempB = 4;		
-	}
-	multiply(){
-		addToYellowBox(this.tempA * this.tempB);
-	}
-	add(){
-		addToYellowBox(this.tempA + this.tempB);
-	}
-	addAndMultiply(){
-		this.multiply();
-		this.add();		
-	}
-	
-}
-
 function Layout_SetAside(){
 	this.selection = new Selection();
 	this.copyButton = new CopyButton();
 	this.appendCopyButton = () => {
 		if(!!this.selection){
 			if(!!this.copyButton){
-				this.copyButton.remove();
+				this.copyButton.removeFromDOM();
 				this.copyButton = new CopyButton();
 			}
 			this.selection.focusNode_ParentElement.innerHTML = this.selection.focusNode_ParentElement.innerHTML.insertSubStringAt(this.copyButton.DOM.outerHTML,this.selection.focusOffset); 
@@ -72,12 +54,18 @@ class Layout{
 	constructor(){
 		this.selection = new DOM_Selection();
 		this.copyButton = new DOM_Button(this.selection.copyToClipBoard,"ezCopy","ezCopy");
+        this.copyButton.DOM.style.backgroundColor = "red";
+        this.copyButton.DOM.style.width = '5px';
+        this.copyButton.DOM.style.height = '24px';
+        this.copyButton.DOM.style.backgroundSize = '100%';
+        this.copyButton.DOM.style.backgroundImage = copyButtonImageURL;
 	}	
-	appendCopyButton(){
+    appendCopyButton = () => {
+	//appendCopyButton(){
 		if(!!this.selection){
 			if(!!this.copyButton){
-				this.copyButton.remove();
-				this.copyButton = new CopyButton();
+				this.copyButton.removeFromDOM();
+				this.copyButton = new DOM_Button(this.selection.copyToClipBoard,"ezCopy","ezCopy");
 			}
 			this.selection.focusNode_ParentElement.innerHTML = 
 			this.selection.focusNode_ParentElement.innerHTML.insertSubStringAt(
@@ -86,7 +74,7 @@ class Layout{
 		} else 
 			addToYellowBox("could NOT find selection");
 	}
-	mouseUp(){
+	mouseUp = () => {
 		this.selection = new DOM_Selection();
 		if(!!this.selection.text)
 			this.appendCopyButton();
@@ -110,8 +98,10 @@ class DOM_ELEMENT{
 	}
 	
 	removeFromDOM(){
-		document.getElementById(this.id).parentElement.
-		removeChild(document.getElementById(this.id));		
+        if(!!document.getElementById(this.id)){
+            document.getElementById(this.id).parentElement.
+            removeChild(document.getElementById(this.id));	
+        }
 	}	
 }
 
@@ -209,33 +199,6 @@ function Button(action = "click",
 	}
 }
 
-function CopyButton_SetAside(){
-	this.copySelectionText = () =>{		
-		let copysuccess;
-		try{
-			copysuccess = document.execCommand("copy");
-		} catch(e){
-			copysuccess = false;
-		}
-		return copysuccess;
-	}
-	this.button = new Button("click", this.copySelectionText, "button", "copyButton");
-	this.DOM = this.button.DOM;
-	this.DOM.style.width = '5px';
-	this.DOM.style.height = '24px';
-	this.DOM.style.backgroundSize = '100%';
-	this.DOM.style.backgroundImage = copyButtonImageURL;
-}
-
-function copySelectionText(){
-    let copysuccess;
-    try{
-        copysuccess = document.execCommand("copy");
-    } catch(e){
-        copysuccess = false;
-    }
-    return copysuccess;
-}
 
 ///_____________________________________________________________________|~
 //--------------------------------|`````````|---------------------------|~~
@@ -267,14 +230,6 @@ function insert_Element_In_Element_At_Position(elementToInsert,elementToReceive,
 	
 	addToYellowBox(fullHTML);
 	return fullHTML;	
-}
-
-function CLICK_TEST1(){
-    addToYellowBox('clicked');
-}
-
-function CLICK_TEST2(){
-    addToYellowBox('button in object clicked');
 }
 
 function clearYellowBox(){
@@ -316,11 +271,11 @@ function sleep(mils){
 	
 	//element.TEST();
 	
-	//layout = new Layout();
+	layout = new Layout();
 	
-	//set_Register_Mouse_Up_On_Document(layout.mouseUp);//layout.mouseUp);
+	set_Register_Mouse_Up_On_Document(layout.mouseUp);//layout.mouseUp);
 	
-	MAIN_TEST();
+	//MAIN_TEST();
 	
 	
 })();
@@ -371,6 +326,23 @@ function testElement(){
 //--------------------------------|DISABLED|--------------------------------|~~~
 //--------------------------------|________|--------------------------------|~~
 ///`````````````````````````````````````````````````````````````````````````|~
+
+// class TestClass {
+	// constructor(){
+		// this.tempA = 3;
+		// this.tempB = 4;		
+	// }
+	// multiply(){
+		// addToYellowBox(this.tempA * this.tempB);
+	// }
+	// add(){
+		// addToYellowBox(this.tempA + this.tempB);
+	// }
+	// addAndMultiply(){
+		// this.multiply();
+		// this.add();		
+	// }
+//}
 
 
 /*****************************************************************************
