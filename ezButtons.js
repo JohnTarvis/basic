@@ -92,10 +92,11 @@ class EZ_Layout {
 			this.selection.focusOffset); 
 	}		
 	mouseUp = mouseEvent => {
-		this.selection = new EZ_Selection();
 		let mouseTargetClass = mouseEvent.target.className;
 		//addToYellowBox(this.selection.text, "selection text: ");
 		if(mouseTargetClass != ezClass){
+			this.selection = new EZ_Selection();
+			addToYellowBox(this.selection.text);
 			if(!!this.selection.text)
 				this.appendCopyButton();
 			else
