@@ -17,8 +17,7 @@ const copyButtonImageURL = "url('icons/copyButtonIcon21-26.png')";
 //--------------------------------|_________|---------------------------|~~
 ///`````````````````````````````````````````````````````````````````````|~
 
-let selection;
-let layout;
+let ezLayout;
 
 ///___________________________________________________________________|~
 //--------------------------------|```````|---------------------------|~~
@@ -30,124 +29,45 @@ function clickTest3(){
     addToYellowBox("..clicked..");
 }
 
-class Layout{
-	constructor(){
-		this.selection = new DOM_Selection();
-        //this.copyButton = new DOM_Button(clickTest3,ezClass,"ezCopyButton");
-	}	
-    select(){
-        this.selection = new DOM_Selection();
-    }
-    appendCopyButton = () => {
-		if(!!this.selection){
-			if(!!this.copyButton){
-				this.copyButton.removeFromDOM();
-				//this.copyButton = new DOM_Button(this.selection.copyToClipBoard,ezClass,"ezCopy");
-			} else {
-                this.copyButton = new DOM_Button(clickTest3,ezClass,"ezCopy");
-            }
-            
-			//this.copyButton = new DOM_Button(copySelectionText,ezClass,"ezCopy");
-			//this.copyButton.DOM.style.backgroundColor = "red";
-			this.copyButton.DOM.style.width = '5px';
-			this.copyButton.DOM.style.height = '24px';
-			this.copyButton.DOM.style.backgroundSize = '100%';
-			this.copyButton.DOM.style.backgroundImage = copyButtonImageURL;
-            
-            //this.copyButton.setClickListener(copySelectionText);
-            
-            //this.copyButton.setClickListener(clickTest3);
-            this.copyButton.DOM.addEventListener("click",clickTest3);
-			
-			this.selection.focusNode_ParentElement.innerHTML = 
-				this.selection.focusNode_ParentElement.innerHTML.insertSubStringAt(
-				this.copyButton.DOM.outerHTML,
-				this.selection.focusOffset); 
-		} else 
-			addToYellowBox("could NOT find selection");
+class EZ_Element {	
+	constructor(type = "div", className = "ezClass", id = "ez_ID"){
+		this.element = document.createElement(type);
+		this.element.className = className;
+		this.element.id = id;		
 	}
-	mouseUp = mouseEvent => {
-		let mouseTargetClass = mouseEvent.target.className;
-		if(mouseTargetClass != ezClass){
-			//this.selection = new DOM_Selection();
-            this.select();
-			if(!!this.selection.text)
-				this.appendCopyButton();
-			else
-				addToYellowBox("no text");			
-		}
-	}
-}
-
-class DOM_ELEMENT{
-	constructor(type = 'p',className = 'dom_element',id = 'dom_element'){
-		this.type = type;
-		this.className = className;
-		this.id = id;
-		this.instantiate();
-	}
-	
-	instantiate(){
-		this.DOM = document.createElement(this.type);
-		this.DOM.id = this.id;
-		this.DOM.className = this.className;
-	}
-	
-	removeFromDOM(){
-        if(!!document.getElementById(this.id)){
-            document.getElementById(this.id).parentElement.
-            removeChild(document.getElementById(this.id));	
-        }
+	removeFromDocument = () => {
+		let element = document.getElementById(this.element.id);
+		if(!!element)element.parentElement.removeChild(element);
 	}	
 }
 
-class DOM_Button extends DOM_ELEMENT{
-		constructor(clickResponse = () => addToYellowBox("no function"), 
-					className = "dom_button",
-					id = "dom_button"){
-		super("button",className,id);
-		this.type = "button";
-		this.clickResponse = clickResponse;
-		this.DOM.addEventListener("click",this.clickResponse);
+class EZ_Button extends EZ_Element {
+	constructor(action = "click", callback = () => addToYellowBox("clicked")){
+		super("button", "ezButton");
+		this.element.addEventListener(action, callback);
+		this.callback = callback;
+		this.setStandardStyle();
+	}	
+	setStandardStyle = () => {
+		this.element.style.width = '5px';
+        this.element.style.height = '24px';
+        this.element.style.backgroundSize = '100%';
+		this.element.style.backgroundColor = "purple";
 	}
-	
-	setClickListener(response){
-		this.DOM.removeEventListener("click",this.clickResponse,false);
-		this.DOM.removeEventListener("click",response,false);
-		this.DOM.addEventListener("click",response);
-		this.clickResponse = response;
+	changeEventListener = (callback) => {
+		this.element.removeEventListener("click", this.callback, false);
+		this.element.addEventListener("click", callback);
+		this.callback = callback;
 	}
-	
-	setDimensions(width, height){
-		this.DOM.style.width = width;
-		this.DOM.style.height = height;
-	}
-	
-	setBackgroundColor(color){
-		this.DOM.style.backgroundColor = color;
-	}
-	
-	test(){
-		addToYellowBox("created DOM button");
-	}
-	
 }
 
-class DOM_Selection{
-	constructor(){
-		this.text = "``=--___EZB COULD NOT RETRIEVE___--=``";
-		if (!!window.getSelection()) {
-			this.windowSelection = window.getSelection();
-			this.text = window.getSelection().toString();
-			this.focusNode = this.windowSelection.focusNode;
-			if(!!this.focusNode)this.focusNode_ParentElement = this.focusNode.parentElement;
-			this.focusOffset = this.windowSelection.focusOffset;
-		} else if (document.selection && document.selection.type != "Control") {
-			this.text = document.selection.createRange().text;
-		}			
+class EZ_CopyButton extends EZ_Button {
+	constructor() {
+		super("click");
+		this.changeEventListener(this.copySelectionText);
+		this.element.style.backgroundImage = copyButtonImageURL;
 	}
-	
-	copyToClipBoard(){		
+	copySelectionText = () => {
 		let copysuccess;
 		try{
 			copysuccess = document.execCommand("copy");
@@ -158,46 +78,46 @@ class DOM_Selection{
 	}
 }
 
-function Button(action = "click",
-				responseFunction = () => addToYellowBox("clicked"), 
-				className = "DOM", 
-				id = "DOM"){
-	
-	this.DOM = document.createElement('button');
-	this.DOM.addEventListener(action,responseFunction);
-	this.DOM.className = className;
-	this.DOM.id = id;	
-	
-//	this.remove = function(){
-//		buttonElement = document.getElementById(this.DOM.id)
-//		buttonElement.parentElement.removeChild(buttonElement);
-//	}
+class EZ_Layout {	
+	constructor(){		
+		//this.selection = new EZ_Selection();	
+		this.copyButton = new EZ_CopyButton();
+	}
+	appendCopyButton = () => {		
+		//this.selection = new EZ_Selection();		
+		this.copyButton.removeFromDocument();	
+		this.selection.focusNode_ParentElement.innerHTML = 
+			this.selection.focusNode_ParentElement.innerHTML.insertSubStringAt(
+			this.copyButton.element.outerHTML,
+			this.selection.focusOffset); 
+	}		
+	mouseUp = mouseEvent => {
+		this.selection = new EZ_Selection();
+		let mouseTargetClass = mouseEvent.target.className;
+		//addToYellowBox(this.selection.text, "selection text: ");
+		if(mouseTargetClass != ezClass){
+			if(!!this.selection.text)
+				this.appendCopyButton();
+			else
+				addToYellowBox("no text");
+		}
+	}
 }
 
-class EZ_CopyButton {
-    constructor() {
-        this.element = document.createElement("button");
-        this.element.className = ezClass;
-        this.element.id = "ezCopy"
-        this.element.addEventListener("click",this.copySelectionText);
-        this.element.style.width = '5px';
-        this.element.style.height = '24px';
-        this.element.style.backgroundSize = '100%';
-        this.element.style.backgroundImage = copyButtonImageURL;
-    }    
-    copySelectionText() {
-        let copySuccess;
-        try{
-            copySuccess = document.execCommand("copy");
-        } catch(e){
-            copySuccess = false;
-        }
-        return copySuccess;
-    }    
-    removeFromDocument(){
-        let element = document.getElementById(this.element.id);
-        element.parentElement.removeChild(element);
-    }
+class EZ_Selection{
+	constructor(){
+		this.text = "``=--___EZB COULD NOT RETRIEVE___--=``";
+		if (!!window.getSelection()) {
+			this.windowSelection = window.getSelection();
+			this.text = window.getSelection().toString();
+			this.focusNode = this.windowSelection.focusNode;
+			if(!!this.focusNode)
+				this.focusNode_ParentElement = this.focusNode.parentElement;
+			this.focusOffset = this.windowSelection.focusOffset;
+		} else if (document.selection && document.selection.type != "Control") {
+			this.text = document.selection.createRange().text;
+		}			
+	}
 }
 
 ///_____________________________________________________________________|~
@@ -206,18 +126,7 @@ class EZ_CopyButton {
 //--------------------------------|_________|---------------------------|~~
 ///`````````````````````````````````````````````````````````````````````|~
 
-function copySelectionText(){		
-    let copysuccess;
-    try{
-        copysuccess = document.execCommand("copy");
-    } catch(e){
-        copysuccess = false;
-    }
-    return copysuccess;
-}
-
-function set_Register_Mouse_Up_On_Document(
-            callback = () => {
+function set_Register_Mouse_Up_On_Document(callback  = () => {
                 addToYellowBox("NO CALLBACK FOR MOUSEUP");
             }){
             document.onmouseup = callback;
@@ -277,13 +186,9 @@ function sleep(mils){
     addToYellowBox('EZB starting up..','(^__~)');
     addToYellowBox('``````````````````````````');
     
-    layout = new Layout;
-    
-    //set_Register_Mouse_Up_On_Document(layout.mouseUp);
-    
-    let ezCopyButton = new EZ_CopyButton();
-    
-    getHere().appendChild(ezCopyButton.element);
+    ezLayout = new EZ_Layout();
+	
+	set_Register_Mouse_Up_On_Document(ezLayout.mouseUp);
 	
 	
 })();
