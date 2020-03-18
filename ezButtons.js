@@ -80,11 +80,9 @@ class EZ_CopyButton extends EZ_Button {
 
 class EZ_Layout {	
 	constructor(){		
-		//this.selection = new EZ_Selection();	
 		this.copyButton = new EZ_CopyButton();
 	}
-	appendCopyButton = () => {		
-		//this.selection = new EZ_Selection();		
+	appendCopyButton = () => {			
 		this.copyButton.removeFromDocument();	
 		this.selection.focusNode_ParentElement.innerHTML = 
 			this.selection.focusNode_ParentElement.innerHTML.insertSubStringAt(
@@ -93,7 +91,6 @@ class EZ_Layout {
 	}		
 	mouseUp = mouseEvent => {
 		let mouseTargetClass = mouseEvent.target.className;
-		//addToYellowBox(this.selection.text, "selection text: ");
 		if(mouseTargetClass != ezClass){
 			this.selection = new EZ_Selection();
 			addToYellowBox(this.selection.text);
