@@ -17,7 +17,7 @@
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": ["ezButtons.js","jquery-3.4.1.min.js"]
+            "js": ["ezButtons.js"]
         }
     ],
 

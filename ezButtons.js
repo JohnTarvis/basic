@@ -26,7 +26,7 @@ let ezLayout;
 ///```````````````````````````````````````````````````````````````````|~
 
 function clickTest3(){
-    addToYellowBox("..clicked..");
+    addToYellowBox("..click test 3..");
 }
 
 class EZ_Element {	
@@ -38,14 +38,33 @@ class EZ_Element {
 	removeFromDocument = () => {
 		let element = document.getElementById(this.element.id);
 		if(!!element)element.parentElement.removeChild(element);
-	}	
+	}
+	appendToNewParent = (parent, position) => {
+		let thisOuterHTML = this.element.outerHTML;
+		let thatInnerHTML = parent.innerHTML;
+		parent.innerHTML = thatInnerHTML.slice(0, position) + thisOuterHTML + thatInnerHTML.slice(position);		
+		//parent.innerHTML = thatInnerHTML.slice(0, position) + "<div>" + thisOuterHTML + "</div>" + thatInnerHTML.slice(position);
+	}
+	isInDocument = (caller = "::") => {
+		let inDocument = !!document.getElementById(this.element.id);
+		if(inDocument) {
+			return true;
+		} else {
+			addToYellowBox("element is NOT in document", caller);
+			return false;
+		}			
+	}
+	getElementFromDocument = () => {
+		if(this.isInDocument("getElementFromDocument"))
+			return document.getElementById(this.element.id);
+	}
 }
 
 class EZ_Button extends EZ_Element {
-	constructor(action = "click", callback = () => addToYellowBox("clicked")){
+	constructor(action = "click", callback){//, callback = () => addToYellowBox("default clicked")){
 		super("button", "ezButton");
-		this.element.addEventListener(action, callback);
 		this.callback = callback;
+		this.action = action;
 		this.setStandardStyle();
 	}	
 	setStandardStyle = () => {
@@ -54,17 +73,27 @@ class EZ_Button extends EZ_Element {
         this.element.style.backgroundSize = '100%';
 		this.element.style.backgroundColor = "purple";
 	}
-	changeEventListener = (callback) => {
+	changeEventListener = callback => {
 		this.element.removeEventListener("click", this.callback, false);
 		this.element.addEventListener("click", callback);
 		this.callback = callback;
 	}
+	setEventListenerInDocument = () => {
+		if(this.isInDocument("setEventListenerInDocument"))
+			this.getElementFromDocument().addEventListener(this.action,this.callback);
+	}
+	appendToNewParent = (parent, position) => {
+		let thisOuterHTML = this.element.outerHTML;
+		let thatInnerHTML = parent.innerHTML;
+		parent.innerHTML = thatInnerHTML.slice(0, position) + thisOuterHTML + thatInnerHTML.slice(position);
+		this.setEventListenerInDocument();
+	}	
 }
 
 class EZ_CopyButton extends EZ_Button {
 	constructor() {
-		super("click");
-		this.changeEventListener(this.copySelectionText);
+		super();
+		this.callback = this.copySelectionText;
 		this.element.style.backgroundImage = copyButtonImageURL;
 	}
 	copySelectionText = () => {
@@ -82,22 +111,30 @@ class EZ_Layout {
 	constructor(){		
 		this.copyButton = new EZ_CopyButton();
 	}
-	appendCopyButton = () => {			
-		this.copyButton.removeFromDocument();	
-		this.selection.focusNode_ParentElement.innerHTML = 
-			this.selection.focusNode_ParentElement.innerHTML.insertSubStringAt(
-			this.copyButton.element.outerHTML,
-			this.selection.focusOffset); 
+	appendCopyButton = () => {		
+		this.copyButton.removeFromDocument();				
+		this.copyButton.appendToNewParent(this.selection.focusNode_ParentElement, this.selection.focusOffset);	
+		this.copyButton.setEventListenerInDocument();
 	}		
+	testCB = () => {
+		this.copyButton.removeFromDocument();
+		getHere().appendChild(this.copyButton.element);
+	}
 	mouseUp = mouseEvent => {
 		let mouseTargetClass = mouseEvent.target.className;
-		if(mouseTargetClass != ezClass){
-			this.selection = new EZ_Selection();
-			addToYellowBox(this.selection.text);
-			if(!!this.selection.text)
-				this.appendCopyButton();
-			else
-				addToYellowBox("no text");
+		if(mouseEvent.button != 0){
+			//do nothing yet
+		} else {
+			if(mouseTargetClass != ezClass) {
+				this.selection = new EZ_Selection();
+				if(!!this.selection.text) {
+					this.appendCopyButton();
+					//addToYellowBox(this.copyButton.callback);
+				}
+				else {
+					addToYellowBox("no text");
+				}
+			}
 		}
 	}
 }
@@ -123,6 +160,10 @@ class EZ_Selection{
 //--------------------------------|FUNCTIONS|---------------------------|~~~
 //--------------------------------|_________|---------------------------|~~
 ///`````````````````````````````````````````````````````````````````````|~
+
+function insertStringInString(toInsert, toReceive, place){
+	return toReceive.slice(0,place) + toInsert + toReceive.slice(place);	
+}
 
 function set_Register_Mouse_Up_On_Document(callback  = () => {
                 addToYellowBox("NO CALLBACK FOR MOUSEUP");
@@ -183,12 +224,10 @@ function sleep(mils){
     addToYellowBox('__________________________');
     addToYellowBox('EZB starting up..','(^__~)');
     addToYellowBox('``````````````````````````');
-    
-    ezLayout = new EZ_Layout();
 	
+    ezLayout = new EZ_Layout();	
 	set_Register_Mouse_Up_On_Document(ezLayout.mouseUp);
-	
-	
+
 })();
 
 ///_____________________________________________________________________|~
