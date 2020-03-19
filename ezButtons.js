@@ -7,6 +7,7 @@
 ///`````````````````````````````````````````````````````````````````````|~
 
 const ezClass = 'ezClass';
+const ezID = "ezID";
 const toolTip_id = 'toolTip_id';
 const copyButton_id = 'copyButton_id';
 const copyButtonImageURL = "url('icons/copyButtonIcon21-26.png')";
@@ -25,12 +26,8 @@ let ezLayout;
 //--------------------------------|_______|---------------------------|~~
 ///```````````````````````````````````````````````````````````````````|~
 
-function clickTest3(){
-    addToYellowBox("..click test 3..");
-}
-
 class EZ_Element {	
-	constructor(type = "div", className = "ezClass", id = "ez_ID"){
+	constructor(type = "div", className = ezClass, id = ezID){
 		this.element = document.createElement(type);
 		this.element.className = className;
 		this.element.id = id;		
@@ -48,14 +45,15 @@ class EZ_Element {
 	isInDocument = (caller = "::") => {
 		let inDocument = !!document.getElementById(this.element.id);
 		if(inDocument) {
+            if(caller != "::")addToYellowBox(" IS in document", caller);
 			return true;
 		} else {
-			addToYellowBox("element is NOT in document", caller);
+			if(caller != "::")addToYellowBox(" is NOT in document", caller);
 			return false;
 		}			
 	}
 	getElementFromDocument = () => {
-		if(this.isInDocument("getElementFromDocument"))
+		if(this.isInDocument())
 			return document.getElementById(this.element.id);
 	}
 }
@@ -79,7 +77,7 @@ class EZ_Button extends EZ_Element {
 		this.callback = callback;
 	}
 	setEventListenerInDocument = () => {
-		if(this.isInDocument("setEventListenerInDocument"))
+		if(this.isInDocument())
 			this.getElementFromDocument().addEventListener(this.action,this.callback);
 	}
 	appendToNewParent = (parent, position) => {
@@ -93,7 +91,8 @@ class EZ_Button extends EZ_Element {
 class EZ_CopyButton extends EZ_Button {
 	constructor() {
 		super();
-		this.callback = this.copySelectionText;
+		//this.callback = this.copySelectionText;
+        this.callback = () => {addToYellowBox("got callback");}
 		this.element.style.backgroundImage = copyButtonImageURL;
 	}
 	copySelectionText = () => {
@@ -103,33 +102,33 @@ class EZ_CopyButton extends EZ_Button {
 		} catch(e){
 			copysuccess = false;
 		}
-		return copysuccess;
+		addToYellowBox(copysuccess, "COPYSUCCESS? ");
 	}
 }
 
 class EZ_Layout {	
 	constructor(){		
 		this.copyButton = new EZ_CopyButton();
+        this.selection = new EZ_Selection();
 	}
 	appendCopyButton = () => {		
 		this.copyButton.removeFromDocument();				
 		this.copyButton.appendToNewParent(this.selection.focusNode_ParentElement, this.selection.focusOffset);	
 		this.copyButton.setEventListenerInDocument();
 	}		
-	testCB = () => {
-		this.copyButton.removeFromDocument();
-		getHere().appendChild(this.copyButton.element);
-	}
+	
 	mouseUp = mouseEvent => {
 		let mouseTargetClass = mouseEvent.target.className;
 		if(mouseEvent.button != 0){
 			//do nothing yet
 		} else {
 			if(mouseTargetClass != ezClass) {
-				this.selection = new EZ_Selection();
+				this.selection.fromDocument();
 				if(!!this.selection.text) {
+                    //this.selection.select();
 					this.appendCopyButton();
-					//addToYellowBox(this.copyButton.callback);
+                    this.selection.reset();
+                    //this.selection.select();
 				}
 				else {
 					addToYellowBox("no text");
@@ -149,10 +148,52 @@ class EZ_Selection{
 			if(!!this.focusNode)
 				this.focusNode_ParentElement = this.focusNode.parentElement;
 			this.focusOffset = this.windowSelection.focusOffset;
+            this.anchorNode = this.windowSelection.anchorNode;
+            this.anchorOffset = this.windowSelection.anchorOffset;
 		} else if (document.selection && document.selection.type != "Control") {
 			this.text = document.selection.createRange().text;
 		}			
-	}
+	}    
+    reset(){        
+        try {
+            let selection = window.getSelection();
+            let button = document.getElementById(ezID);
+            selection.setBaseAndExtent(this.anchorNode, this.anchorOffset.valueOf, button, 0);
+            
+        } catch(e) {
+            console.log(e.message);
+        }
+    }
+    fromWindow(){
+        this.text = "``=--___EZB COULD NOT RETRIEVE___--=``";
+		if (!!window.getSelection()) {
+			this.windowSelection = window.getSelection();
+			this.text = window.getSelection().toString();
+			this.focusNode = this.windowSelection.focusNode;
+			if(!!this.focusNode)
+				this.focusNode_ParentElement = this.focusNode.parentElement;
+			this.focusOffset = this.windowSelection.focusOffset;
+            this.anchorNode = this.windowSelection.anchorNode;
+            this.anchorOffset = this.windowSelection.anchorOffset;
+		} else if (document.selection && document.selection.type != "Control") {
+			this.text = document.selection.createRange().text;
+		}		
+    }
+    fromDocument(){
+        this.text = "``=--___EZB COULD NOT RETRIEVE___--=``";
+		if (!!document.getSelection()) {
+			this.documentSelection = document.getSelection();
+			this.text = document.getSelection().toString();
+			this.focusNode = this.documentSelection.focusNode;
+			if(!!this.focusNode)
+				this.focusNode_ParentElement = this.focusNode.parentElement;
+			this.focusOffset = this.documentSelection.focusOffset;
+            this.anchorNode = this.documentSelection.anchorNode;
+            this.anchorOffset = this.documentSelection.anchorOffset;
+		} else if (document.selection && document.selection.type != "Control") {
+			this.text = document.selection.createRange().text;
+		}		
+    }
 }
 
 ///_____________________________________________________________________|~
@@ -160,6 +201,10 @@ class EZ_Selection{
 //--------------------------------|FUNCTIONS|---------------------------|~~~
 //--------------------------------|_________|---------------------------|~~
 ///`````````````````````````````````````````````````````````````````````|~
+
+function clickTest3(){
+    addToYellowBox("..click test 3..");
+}
 
 function insertStringInString(toInsert, toReceive, place){
 	return toReceive.slice(0,place) + toInsert + toReceive.slice(place);	
@@ -172,8 +217,18 @@ function set_Register_Mouse_Up_On_Document(callback  = () => {
             document.onkeyup = callback;
 }
 
+function set_Register_Document_Selection_Change(callback = () => {
+                addToYellowBox("NO CALLBACK FOR SELECTION CHANGE");
+            }){
+            document.onselectionchange = callback;    
+}
+
 function getHere(){
 	return document.getElementById("here");
+}
+
+function getThere(){
+    return document.getElementById("there");
 }
 
 function insert_Element_In_Element_At_Position(elementToInsert,elementToReceive,atPosition){
@@ -224,9 +279,21 @@ function sleep(mils){
     addToYellowBox('__________________________');
     addToYellowBox('EZB starting up..','(^__~)');
     addToYellowBox('``````````````````````````');
+    
+    
 	
     ezLayout = new EZ_Layout();	
 	set_Register_Mouse_Up_On_Document(ezLayout.mouseUp);
+    
+    //let here = getHere();
+    //let there = getThere();
+    
+    //selection.setBaseAndExtent(here, 2, there, 3);
+    //(this.anchorNode, this.anchorOffset, this.focusNode, this.focusOffset)
+    
+    //set_Register_Document_Selection_Change(()=>{addToYellowBox("SELECTION CHANGED");});
+    
+    console.log("STARTING EZ BUTTONS");
 
 })();
 
