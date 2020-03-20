@@ -119,12 +119,12 @@ let asyncLoadScript = function (url, callback) {
 			console.log("STARTING EZ BUTTONS");
 		}
 		
-		// addToYellowBox('__________________________');
-		// addToYellowBox('EZB starting up..','(^__~)');
-		// addToYellowBox('``````````````````````````');
+
 	);
 	
-	
+	addToYellowBox('__________________________');
+	addToYellowBox('EZB starting up..','(^__~)');
+	addToYellowBox('``````````````````````````');
 
 })();
 
