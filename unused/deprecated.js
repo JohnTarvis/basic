@@ -1,3 +1,229 @@
+
+class EZ_Element {	
+	constructor(type = "div", className = ezClass, id = ezID){
+		this.element = document.createElement(type);
+		this.element.className = className;
+		this.element.id = id;		
+	}
+	removeFromDocument = () => {
+		let element = document.getElementById(this.element.id);
+		if(!!element)element.parentElement.removeChild(element);
+	}
+	appendToNewParent = (parent, position) => {
+		let thisOuterHTML = this.element.outerHTML;
+		let thatInnerHTML = parent.innerHTML;
+		parent.innerHTML = thatInnerHTML.slice(0, position) + thisOuterHTML + thatInnerHTML.slice(position);		
+		//parent.innerHTML = thatInnerHTML.slice(0, position) + "<div>" + thisOuterHTML + "</div>" + thatInnerHTML.slice(position);
+	}
+	isInDocument = (caller = "::") => {
+		let inDocument = !!document.getElementById(this.element.id);
+		if(inDocument) {
+            if(caller != "::")addToYellowBox(" IS in document", caller);
+			return true;
+		} else {
+			if(caller != "::")addToYellowBox(" is NOT in document", caller);
+			return false;
+		}			
+	}
+	getElementFromDocument = () => {
+		if(this.isInDocument())
+			return document.getElementById(this.element.id);
+	}
+}
+class EZ_Button extends EZ_Element {
+	constructor(action = "click", callback){//, callback = () => addToYellowBox("default clicked")){
+		super("button", "ezButton");
+		this.callback = callback;
+		this.action = action;
+		this.setStandardStyle();
+	}	
+	setStandardStyle = () => {
+		this.element.style.width = '5px';
+        this.element.style.height = '24px';
+        this.element.style.backgroundSize = '100%';
+		this.element.style.backgroundColor = "purple";
+	}
+	changeEventListener = callback => {
+		this.element.removeEventListener("click", this.callback, false);
+		this.element.addEventListener("click", callback);
+		this.callback = callback;
+	}
+	setEventListenerInDocument = () => {
+		if(this.isInDocument())
+			this.getElementFromDocument().addEventListener(this.action,this.callback);
+	}
+	appendToNewParent = (parent, position) => {
+		let thisOuterHTML = this.element.outerHTML;
+		let thatInnerHTML = parent.innerHTML;
+		parent.innerHTML = thatInnerHTML.slice(0, position) + thisOuterHTML + thatInnerHTML.slice(position);
+		this.setEventListenerInDocument();
+	}	
+}
+class EZ_CopyButton extends EZ_Button {
+	constructor() {
+		super();
+		//this.callback = this.copySelectionText;
+        this.callback = () => {addToYellowBox("got callback");}
+		this.element.style.backgroundImage = copyButtonImageURL;
+	}
+	copySelectionText = () => {
+		let copysuccess;
+		try{
+			copysuccess = document.execCommand("copy");
+		} catch(e){
+			copysuccess = false;
+		}
+		addToYellowBox(copysuccess, "COPYSUCCESS? ");
+	}
+}
+
+class EZ_Layout {	
+	constructor(){		
+		this.copyButton = new EZ_CopyButton();
+        this.selection = new EZ_Selection();
+	}
+	appendCopyButton = () => {		
+		this.copyButton.removeFromDocument();				
+		this.copyButton.appendToNewParent(this.selection.focusNode_ParentElement, this.selection.focusOffset);	
+		this.copyButton.setEventListenerInDocument();
+	}		
+	
+	mouseUp = mouseEvent => {
+		let mouseTargetClass = mouseEvent.target.className;
+		if(mouseEvent.button != 0){
+			//do nothing yet
+		} else {
+			if(mouseTargetClass != ezClass) {
+				this.selection.fromDocument();
+				if(!!this.selection.text) {
+                    //this.selection.select();
+					this.appendCopyButton();
+                    this.selection.reset();
+                    //this.selection.select();
+				}
+				else {
+					addToYellowBox("no text");
+				}
+			}
+		}
+	}
+}
+
+class EZ_Selection{
+	constructor(){
+		this.text = "``=--___EZB COULD NOT RETRIEVE___--=``";
+		if (!!window.getSelection()) {
+			this.windowSelection = window.getSelection();
+			this.text = window.getSelection().toString();
+			this.focusNode = this.windowSelection.focusNode;
+			if(!!this.focusNode)
+				this.focusNode_ParentElement = this.focusNode.parentElement;
+			this.focusOffset = this.windowSelection.focusOffset;
+            this.anchorNode = this.windowSelection.anchorNode;
+            this.anchorOffset = this.windowSelection.anchorOffset;
+		} else if (document.selection && document.selection.type != "Control") {
+			this.text = document.selection.createRange().text;
+		}			
+	}    
+    reset(){        
+        try {
+            let selection = window.getSelection();
+            let button = document.getElementById(ezID);
+            selection.setBaseAndExtent(this.anchorNode, this.anchorOffset.valueOf, button, 0);
+            
+        } catch(e) {
+            console.log(e.message);
+        }
+    }
+    fromWindow(){
+        this.text = "``=--___EZB COULD NOT RETRIEVE___--=``";
+		if (!!window.getSelection()) {
+			this.windowSelection = window.getSelection();
+			this.text = window.getSelection().toString();
+			this.focusNode = this.windowSelection.focusNode;
+			if(!!this.focusNode)
+				this.focusNode_ParentElement = this.focusNode.parentElement;
+			this.focusOffset = this.windowSelection.focusOffset;
+            this.anchorNode = this.windowSelection.anchorNode;
+            this.anchorOffset = this.windowSelection.anchorOffset;
+		} else if (document.selection && document.selection.type != "Control") {
+			this.text = document.selection.createRange().text;
+		}		
+    }
+    fromDocument(){
+        this.text = "``=--___EZB COULD NOT RETRIEVE___--=``";
+		if (!!document.getSelection()) {
+			this.documentSelection = document.getSelection();
+			this.text = document.getSelection().toString();
+			this.focusNode = this.documentSelection.focusNode;
+			if(!!this.focusNode)
+				this.focusNode_ParentElement = this.focusNode.parentElement;
+			this.focusOffset = this.documentSelection.focusOffset;
+            this.anchorNode = this.documentSelection.anchorNode;
+            this.anchorOffset = this.documentSelection.anchorOffset;
+		} else if (document.selection && document.selection.type != "Control") {
+			this.text = document.selection.createRange().text;
+		}		
+    }
+}
+
+
+
+
+
+class ScriptLoader {
+  constructor (options) {
+    const { src, global, protocol = document.location.protocol } = options
+    this.src = src
+    this.global = global
+    this.protocol = "file";//protocol
+    this.isLoaded = false
+  }
+
+  loadScript () {
+    return new Promise((resolve, reject) => {
+      // Create script element and set attributes
+      const script = document.createElement('script')
+      script.type = 'text/javascript'
+      script.async = true
+      script.src = `${this.protocol}//${this.src}`
+
+      // Append the script to the DOM
+      const el = document.getElementsByTagName('script')[0]
+      el.parentNode.insertBefore(script, el)
+
+      // Resolve the promise once the script is loaded
+      script.addEventListener('load', () => {
+        this.isLoaded = true
+        resolve(script)
+      })
+
+      // Catch any errors while loading the script
+      script.addEventListener('error', () => {
+        reject(new Error(`${this.src} failed to load.`))
+      })
+    })
+  }
+
+  load () {
+    return new Promise(async (resolve, reject) => {
+      if (!this.isLoaded) {
+        try {
+          await this.loadScript()
+          resolve(window[this.global])
+        } catch (e) {
+          reject(e)
+        }
+      } else {
+        resolve(window[this.global])
+      }
+    })
+  }
+}
+
+
+
+
 function Button(action = "click",
 				responseFunction = () => addToYellowBox("clicked"), 
 				className = "DOM", 

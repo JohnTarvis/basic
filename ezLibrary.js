@@ -1,10 +1,49 @@
 "use strict";
 
+//////////////////////////////////////////////////////////////////////////
+///-------------------------------|ezLibrary|--------------------------///
+//////////////////////////////////////////////////////////////////////////
+
+/*************************************************************************
+................................................ .... ...                                           
+.............................................;c. .... ,c.                                           
+...................................''........:l. .... ,c.                                           
+...............................,coxkxo,..... ;o. .    ':.                                           
+.............................:dkOkkOOOd;.... ,o'      ',.                                           
+.............................:xxddxk000k:. . 'd;      ..                                            
+..............................,dxoldk0KKk:.  .oc      '.               .;lol:'.                     
+................................cxdlldOKKk;. .lo.    .,.            .,lxOkdl:'..'.                  
+......................,oo:,......,dko:lk00x;. :d'    ';.         .':dOOxdc;,;clc;.                  
+......................'cdkkdl;'....:xxc:dO0x, ,x;    :;        .,cxOkkdlc:clol;.                    
+...................lkxdlccccodxoc;'.'cdo:lkOo..dl.  .c'     ..,lxkkxollcllc;'.','..                 
+.................:kKXXXNXKkdlc:::ccc:,;odlcdkc.co.  ,:.   ..,lxkxdolllc:,'..'''',,,'.               
+................l00000KKXXXXK0kdc;,'',,;:lccdx;,l' .;,  ..,ldxxdolc;,'...'',;::clloooc'.            
+...............lKKkxdddxxxxkkkOOOkxo:,...';:ldd;c, .;...':oxdllc;,,,,:clodxkkOOOOOkkxxd:.           
+..............'ldddoooodooolllcclldxkkdl;...,lxoc;.';..,lolc:;;::coxxxxxxxxdddoollccccc:.           
+..............;dddolllllllllllcc:::::::ccl:'..;dl;,;'.,lc:;;::oddlc:;,''',,,,;;;;;::::c:'.          
+............'cxOOOkkkxxddddoooooddxxxdoc;'',,'.,cc;,',::;,:llc:;,,,;:ccclllooooooooddddooc.         
+...........,dxollcccc::;;;,,'''....'',;clolc;'',,:c;';;';ccc:;:codxxddoodddddxxxxxxxxxxxddl,        
+...........;olc::;::::cccclccccc::::;;;,'',;clc::coc;,,:olclolc;,''...........''',,,,,;;;;;,.       
+..........;dxl;,'..................'',;;::c::codoodoc;lxdollcc:::cclooooddddddxddddddddddddoc.      
+. .....,:lkOkdooollllccccccccccccccccccccllooxxdddoc,;lxkxxxkOOOOOOOOOOOOO000OOOOOOOOOOOkkkkkd:.  ..
+;,,,:c;''',,,;;;;;:c;;::::::::::::::::::cccc:cllc,.....;coocclllllllllllllllllllllllllllcccccc:;...'
+kkkk0Oc'.      ..,:;.',,';:,.         .';'    .,,..    ....';;'.............    .....'.     ..';,..'
+XXXNWKo;;coolloxOdl:ck00KKko:',;;;;;;clll::ooodOxlc,':cllodkd:'.;loddddxo;;,;llllodl:;,:cllloxxo:':l
+NNNNWKl,l0XNXXXXXxc;o0KKXXko;;dO0KKKKXOoc:xKXXXKkol;:kO0KKXKd;..cdkO0KKXx;,;oO00OO0xc;;dOOOO0Kko:;lx
+NNNNN0c,oKXXXXXXXx:;o0KKXXkc,;dO0KKKKX0o::kKXXXKxlc;ckO00KX0o,..cxO00KKKx,,;oOO0OO0kc;;dOOO00Kkl:,cd
+XXXNNO:,oKXXXXXXKd::oO0KXKx:,:xO00KKKXOo;:kKKXX0dc;;ckO000X0l'.'cdkO00KKd,';okOOOOOxc,;dkOOO0Kxl:':d
+XXXXNO;,dKXXXXKXKo;:oO00KKd;':xkO000KXOl;:kKKKXOo:,,cxOO00KOc'.'cdkO000Ko'';okOOOkOx:';dkOOOO0xl:':o
+
+**************************************************************************/
+
 ///_____________________________________________________________________|~
 //--------------------------------|`````````|---------------------------|~~
 //--------------------------------|CONSTANTS|---------------------------|~~~
 //--------------------------------|_________|---------------------------|~~
 ///`````````````````````````````````````````````````````````````````````|~
+
+const ez_id = "ez_id";
+const ez_class = "ez_class";
 
 ///_____________________________________________________________________|~
 //--------------------------------|`````````|---------------------------|~~
@@ -18,7 +57,126 @@
 //--------------------------------|_______|---------------------------|~~
 ///```````````````````````````````````````````````````````````````````|~
 
+///-add attribute setter
+class Element_ez {
+    constructor(type = "div", id = "ez_id", className = "ez_class"){
+        this.inDoc = document.createElement(type);
+        this.inDoc.id = id;
+        this.inDoc.className = className;
+        This = this;
+    }
+    getFromDocument(){
+        if(This.isInDocument())
+            return document.getElementById(This.inDoc.id);
+    }
+    isInDocument(){
+        let foundInDocument = !!document.getElementById(This.inDoc.id);
+        if(foundInDocument){
+            return true;
+        } else {
+            l_(This.inDoc.id + "-NOT found in document");
+            return false;
+        }
+    }
+    removeFromDocument(){
+		if(This.isInDocument())
+            This.inDoc.parentElement.removeChild(element);
+	}
+    appendToNewParent(parent, position){
+		let outerHTML = this.element.outerHTML;
+		let parentInnerHTML = parent.innerHTML;
+		parent.innerHTML = thatInnerHTML.slice(0, position) + outerHTML + parentInnerHTML.slice(position);		
+	}
+    setAttributes(attributes){
+        for(attribute in attributes){
+            This.inDoc.attribute = attribute;
+        } 
+    }
+}
 
+class Button_ez extends Element_ez {
+    constructor(action = "click", listener = () => {console.log("no function for button");}, id = "ezButton_id" ){
+        super("button",id);
+        this.inDoc.addEventListener(action,listener);
+        this.action = action;
+        this.listener = listener;
+        This = this;
+    }
+    addEventListenerInDocument(listener){
+        if(This.isInDocument)
+            This.getFromDocument().addEventListener(This.action,This.listener);
+    }
+    appendToNewParent(parent, position){
+        super.appendToNewParent(parent, position);
+        This.addEventListenerInDocument();
+    }
+    setDefaultStyle(){
+        This.setAttributes({
+            width: "5px",
+            height: "24px",
+            backgroundSize: "100%",
+        });
+    }    
+}
+
+class Selection_ez {
+	constructor(){
+        this.windowSelection = window.getSelection();
+        this.documentSelection = document.getSelection();
+        if(!!this.windowSelection){
+            this.text = window.getSelection().toString();
+			this.focusNode = this.windowSelection.focusNode;
+			this.focusOffset = this.windowSelection.focusOffset;
+            this.anchorNode = this.windowSelection.anchorNode;
+            this.anchorOffset = this.windowSelection.anchorOffset;
+            if(!!this.focusNode)
+				this.focusNode_ParentElement = this.focusNode.parentElement;
+        } else if (document.selection && document.selection.type != "Control") {
+			this.text = document.selection.createRange().text;
+		}			
+        let This = this;
+	}    
+    reset(){        
+        try {
+            let selection = window.getSelection();
+            let button = document.getElementById(ezID);
+            selection.setBaseAndExtent(this.anchorNode, this.anchorOffset.valueOf, button, 0);
+            
+        } catch(e) {
+            l_(e.message);
+        }
+    }
+    fromWindow(){
+        this.text = "``=--___EZB COULD NOT RETRIEVE___--=``";
+		if (!!window.getSelection()) {
+			this.windowSelection = window.getSelection();
+			this.text = window.getSelection().toString();
+			this.focusNode = this.windowSelection.focusNode;
+			if(!!this.focusNode)
+				this.focusNode_ParentElement = this.focusNode.parentElement;
+			this.focusOffset = this.windowSelection.focusOffset;
+            this.anchorNode = this.windowSelection.anchorNode;
+            this.anchorOffset = this.windowSelection.anchorOffset;
+		} else if (document.selection && document.selection.type != "Control") {
+			this.text = document.selection.createRange().text;
+		}		
+    }
+    fromDocument(){
+        this.text = "``=--___EZB COULD NOT RETRIEVE___--=``";
+		if (!!document.getSelection()) {
+			this.documentSelection = document.getSelection();
+			this.text = document.getSelection().toString();
+			this.focusNode = this.documentSelection.focusNode;
+			if(!!this.focusNode)
+				this.focusNode_ParentElement = this.focusNode.parentElement;
+			this.focusOffset = this.documentSelection.focusOffset;
+            this.anchorNode = this.documentSelection.anchorNode;
+            this.anchorOffset = this.documentSelection.anchorOffset;
+		} else if (document.selection && document.selection.type != "Control") {
+			this.text = document.selection.createRange().text;
+		}		
+    }
+}
 ///_____________________________________________________________________|~
 //--------------------------------|`````````|---------------------------|~~
 //--------------------------------|FUNCTIONS|---------------------------|~~~
@@ -43,39 +201,31 @@ function set_Register_Document_Selection_Change(callback = () => {
             document.onselectionchange = callback;    
 }
 
+function sleep(mils){
+	let currentTime = new Date().getTime();
+	while(currentTime + mils >= new Date().getTime()){}
+}
 
-///===================================================================================
+///==================================================================================|
 //___________________________________________________________________________________|
 //-----------------------------------------------------------------------------------|
 ///-These elements are in the test page which should be bundled with this script     |
 //-also console functions															 |
 //-----------------------------------------------------------------------------------|
-///``````````````````````````````````````````````````````````````````````````````````
-function getHere(){	
-	try {
-		return document.getElementById("here");
-	}
-	catch(error) {
-		console.log("getHere NOT in document because::" + error.message);
-	}		
+//```````````````````````````````````````````````````````````````````````````````````|
+///==================================================================================|
+
+function getHere(){
+	return document.getElementById("here");
 }
 
 function getThere(){
-	try {
-		return document.getElementById("there");
-	}
-	catch(error) {
-		console.log("getThere NOT in document because::" + error.message);
-	}
+    return document.getElementById("there");
 }
 
 function clearYellowBox(){
-	try {
-		let theYellowBox = document.getElementById('theYellowBox');
-	}
-	catch(error) {
-		console.log("no yellow box");
-	}
+    let theYellowBox = document.getElementById('theYellowBox');
+    theYellowBox.innerHTML = '_______________________________';
 }
 
 function addToYellowBox(text = "...", prefix = ""){
@@ -84,8 +234,6 @@ function addToYellowBox(text = "...", prefix = ""){
 		let theYellowBox_innerHTML = theYellowBox.innerHTML;
 		let textToYellowBox = theYellowBox_innerHTML + '<br>' + prefix + ' : ' + text;
 		theYellowBox.innerHTML = textToYellowBox;
-	} else {
-		console.log("no yellow box");
 	}
 }
 
@@ -94,63 +242,35 @@ function l_(message) {
 	addToYellowBox(message);
 }
 
-///===================================================================================
+function l_clear(){
+    console.clear();
+    clearYellowBox();
+}
 
+///===================================================================================
 
 function sleep(mils){
 	let currentTime = new Date().getTime();
 	while(currentTime + mils >= new Date().getTime()){}
 }
 
-
-
-
-///_____________________________________________________________________|~
-//--------------------------------|````|--------------------------------|~~
-//--------------------------------|MAIN|--------------------------------|~~~
-//--------------------------------|____|--------------------------------|~~
-///`````````````````````````````````````````````````````````````````````|~
-
-function ezLibraryMain(){
-	if (window.hasRun) {
-		return;
-	}
-	window.hasRun = true;
-    
-    addToYellowBox('_______________________/\_');
-    addToYellowBox('EZL starting up..','<(^__~)>');
-    addToYellowBox('```````````````````````\/`````');
-    
-    l_("ezLibrary starting...");
-	
-
+function sleepSeconds(seconds){
+    sleep(mils * 1000);
 }
 
-///_____________________________________________________________________|~
-//--------------------------------|````|--------------------------------|~~
-//--------------------------------|TEST|--------------------------------|~~~
-//--------------------------------|____|--------------------------------|~~
-///`````````````````````````````````````````````````````````````````````|~
+function countDown(seconds){
+    while(seconds > 0){
+        l_(seconds);
+        sleep(1000 * seconds);
+        seconds--;
+    }
+}
 
+///===================================================================================
 
+//l_("...");
 
-///_____________________________________________________________________|~
-//--------------------------------|`````````|--------------------------------|~~
-//--------------------------------|ADDITIONS|--------------------------------|~~~
-//--------------------------------|_________|--------------------------------|~~
-///`````````````````````````````````````````````````````````````````````|~
-
-
-
-
-///_________________________________________________________________________|~
-//--------------------------------|````````|--------------------------------|~~
-//--------------------------------|DISABLED|--------------------------------|~~~
-//--------------------------------|________|--------------------------------|~~
-///`````````````````````````````````````````````````````````````````````````|~
-
-
-/*****************************************************************************
+/*************************************************************************************
 
 :-.```.------....----::/+osyso+:-----:/ymmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
 -.`.-::::////:---://+ossssyyyso++/::+shmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
