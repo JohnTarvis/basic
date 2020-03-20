@@ -1,5 +1,94 @@
 "use strict";
 
+
+
+
+class ScriptLoader {
+  constructor (options) {
+    const { src, global, protocol = document.location.protocol } = options
+    this.src = src
+    this.global = global
+    this.protocol = protocol
+    this.isLoaded = false
+  }
+
+  loadScript () {
+    return new Promise((resolve, reject) => {
+      // Create script element and set attributes
+      const script = document.createElement('script')
+      script.type = 'text/javascript'
+      script.async = true
+      script.src = `${this.protocol}//${this.src}`
+
+      // Append the script to the DOM
+      const el = document.getElementsByTagName('script')[0]
+      el.parentNode.insertBefore(script, el)
+
+      // Resolve the promise once the script is loaded
+      script.addEventListener('load', () => {
+        this.isLoaded = true
+        resolve(script)
+      })
+
+      // Catch any errors while loading the script
+      script.addEventListener('error', () => {
+        reject(new Error(`${this.src} failed to load.`))
+      })
+    })
+  }
+
+  load () {
+    return new Promise(async (resolve, reject) => {
+      if (!this.isLoaded) {
+        try {
+          await this.loadScript()
+          resolve(window[this.global])
+        } catch (e) {
+          reject(e)
+        }
+      } else {
+        resolve(window[this.global])
+      }
+    })
+  }
+}
+
+
+///_____________________________________________________________________|~
+//--------------------------------|````|--------------------------------|~~
+//--------------------------------|MAIN|--------------------------------|~~~
+//--------------------------------|____|--------------------------------|~~
+///`````````````````````````````````````````````````````````````````````|~
+
+(async function main(){
+	if (window.hasRun) {
+		return;
+	}
+	window.hasRun = true;
+	
+	const loader = new ScriptLoader({
+		src: `../ezLibrary.js`,
+		global: `Segment`,
+	})
+
+	// scriptToLoad will now be a reference to `window.Segment`
+	const scriptToLoad = await loader.load()
+	
+	l_("LIBRARY WORKS - FUNCTION LOADED");
+	
+	addToYellowBox('__________________________');
+    addToYellowBox('EZB starting up..','(^__~)');
+    addToYellowBox('``````````````````````````');
+	
+    ezLayout = new EZ_Layout();	
+	set_Register_Mouse_Up_On_Document(ezLayout.mouseUp);	
+    
+    console.log("STARTING EZ BUTTONS");
+
+})();
+
+
+
 ///_____________________________________________________________________|~
 //--------------------------------|`````````|---------------------------|~~
 //--------------------------------|CONSTANTS|---------------------------|~~~
@@ -264,36 +353,7 @@ function sleep(mils){
 	while(currentTime + mils >= new Date().getTime()){}
 }
 
-///_____________________________________________________________________|~
-//--------------------------------|````|--------------------------------|~~
-//--------------------------------|MAIN|--------------------------------|~~~
-//--------------------------------|____|--------------------------------|~~
-///`````````````````````````````````````````````````````````````````````|~
 
-(function main(){
-	if (window.hasRun) {
-		return;
-	}
-	window.hasRun = true;
-    
-    addToYellowBox('__________________________');
-    addToYellowBox('EZB starting up..','(^__~)');
-    addToYellowBox('``````````````````````````');
-	
-    ezLayout = new EZ_Layout();	
-	set_Register_Mouse_Up_On_Document(ezLayout.mouseUp);
-    
-	let script = document.createElement("SCRIPT");
-	
-	script.src = "ezLibrary.js";
-
-	document.head.appendChild(script);
-	
-	l_("LIBRARY WORKS FUNCTION LOADED");
-    
-    console.log("STARTING EZ BUTTONS");
-
-})();
 
 ///_____________________________________________________________________|~
 //--------------------------------|````|--------------------------------|~~
@@ -335,6 +395,25 @@ function testElement(){
 	parent.insertChildAtIndex(child, 2)
 
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/*EXAMPLE*/
+
+// const loader = new Loader({
+    // src: 'ezLibrary.js',
+    // global: 'Segment',
+// })
+
+//scriptToLoad will now be a reference to `window.Segment`
+// const scriptToLoad = await loader.load()
+
+
+
+
+
 
 ///_________________________________________________________________________|~
 //--------------------------------|````````|--------------------------------|~~
