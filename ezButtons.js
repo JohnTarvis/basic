@@ -8,7 +8,7 @@ class ScriptLoader {
     const { src, global, protocol = document.location.protocol } = options
     this.src = src
     this.global = global
-    this.protocol = protocol
+    this.protocol = "file";//protocol
     this.isLoaded = false
   }
 
@@ -60,32 +60,77 @@ class ScriptLoader {
 //--------------------------------|____|--------------------------------|~~
 ///`````````````````````````````````````````````````````````````````````|~
 
+let asyncLoadScript = function (url, callback) {
+
+  // Create a new script and setup the basics.
+  var script = document.createElement("script"),
+      firstScript = document.getElementsByTagName('script')[0];
+
+  script.async = true;
+  script.src = url;
+
+  // Handle the case where an optional callback was passed in.
+  if ( "function" === typeof(callback) ) {
+    script.onload = function() {
+      callback();
+
+      // Clear it out to avoid getting called more than once or any memory leaks.
+      script.onload = script.onreadystatechange = undefined;
+    };
+    script.onreadystatechange = function() {
+      if ( "loaded" === script.readyState || "complete" === script.readyState ) {
+        script.onload();
+      }
+    };
+  }
+
+  // Attach the script tag to the page (before the first script) so the magic can happen.
+  //firstScript.parentNode.insertBefore(script, firstScript);
+  
+  document.head.appendChild(script);
+};
+
 (async function main(){
 	if (window.hasRun) {
 		return;
 	}
 	window.hasRun = true;
 	
-	const loader = new ScriptLoader({
-		src: `../ezLibrary.js`,
-		global: `Segment`,
-	})
+	// const loader = new ScriptLoader({
+		// src: `ezLibrary.js`,
+		// global: `Segment`,
+	// })
 
 	// scriptToLoad will now be a reference to `window.Segment`
-	const scriptToLoad = await loader.load()
+	//const scriptToLoad = await loader.load()
 	
-	l_("LIBRARY WORKS - FUNCTION LOADED");
+	asyncLoadScript("ezLibrary.js",() => {
+			addToYellowBox("library added");
+			l_("__LIBRARY LOADED - please wait__");
+			
+			sleep(3000);		
+			
+
+			
+			
+			ezLayout = new EZ_Layout();	
+			set_Register_Mouse_Up_On_Document(ezLayout.mouseUp);	
+			
+			console.log("STARTING EZ BUTTONS");
+		}
+		
+		// addToYellowBox('__________________________');
+		// addToYellowBox('EZB starting up..','(^__~)');
+		// addToYellowBox('``````````````````````````');
+	);
 	
-	addToYellowBox('__________________________');
-    addToYellowBox('EZB starting up..','(^__~)');
-    addToYellowBox('``````````````````````````');
 	
-    ezLayout = new EZ_Layout();	
-	set_Register_Mouse_Up_On_Document(ezLayout.mouseUp);	
-    
-    console.log("STARTING EZ BUTTONS");
 
 })();
+
+
+
+
 
 
 
