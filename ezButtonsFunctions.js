@@ -279,17 +279,19 @@ function sleep(mils){
     addToYellowBox('__________________________');
     addToYellowBox('EZB starting up..','(^__~)');
     addToYellowBox('``````````````````````````');
+    
+    
 	
     ezLayout = new EZ_Layout();	
 	set_Register_Mouse_Up_On_Document(ezLayout.mouseUp);
     
-	let script = document.createElement("SCRIPT");
-	
-	script.src = "ezLibrary.js";
-
-	document.head.appendChild(script);
-	
-	l_("LIBRARY WORKS FUNCTION LOADED");
+    //let here = getHere();
+    //let there = getThere();
+    
+    //selection.setBaseAndExtent(here, 2, there, 3);
+    //(this.anchorNode, this.anchorOffset, this.focusNode, this.focusOffset)
+    
+    //set_Register_Document_Selection_Change(()=>{addToYellowBox("SELECTION CHANGED");});
     
     console.log("STARTING EZ BUTTONS");
 
