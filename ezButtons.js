@@ -87,6 +87,8 @@ function startUp(){
     
     let testButton = new Button_ez();
     getHere().appendChild(testButton.inDoc);
+	
+	testButton.test("height");
 }
 
 (async function main(){

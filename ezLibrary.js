@@ -89,10 +89,13 @@ class Element_ez {
 	}
     setAttributes = (attributes) => {
         for (let attribute in attributes) {
-		l_(`change ${attribute}`);
-			this.inDoc[attribute] = attributes[attribute];
+			this.inDoc.style[attribute] = attributes[attribute];
 		}
     }
+	
+	test = (a) => {
+		l_(`property ${a} in element? ${this.inDoc.style.hasOwnProperty(a)}`);
+	}
 }
 
 class Button_ez extends Element_ez {
