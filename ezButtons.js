@@ -64,7 +64,7 @@ function asyncLoadScript(url,callback){
     //firstScript.parentNode.insertBefore(script, firstScript);
 
     document.head.appendChild(script);
-    addToYellowBox(message);
+    //console.log(message);
 };
 
 ///_____________________________________________________________________|~
@@ -86,7 +86,7 @@ function startUp(){
     l_("...ezLibrary loaded");
     
     let testButton = new Button_ez();
-    document.body.appendChild(testButton.inDoc);
+    getHere().appendChild(testButton.inDoc);
 }
 
 (async function main(){

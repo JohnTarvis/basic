@@ -63,34 +63,35 @@ class Element_ez {
         this.inDoc = document.createElement(type);
         this.inDoc.id = id;
         this.inDoc.className = className;
-        This = this;
+        /////-
     }
-    getFromDocument(){
-        if(This.isInDocument())
-            return document.getElementById(This.inDoc.id);
+    getFromDocument = () => {
+        if(this.isInDocument())
+            return document.getElementById(this.inDoc.id);
     }
-    isInDocument(){
-        let foundInDocument = !!document.getElementById(This.inDoc.id);
+    isInDocument = () => {
+        let foundInDocument = !!document.getElementById(this.inDoc.id);
         if(foundInDocument){
             return true;
         } else {
-            l_(This.inDoc.id + "-NOT found in document");
+            l_(this.inDoc.id + "-NOT found in document");
             return false;
         }
     }
-    removeFromDocument(){
-		if(This.isInDocument())
-            This.inDoc.parentElement.removeChild(element);
+    removeFromDocument = () => {
+		if(this.isInDocument())
+            this.inDoc.parentElement.removeChild(element);
 	}
-    appendToNewParent(parent, position){
+    appendToNewParent = (parent, position) => {
 		let outerHTML = this.element.outerHTML;
 		let parentInnerHTML = parent.innerHTML;
 		parent.innerHTML = thatInnerHTML.slice(0, position) + outerHTML + parentInnerHTML.slice(position);		
 	}
-    setAttributes(attributes){
-        for(attribute in attributes){
-            This.inDoc.attribute = attribute;
-        } 
+    setAttributes = (attributes) => {
+        for (let attribute in attributes) {
+		l_(`change ${attribute}`);
+			this.inDoc[attribute] = attributes[attribute];
+		}
     }
 }
 
@@ -100,21 +101,23 @@ class Button_ez extends Element_ez {
         this.inDoc.addEventListener(action,listener);
         this.action = action;
         this.listener = listener;
-        This = this;
+		this.setDefaultStyle();
+        ///-
     }
-    addEventListenerInDocument(listener){
-        if(This.isInDocument)
-            This.getFromDocument().addEventListener(This.action,This.listener);
+    addEventListenerInDocument = (listener) => {
+        if(this.isInDocument)
+            this.getFromDocument().addEventListener(this.action,this.listener);
     }
-    appendToNewParent(parent, position){
+    appendToNewParent = (parent, position) => {
         super.appendToNewParent(parent, position);
-        This.addEventListenerInDocument();
+        this.addEventListenerInDocument();
     }
-    setDefaultStyle(){
-        This.setAttributes({
-            width: "5px",
-            height: "24px",
+    setDefaultStyle = () => {
+        this.setAttributes({
+            width: "20px",
+            height: "20px",
             backgroundSize: "100%",
+			backgroundColor: "blue",
         });
     }    
 }
@@ -134,9 +137,9 @@ class Selection_ez {
         } else if (document.selection && document.selection.type != "Control") {
 			this.text = document.selection.createRange().text;
 		}			
-        let This = this;
+        ///-
 	}    
-    reset(){        
+    reset = () => {        
         try {
             let selection = window.getSelection();
             let button = document.getElementById(ezID);
@@ -146,7 +149,7 @@ class Selection_ez {
             l_(e.message);
         }
     }
-    fromWindow(){
+    fromWindow = () => {
         this.text = "``=--___EZB COULD NOT RETRIEVE___--=``";
 		if (!!window.getSelection()) {
 			this.windowSelection = window.getSelection();
@@ -161,7 +164,7 @@ class Selection_ez {
 			this.text = document.selection.createRange().text;
 		}		
     }
-    fromDocument(){
+    fromDocument = () => {
         this.text = "``=--___EZB COULD NOT RETRIEVE___--=``";
 		if (!!document.getSelection()) {
 			this.documentSelection = document.getSelection();
