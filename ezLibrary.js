@@ -213,7 +213,7 @@ function sleep(mils){
 }
 
 ///==================================================================================|
-//___________________________________________________________________________________|
+//____________________________________HERE/THERE_____________________________________|
 //-----------------------------------------------------------------------------------|
 ///-These elements are in the test page which should be bundled with this script     |
 //-also console functions															 |
@@ -229,9 +229,48 @@ function getThere(){
     return document.getElementById("there");
 }
 
+
+
+///==================================================================================|
+//____________________________________THE YELLOW BOX_________________________________|
+//-----------------------------------------------------------------------------------|
+///-The Yellow Box is a second console displayed on the current webpage              |															 |
+//-----------------------------------------------------------------------------------|
+//```````````````````````````````````````````````````````````````````````````````````|
+///==================================================================================|
+
+//    <div id='theYellowBox' style="background-color:yellow"> DISPLAY </div>
+
+function generateYellowBox(startingText = "LOG"){
+    let theYellowBox = document.createElement("div");
+    theYellowBox.style.backgroundColor = "yellow";
+    theYellowBox.innerHTML = startingText;  
+    theYellowBox.id = "theYellowBox";
+}
+
+function getYellowBoxFromDocument(){
+    let theYellowBox = document.getElementById("theYellowBox");
+    if(!!theYellowBox) 
+        return theYellowBox;
+    else 
+        l_("theYellowBox is not in the document");
+}
+
+function appendYellowBox(){
+    let theYellowBox = getYellowBoxFromDocument();
+    if(!!theYellowBox)
+        document.body.appendChild(theYellowBox);
+}
+
+function removeYellowBox(){
+    let theYellowBox = getYellowBoxFromDocument();
+    if(!!theYellowBox)
+        document.body.removeChild(theYellowBox);    
+}
+
 function clearYellowBox(){
     let theYellowBox = document.getElementById('theYellowBox');
-    theYellowBox.innerHTML = '_______________________________';
+    theYellowBox.innerHTML = "";
 }
 
 function addToYellowBox(text = "...", prefix = ""){
