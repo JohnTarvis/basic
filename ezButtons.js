@@ -61,7 +61,17 @@ async function loadScript(src, id) {
 //--------------------------------|____|--------------------------------|~~
 ///`````````````````````````````````````````````````````````````````````|~
 
-
+function mu(){
+	let button = new Button_ez();
+	let p = document.createElement("p");
+	p.innerHTML = "TESTING TESTING";
+	let image = document.getElementById("image");
+	
+	image.insertAdjacentHTML("beforebegin",p.outerHTML);
+	
+	l_(image.id);
+	
+}
 
 (async function main(){
 	if (window.hasRun) {
@@ -71,19 +81,30 @@ async function loadScript(src, id) {
 
     await loadScript("../ezLibrary.js");
     
-    let button = new Button_ez();
-    
-    let images = document.getElementsByTagName("img");
-    
-    
-    
-    for(image in images) {
-        //image.appendChild(button.inDoc);
-        image.innerHTML = "GONE"
-    }
-    
 
-//    let image = document.getElementById("tpImage");
+    
+    //let images = document.getElementsByTagName("img");
+    
+    // for(let image in images) {
+        // image.appendChild(button.inDoc);
+    // }
+	
+	// let count = 0;
+	// for(count = 0; count < images.length; count++) {
+		// images[count].appendChild(button.inDoc);
+	// }
+	
+
+	
+	document.onmouseup = mu;
+
+	//image.appendChild(button.inDoc);
+
+	//image.appendChild(button.inDoc);
+	
+	//document.body.appendChild(button.inDoc);
+
+
 //    
 //    image.appendChild(button.inDoc);
     
