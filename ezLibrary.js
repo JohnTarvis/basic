@@ -1,5 +1,31 @@
 "use strict";
 
+///-USE THIS TO LOAD THE LIBRARY
+//async function loadScript(src, id) {
+//    if(document.getElementById(id)) {
+//        console.log("removing duplicate script: " + src);
+//        let duplicate = document.getElementById(ezLibrary_id);
+//        duplicate.parentElement.removeChild(duplicate);
+//    }
+//    
+//    let promise = new Promise(function(resolve, reject) {
+//        let script = document.createElement('script');
+//        script.src = src;
+//        
+//        script.async = false;
+//        
+//        script.onload = () => resolve(script);
+//        script.onerror = () => reject(new Error(`Script load error for ${src}`));
+//        document.head.append(script);
+//    });
+//    
+//    promise.then(
+//        script => console.log(`${script.src} is loaded!`),
+//        error => console.log(`Error: ${error.message}`)
+//    );
+//}
+
+
 //////////////////////////////////////////////////////////////////////////
 ///-------------------------------|ezLibrary|--------------------------///
 //////////////////////////////////////////////////////////////////////////
@@ -36,28 +62,39 @@ XXXXNO;,dKXXXXKXKo;:oO00KKd;':xkO000KXOl;:kKKKXOo:,,cxOO00KOc'.'cdkO000Ko'';okOO
 
 **************************************************************************/
 
-///_____________________________________________________________________|~
-//--------------------------------|`````````|---------------------------|~~
-//--------------------------------|CONSTANTS|---------------------------|~~~
-//--------------------------------|_________|---------------------------|~~
-///`````````````````````````````````````````````````````````````````````|~
-
-const ez_id = "ez_id";
-const ez_class = "ez_class";
-
-///_____________________________________________________________________|~
-//--------------------------------|`````````|---------------------------|~~
-//--------------------------------|VARIABLES|---------------------------|~~~
-//--------------------------------|_________|---------------------------|~~
-///`````````````````````````````````````````````````````````````````````|~
-
 ///___________________________________________________________________|~
 //--------------------------------|```````|---------------------------|~~
 //--------------------------------|OBJECTS|---------------------------|~~~
 //--------------------------------|_______|---------------------------|~~
 ///```````````````````````````````````````````````````````````````````|~
 
-///-add attribute setter
+class Timer_ez {
+	constructor() {
+		this.defaultColor = "blue";
+		this.createdAtUT = Date.now();
+		this.inDoc = document.createElement("div");
+		this.inDoc.id = "ezTimer";
+		this.inDoc.style.backgroundColor = this.defaultColor;
+		this.inDoc.innerHTML = this.createdAtUT;
+		document.body.appendChild(this.inDoc);
+	}
+	
+	start = (count = "seconds") => {
+		if(count === "seconds") {
+			setTimeout(this.displayTime, seconds * 1000);
+		}	
+	}
+	
+	displayTime = () => {
+		this.inDoc.innerHTML = Date.now();
+		if(this.inDoc.style.backgroundColor === "blue")
+			this.inDoc.style.backgroundColor = "purple";
+		else if (this.inDoc.style.backgroundColor === "purple") 
+			this.inDoc.style.backgroundColor = "blue";
+	}
+	
+}
+
 class Element_ez {
     constructor(type = "div", id = "ez_id", className = "ez_class"){
         this.inDoc = document.createElement(type);
@@ -137,7 +174,7 @@ class Selection_ez {
             this.anchorOffset = this.windowSelection.anchorOffset;
             if(!!this.focusNode)
 				this.focusNode_ParentElement = this.focusNode.parentElement;
-        } else if (document.selection && document.selection.type != "Control") {
+        } else if (!!document.selection && document.selection.type != "Control") {
 			this.text = document.selection.createRange().text;
 		}			
         ///-
@@ -183,6 +220,24 @@ class Selection_ez {
 		}		
     }
 }
+
+///_____________________________________________________________________|~
+//--------------------------------|`````````|---------------------------|~~
+//--------------------------------|CONSTANTS|---------------------------|~~~
+//--------------------------------|_________|---------------------------|~~
+///`````````````````````````````````````````````````````````````````````|~
+
+const ez_id = "ez_id";
+
+const ez_class = "ez_class";
+
+///_____________________________________________________________________|~
+//--------------------------------|`````````|---------------------------|~~
+//--------------------------------|VARIABLES|---------------------------|~~~
+//--------------------------------|_________|---------------------------|~~
+///`````````````````````````````````````````````````````````````````````|~
+
+
 ///_____________________________________________________________________|~
 //--------------------------------|`````````|---------------------------|~~
 //--------------------------------|FUNCTIONS|---------------------------|~~~
@@ -229,8 +284,6 @@ function getThere(){
     return document.getElementById("there");
 }
 
-
-
 ///==================================================================================|
 //____________________________________THE YELLOW BOX_________________________________|
 //-----------------------------------------------------------------------------------|
@@ -239,13 +292,12 @@ function getThere(){
 //```````````````````````````````````````````````````````````````````````````````````|
 ///==================================================================================|
 
-//    <div id='theYellowBox' style="background-color:yellow"> DISPLAY </div>
-
 function generateYellowBox(startingText = "LOG"){
     let theYellowBox = document.createElement("div");
     theYellowBox.style.backgroundColor = "yellow";
     theYellowBox.innerHTML = startingText;  
     theYellowBox.id = "theYellowBox";
+	return theYellowBox;
 }
 
 function getYellowBoxFromDocument(){
@@ -253,19 +305,29 @@ function getYellowBoxFromDocument(){
     if(!!theYellowBox) 
         return theYellowBox;
     else 
-        l_("theYellowBox is not in the document");
+        console.log("theYellowBox is not in the document");
 }
 
-function appendYellowBox(){
-    let theYellowBox = getYellowBoxFromDocument();
-    if(!!theYellowBox)
+function generateAndAppendYellowBox(){
+    let theYellowBox = generateYellowBox();
+	let isInDocument = document.getElementById("theYellowBow");
+    if(!isInDocument) {
         document.body.appendChild(theYellowBox);
+	}
+}
+
+function replaceYellowBox(startText = "replaced"){
+	l_("replacing yellow box");
+	removeYellowBox();
+	generateAndAppendYellowBox();
+	l_(startText);
 }
 
 function removeYellowBox(){
-    let theYellowBox = getYellowBoxFromDocument();
-    if(!!theYellowBox)
-        document.body.removeChild(theYellowBox);    
+	let theYellowBow = document.getElementById("theYellowBox");
+    if (!!theYellowBow) 
+		document.body.removeChild(theYellowBow);
+	
 }
 
 function clearYellowBox(){
@@ -292,8 +354,6 @@ function l_clear(){
     clearYellowBox();
 }
 
-///===================================================================================
-
 function sleep(mils){
 	let currentTime = new Date().getTime();
 	while(currentTime + mils >= new Date().getTime()){}
@@ -312,68 +372,4 @@ function countDown(seconds){
 }
 
 ///===================================================================================
-
-//l_("...");
-
-/*************************************************************************************
-
-:-.```.------....----::/+osyso+:-----:/ymmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
--.`.-::::////:---://+ossssyyyso++/::+shmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-:..-/++o+/:::--:+o++osyyyyyssssshhyshmmmmmddddmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-yo--:+/:------/osysssyyyysssssshdmmmmddhhyyyyhhhhddmmNNNNmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-::-......----/++osyyyysssoosyhdhhdhyyhhhhhddddhhhhhdmmmNNmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-.---..-----:::::/ossssoshhhddddshyoshmmmmmmNNNNmddhhhdmmmmmysmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
----:::::::::::///++oooosdddddmhyhdyhddddddddmmmNmmhyhddmmmh:.sdmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
--::/++++++++/://:/oosyyhddddddyyhhhhyyhhhhhddddhys+/+shmmddhsssdmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-://+osssssooo+ossyhhdddddddhdhyyysyyyhyhyysyyyyhsso+osshhdddddhydmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-oooshddhhysssyhddddddddddddhsyyyyyhhdmhdhhhdhhhdhyssyyhhhmmmdmmdhdmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-hyyyyhddhyysyhdddddddddddddo-oyydhmmNmmNNmmNmmmmyhhhhydhdddddmmmmymmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-mmdhhhhdhhhhhdddddddddddddhs/shdmmNNNNNNNNNNNNNmhyhddhhdmdmNmmmNNdhdmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-mmdmmddmmdddddddddddddddddyhhdhdmNNNNNNmmmmmmmmmmdhmmdNNdddNNNNNNNmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-mdddhhhhdmddddddddddddddddyymmmmmmmmdhs++//:::/+oshyhhddydydmNNNNNddmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-ddhs+++osyhdddddddddddddddyydNNNNmy+:.``````````.-/syhhhddhdmNNNNNmymmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-hyo++ooo//ohddddddddddddddddmNNNmo-.````````````..shsdNymNdmNNNNNNddmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-++//+sys++ydddddddddddddddhddmNNd:.````````..::::::/+shyydhmNNNNmdhmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-////+syyyhdddddddddddddddhhhhdmmd/....````:syysssso+syysshddmmmddyydmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-+++oosyhddddddddddddddds/::+/+dmNhososo:-.:oyyydhy+/osyyymmmmmdsoshmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-+++++osssyhddddddddddd+.```.-+odNmhhyyyo-`..:/+o/-.:oooshhhhhdNmh++hmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-o+++++++++shdddddddhyo-/////ohyohNhyss+-.````.....-yshoyhyhshNNNNNdommmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-sssssssooooohddhsoso//+hhhhhdddhshy::-``````.````-syysosyyymMMMMNNNmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-yyyhhhy/-.`./hh+:--:::+hdddddddddhs/-.``..-/:.`...-oys+oshhMMMMMMMNmmmmmmmmmmmmmmmmmmmmmmNNmmmmmmNmm
-sosydmy--:::/sy//++//+sydddddddddddh+....:/:.``...-+s++sshhMMNNNNNNmNmmmmmmmmmmmmmmmmmmNmmmmmmmmmmmm
-ysoohddy+osooysshhhhhhhdddddddddddddds:..:oss//:---:/++oshdmNNNNNNNNNmmmmmmmmmmmmmmmmmmNmmmmmmmNNNNN
-+/-..:os+ohhhhddddddddddddddddddddddddh/-:oo+:....--/+shdddddNNNMMNmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmNNN
--.......--+hddddddddddddddddddddddddddddo--:-.``..:+yddhhhdmmmNNNNdmmmmmmmmmmmmmmmmmmmmmmmmmmmmmNNNN
-/-....````./hddddddddddddddddddddddddddddy:---:/+ydmdyyyhdmmNmNmmmmmmmmmmmmmNmmmmmmmmmmmmmmmmmNNNNNN
-:--..````-:ohdddddddddddddddddddddddddddddmdddhhdddyo+yhdhyssydmmmmmmmmmmmmmNmmmmmmmmmmmmmmNNNNNNNNN
-.....```.:oddddddddddddddddddddddddddmmddddmmNhsyyo++yhhyysyhdmmNNmmmmmmmmmmmmmmmmmmmmmmmmmmmNmNNNNN
-`.-/:---:ohddddddddddddddddddddmmdddmddddhddmNmss+/osss/ssydmmNNNNNNmmmmmmmmmmmmmmmmmmmmmmmmmmmmNNmm
-.-+sys+//sdddddddddddddddddddddmmdmmNNmdhhhdmdso++s+/:/:-.:symNhdNMNNNNmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
--:oyhdhyshdddddddddddddddddddmmmmNmmmmmhdyhdhoo+ohyyooyso+yydMmshNMmmNNmmmmmmmmmmmmmmmmmmNNNNNmNNNmm
-syhdmmmmmddddddddddddddmdddmmdmmmddhhhsyyshhoosyyssyhmNdysyydNmdmNMmyNNmmmNNNmmmmmNmmmmNNNNmmmmmNNNN
-hdmmmmmmmddddddddmmddddmmdddoommddhhhhyssyyyhdhysshddddmysdNNmmddNMmmNNNmmNNNmmmmmmmmmmNNNmmmmmNNNNN
-dmmmmmmmmmddddddmmmddmmmdhd+:odhhhhhhsosyydmdhyyyyyyyyhmddNNNdhddNdshdNmmmmmNmmmmmmmmmmmmmmmmmmmmNNN
-dmmmmmmmmmddddddmmmmmmmmdyds/yhddhdysosdhmmdyssyysssyhdmmmmmNhshmdyydmNNmmmmNNmmmmmmmmmmmmmmmmmmmNNN
-mmmmmmmmmmdddddmmmmmmmmmmyms/yddhhsshmmNmdhssyyyyssyyhdmmNNNNdhddhymNNNNNmmmmmmmmmmmmmmmmmmmmmmNNNNN
-mmmmmmmmmmmmmddmmmmmmmmmds/+/ydhhhmNNNNmhyyyhhhyyyyddddddddmmhddhoyddmNNmmmmmmmmmmmmmmmmmmmmmmmNNNNN
-mmmmmmmmmmmmmmmmmmmmmmmmmh+:shdmNNNNNmmhhhddhysssyyyyyyhdmNNNdddyhdhmNNmNNNNmmmmmmmmmmmmmmmmmmmNNNNN
-mmmmmmmmmmmmmmmmmmmmmmmmmhyssyNNNNNdmmdddddhyssssyyhdmNNNNNNNddhhdddNNNNNNNNmmmmmmmmmmmmmmmmmmmmmmNN
-mmmmmmmmmmmmmmmmmmmmmmmNNmyyodhsmmyymdddddhysssshdmNNmddhddmmhhdyshmNNNNNNNNmmmmmmmmmmmmmmmmmmmmmmNN
-mmmmmmmmmmmmmmmmmmmmmdNNNhyydhsdmd+hddddhyssssyhhhddhyshdmNNhhyhs+sydNNNNNNNNNNmmmmmmmmmmmmmmmmmmmNN
-mmmmmmmmmmmmmmdmmmmNNNNhhsyhhyddo/osdddhyssssyhhdmmmNNNMMNdmyy++soyyhdNNNNNNNNNmmmmmmmmmmmmmmmmmmmNN
-mmmmmmmmmmmmmmmNNNmddNmsossoyho//syhddhysssyyhdmmNMMMMNNNNdsdhhhhhhmdmmNNNNNNNNmmmmmmmmmmmmNNNmmmmNN
-mmmmmmmmmmNNNNNNNdssyyyhysso++/+yyhhhyssssyyhdmNNNMNNNNNymmNNNNNNmdmddmNNNNNNNNmmmmmmmmmmmmmmmmmmmNN
-mmmmmmmmmNNNNmmNmd/+soooooos+++/shyyssssyyhdmmNNNNNmmmmh+dmmmmmmmmdNNNmNNNNNNNmmmmmmmmmmmmmmmmmmmNNN
-mmmmmmmmmmmNNNmmmd--//+++++:::/osssssyyyhdmmNNNmddhhhhyo:+/ydmNNmmmmNNNNNNNNNNmmmmmmmmmmmmmmmmmmmNNN
-mmmmmmmmdhyhdmmhhd:://-:--.`.:+ssssyyhhdmmNNNNdNNNNNMNd+++s+++shddhddhhdNNNNNNNmmmmmmmmmmmmmmmmmmmNN
-mmmmmmmmmy/+ooo/yo+::-..-:.`.`/yyyhhdddmmNmmNmyhNNdNNdy+/os/:-:///+++sssdNNNNNNmmmmmmmmmmmmmmmmmmmNN
-mmmmmmmmmh/-:::+-.``.://+/-::/shdyhdddmmNmyymo+oNMmhd+--/yo////+++++/+sosNNNNNNmmmmmmmmmmmmmmmmmmmNN
-mmmmmmmmmmh//o/.``.-/sosy+/o+osso+hmmmmmmmysy++sNMNho/://do++++ooo++/+o+oNNNNNNmmmmmmmmmmmmmmmmmmNNN
-mmmmmmmmmmmhyy+:-::oso+ydsoo/sooy:/smmmhmh:+ooddydNmmh/-/+ooo++o++:--///oNNNNNNmmmmmmmmmmmmmmmNNNNNN
-mmmmmmmmmmmNMs+/:::yhhoodsoosso+hooymmmNmddhNmdyhddNmd+-+sssoo++/:-.:/:/hNNNNNNmmmmmmmmmmmmmmNNNNNNN
-mmmmmmmmmmmmms+/../yys+ohyshNmmdNNNNmmmmmmmNmosNNdhdmm//oyssso+/:-.-/:/yNNNNNNNNNmmmmmmmmmmmmNNNNNNN
-mmmmmmmmmmmmm/+o//ydso+yhyshhhhNNNNNmmmmmNNNNdmmhdsymhsssssoo+:-.-////yNNNNNNNNNmmmmmmmmmmmmmNNNNNNN
-mmmmmmmmmmmmh/:oo+yhsshhsshohyhdmNNNNNmmmN
-
-*/
 

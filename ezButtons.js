@@ -31,41 +31,29 @@ let ezLayout;
 //--------------------------------|_________|---------------------------|~~
 ///`````````````````````````````````````````````````````````````````````|~
 
-function asyncLoadScript(url,callback){
-    
-    if(!!document.getElementById(ezLibrary_id)){
+async function loadScript(src, id) {
+    if(document.getElementById(id)) {
+        console.log("removing duplicate script: " + src);
         let duplicate = document.getElementById(ezLibrary_id);
         duplicate.parentElement.removeChild(duplicate);
     }
     
-    // Create a new script and setup the basics.
-    let script = document.createElement("script");
-        //firstScript = document.getElementsByTagName('script')[0];
-
-    script.async = true;
-    script.src = url;
-    script.id = ezLibrary_id;
-
-    // Handle the case where an optional callback was passed in.
-    if ( "function" === typeof(callback) ) {
-        script.onload = function() {
-            callback();
-            // Clear it out to avoid getting called more than once or any memory leaks.
-            script.onload = script.onreadystatechange = undefined;
-        };
-        script.onreadystatechange = function() {
-            if ( "loaded" === script.readyState || "complete" === script.readyState ) {
-                script.onload();
-            }
-        };
-    }
-
-    // Attach the script tag to the page (before the first script) so the magic can happen.
-    //firstScript.parentNode.insertBefore(script, firstScript);
-
-    document.head.appendChild(script);
-    //console.log(message);
-};
+    let promise = new Promise(function(resolve, reject) {
+        let script = document.createElement('script');
+        script.src = src;
+        
+        script.async = false;
+        
+        script.onload = () => resolve(script);
+        script.onerror = () => reject(new Error(`Script load error for ${src}`));
+        document.head.append(script);
+    });
+    
+    promise.then(
+        script => console.log(`loaded: ${script.src}`),
+        error => console.log(`Error: ${error.message}`)
+    );
+}
 
 ///_____________________________________________________________________|~
 //--------------------------------|````|--------------------------------|~~
@@ -73,28 +61,7 @@ function asyncLoadScript(url,callback){
 //--------------------------------|____|--------------------------------|~~
 ///`````````````````````````````````````````````````````````````````````|~
 
-function startUp(){
-    l_clear();
-    l_(".");
-    sleep(250);
-    l_("..");
-    sleep(250);
-    l_("...");
-    sleep(250);
-    l_("loading ezLibrary: please wait...");	
-    sleep(250);
-    l_("...ezLibrary loaded");
-    
-//    let testButton = new Button_ez();
-//    getHere().appendChild(testButton.inDoc);
-//	
-//	testButton.test("height");
-    sleepSeconds(2);
-    removeYellowBox();
-    sleep(1111);
-    appendYellowBox();
-    removeYellowBox();
-}
+
 
 (async function main(){
 	if (window.hasRun) {
@@ -102,11 +69,27 @@ function startUp(){
 	}
 	window.hasRun = true;
 
-    if(!document.getElementById(ezLibrary_id)){
-        asyncLoadScript("ezLibrary.js",startUp);
+    await loadScript("../ezLibrary.js");
+    
+    let button = new Button_ez();
+    
+    let images = document.getElementsByTagName("img");
+    
+    
+    
+    for(image in images) {
+        //image.appendChild(button.inDoc);
+        image.innerHTML = "GONE"
     }
     
+
+//    let image = document.getElementById("tpImage");
+//    
+//    image.appendChild(button.inDoc);
     
+    //image.parentElement.removeChild(image);
+    
+    //l_("button exists? " + !!image);
     
 })();
 
