@@ -61,66 +61,71 @@ async function loadScript(src, id) {
 //--------------------------------|____|--------------------------------|~~
 ///`````````````````````````````````````````````````````````````````````|~
 
-function mu(){
-	let button = document.createElement("button");//new Button_ez();
+function makeButton(){
+    let button = document.createElement("button");
     
-	let image = document.getElementById("image");
-    
-    //button.addEventListenerInDocument();
-    
-    let container = document.createElement("div"); //new Element_ez("div","container");
-    
-    container.style.position = "relative";
-    container.style.width = "50%";
-    
-    //let button = button.inDoc();
-    
-    button.style.width = "50px";
-    button.style.height = "50px";
-    
-    button.style.position = "absolue";
-    button.style.top = "50%";
-    button.style.left = "50%";
+    button.style.width = "12px";
+    button.style.height = "12px";
+    button.style.position = "absolute";
+    //button.style.top = "50%";
+    button.style.left = "57%";
     button.style.transform = "translate(-50%,-50%)";
     button.style.msTransform = "translate(-50%,-50%)";
     button.style.backgroundColor = "#555";
     button.style.color = "white";
     button.style.fontSize = "16px";
-    button.style.padding = "12px 24px";
-    button.style.border = "none";
+    //button.style.padding = "12px 24px";
+    button.style.border = "0 none transparent";
     button.style.cursor = "pointer";
-    button.style.borderRadius = "5px";
-    
-//    button.setAttributes ({
-//        position: "absolute",
-//        top: "50%",
-//        left: "50%",
-//        transform: "translate(-50%, -50%)",
-//        ms-transform: "translate(-50%, -50%)",
-//        background-color: "#555",
-//        color: "white",
-//        font-size: "16px",
-//        padding: "12px 24px",
-//        border: "none",
-//        cursor: "pointer",
-//        border-radius: "5px",
-//    });
-//    
-    
-    image.style.width = "100%";
-    image.style.height = "auto";
+    //button.style.borderRadius = "5px";
     
     button.onmouseover = () => {
-        button.inDoc.style.backgroundColor = "black";
+        button.style.backgroundColor = "blue";
     }
     
-    container.innerHTML = button.inDoc.outerHTML;
+    button.onmouseout = () => {
+        button.style.backgroundColor = "grey";
+    }
     
-    image.insertAdjacentHTML(container.inDoc);
-    image.parentElement.removeChild(image);
-	
+    return button;
 }
 
+function makeContainer() {
+    
+    let container = document.createElement("div");
+    
+    container.style.position = "relative";
+    
+    container.style.width = "50%";
+    
+    return container;
+}
+
+function mu(){
+    
+    let images = document.querySelectorAll("img");
+    
+    for(let image in images) {
+
+        let button = makeButton();
+
+        let container = makeContainer();
+
+        container.appendChild(button);
+
+        container.appendChild(image);
+
+        document.body.appendChild(container);
+
+        image.parentElement.replaceChild(container,image);
+        
+    }
+
+}
+
+function mu2() {
+    l_("nothing here");
+}
 
 
 (async function main(){
@@ -131,11 +136,10 @@ function mu(){
 
     await loadScript("../ezLibrary.js");
     
-    //await loadScript("../jquery-3.4.1.js");
+    document.onmouseup = mu;
     
-    mu();
-    
-    
+    //mu();
+
 })();
 
 
