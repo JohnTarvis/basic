@@ -63,15 +63,69 @@ async function loadScript(src, id) {
 
 function mu(){
 	let button = new Button_ez();
-	let p = document.createElement("p");
-	p.innerHTML = "TESTING TESTING";
+    
 	let image = document.getElementById("image");
-	
-	image.insertAdjacentHTML("beforebegin",p.outerHTML);
-	
-	l_(image.id);
+    
+    button.addEventListenerInDocument();
+    
+    let container = document.createElement("div"); //new Element_ez("div","container");
+    
+    container.style.position = "relative";
+    container.style.width = "50%";
+    
+//    container.setAttributes ({    
+//        position: "relative",
+//        width: "50%",
+//    });
+    
+    
+    
+    let docButton = button.inDoc();
+    
+    docButton.style.position = "absolue";
+    docButton.style.top = "50%";
+    docButton.style.left = "50%";
+    docButton.style.transform = "translate(-50%,-50%)";
+    docButton.style.msTransform = "translate(-50%,-50%)";
+    docButton.style.backgroundColor = "#555";
+    docButton.style.color = "white";
+    docButton.style.fontSize = "16px";
+    docButton.style.padding = "12px 24px";
+    docButton.style.border = "none";
+    docButton.style.cursor = "pointer";
+    docButton.style.borderRadius = "5px";
+    
+//    button.setAttributes ({
+//        position: "absolute",
+//        top: "50%",
+//        left: "50%",
+//        transform: "translate(-50%, -50%)",
+//        ms-transform: "translate(-50%, -50%)",
+//        background-color: "#555",
+//        color: "white",
+//        font-size: "16px",
+//        padding: "12px 24px",
+//        border: "none",
+//        cursor: "pointer",
+//        border-radius: "5px",
+//    });
+//    
+    
+    image.style.width = "100%";
+    image.style.height = "auto";
+    
+    button.inDoc.onmouseover = () => {
+        button.inDoc.style.backgroundColor = "black";
+    }
+    
+    container.wrapAround(button.inDoc);
+    
+    image.insertAdjacentHTML(container.inDoc);
+    image.parentElement.removeChild(image);
 	
 }
+
+
 
 (async function main(){
 	if (window.hasRun) {
@@ -81,36 +135,10 @@ function mu(){
 
     await loadScript("../ezLibrary.js");
     
-
+    //await loadScript("../jquery-3.4.1.js");
     
-    //let images = document.getElementsByTagName("img");
+    mu();
     
-    // for(let image in images) {
-        // image.appendChild(button.inDoc);
-    // }
-	
-	// let count = 0;
-	// for(count = 0; count < images.length; count++) {
-		// images[count].appendChild(button.inDoc);
-	// }
-	
-
-	
-	document.onmouseup = mu;
-
-	//image.appendChild(button.inDoc);
-
-	//image.appendChild(button.inDoc);
-	
-	//document.body.appendChild(button.inDoc);
-
-
-//    
-//    image.appendChild(button.inDoc);
-    
-    //image.parentElement.removeChild(image);
-    
-    //l_("button exists? " + !!image);
     
 })();
 
