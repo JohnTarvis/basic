@@ -62,38 +62,34 @@ async function loadScript(src, id) {
 ///`````````````````````````````````````````````````````````````````````|~
 
 function mu(){
-	let button = new Button_ez();
+	let button = document.createElement("button");//new Button_ez();
     
 	let image = document.getElementById("image");
     
-    button.addEventListenerInDocument();
+    //button.addEventListenerInDocument();
     
     let container = document.createElement("div"); //new Element_ez("div","container");
     
     container.style.position = "relative";
     container.style.width = "50%";
     
-//    container.setAttributes ({    
-//        position: "relative",
-//        width: "50%",
-//    });
+    //let button = button.inDoc();
     
+    button.style.width = "50px";
+    button.style.height = "50px";
     
-    
-    let docButton = button.inDoc();
-    
-    docButton.style.position = "absolue";
-    docButton.style.top = "50%";
-    docButton.style.left = "50%";
-    docButton.style.transform = "translate(-50%,-50%)";
-    docButton.style.msTransform = "translate(-50%,-50%)";
-    docButton.style.backgroundColor = "#555";
-    docButton.style.color = "white";
-    docButton.style.fontSize = "16px";
-    docButton.style.padding = "12px 24px";
-    docButton.style.border = "none";
-    docButton.style.cursor = "pointer";
-    docButton.style.borderRadius = "5px";
+    button.style.position = "absolue";
+    button.style.top = "50%";
+    button.style.left = "50%";
+    button.style.transform = "translate(-50%,-50%)";
+    button.style.msTransform = "translate(-50%,-50%)";
+    button.style.backgroundColor = "#555";
+    button.style.color = "white";
+    button.style.fontSize = "16px";
+    button.style.padding = "12px 24px";
+    button.style.border = "none";
+    button.style.cursor = "pointer";
+    button.style.borderRadius = "5px";
     
 //    button.setAttributes ({
 //        position: "absolute",
@@ -114,11 +110,11 @@ function mu(){
     image.style.width = "100%";
     image.style.height = "auto";
     
-    button.inDoc.onmouseover = () => {
+    button.onmouseover = () => {
         button.inDoc.style.backgroundColor = "black";
     }
     
-    container.wrapAround(button.inDoc);
+    container.innerHTML = button.inDoc.outerHTML;
     
     image.insertAdjacentHTML(container.inDoc);
     image.parentElement.removeChild(image);
