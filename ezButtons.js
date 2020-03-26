@@ -104,22 +104,45 @@ function makeContainer() {
 function mu(){
     
     let images = document.querySelectorAll("img");
-    
-    for(let image in images) {
+   
+	//let image;
+	
+    // for( image in images) {
 
-        let button = makeButton();
+        // let button = makeButton();
+
+        // let container = makeContainer();
+
+        // container.appendChild(button);
+
+        // container.appendChild(image);
+
+        // document.body.appendChild(container);
+
+        // image.parentElement.replaceChild(container,image);
+        
+    // }
+	
+	let count = 0;
+	for(count = 0; count < images.length; count++) {
+		let image = images[count];
+		
+		let button = makeButton();
 
         let container = makeContainer();
 
         container.appendChild(button);
 
         container.appendChild(image);
+		
+		//image.parentElement.insertAdjacentHTML("beforebegin", container.outerHTML);
 
-        document.body.appendChild(container);
+        //document.body.appendChild(container);
 
-        image.parentElement.replaceChild(container,image);
-        
-    }
+        //document.body.replaceChild(container, image);
+		
+		//l_(image.id);
+	}
 
 }
 
@@ -134,7 +157,7 @@ function mu2() {
 	}
 	window.hasRun = true;
 
-    await loadScript("../ezLibrary.js");
+    await loadScript("../scripts/ezLibrary.js");
     
     document.onmouseup = mu;
     
