@@ -68,7 +68,7 @@ function makeButton(){
     button.style.height = "12px";
     button.style.position = "absolute";
     //button.style.top = "50%";
-    button.style.left = "57%";
+    //button.style.left = "57%";
     button.style.transform = "translate(-50%,-50%)";
     button.style.msTransform = "translate(-50%,-50%)";
     button.style.backgroundColor = "#555";
@@ -92,11 +92,13 @@ function makeButton(){
 
 function makeContainer() {
     
-    let container = document.createElement("div");
+    let container = document.createElement("p");
     
     container.style.position = "relative";
     
     container.style.width = "50%";
+    
+    container.id = "ezContainer";
     
     return container;
 }
@@ -123,25 +125,30 @@ function mu(){
         
     // }
 	
-	let count = 0;
-	for(count = 0; count < images.length; count++) {
+	//let count = 0;
+	for(let count = 0; count < images.length; count++) {
+        
 		let image = images[count];
 		
 		let button = makeButton();
 
         let container = makeContainer();
 
-        container.appendChild(button);
+        if(image.parentElement.id == "ezContainer") {
+            
+            
+            
+        } else {
+            
+            image.parentElement.insertBefore(container,image);
 
-        container.appendChild(image);
-		
-		//image.parentElement.insertAdjacentHTML("beforebegin", container.outerHTML);
+            container.appendChild(image);
 
-        //document.body.appendChild(container);
-
-        //document.body.replaceChild(container, image);
-		
-		//l_(image.id);
+            container.appendChild(button);
+        }
+        
+        
+        
 	}
 
 }
