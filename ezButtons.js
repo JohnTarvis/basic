@@ -92,7 +92,7 @@ function makeButton(){
     button.style.height = "12px";
     button.style.position = "absolute";
     //button.style.top = "50%";
-    button.style.left = "57%";
+    //button.style.left = "57%";
     button.style.transform = "translate(-50%,-50%)";
     button.style.msTransform = "translate(-50%,-50%)";
     button.style.backgroundColor = "#555";
@@ -116,11 +116,13 @@ function makeButton(){
 
 function makeContainer() {
     
-    let container = document.createElement("div");
+    let container = document.createElement("p");
     
     container.style.position = "relative";
     
     container.style.width = "50%";
+    
+    container.id = "ezContainer";
     
     return container;
 }
@@ -129,11 +131,17 @@ function makeContainer() {
 
 function mu(){
 	
+<<<<<<< HEAD
 	ez.test();
     
     let images = document.querySelectorAll("img");
 	let count = 0;
 	for(count = 0; count < images.length; count++) {
+=======
+	//let count = 0;
+	for(let count = 0; count < images.length; count++) {
+        
+>>>>>>> f05281316460cf4103e964b63b0afc3724d79c74
 		let image = images[count];
 		
 		image.ezImageTag = "ezImageTag";
@@ -146,6 +154,7 @@ function mu(){
 
         //let container = makeContainer();
 
+<<<<<<< HEAD
         //container.appendChild(button);
 
         //container.appendChild(image);
@@ -155,12 +164,23 @@ function mu(){
 		//image.parentElement.insertBefore(container,image);
 		
 		//document.body.insertBefore(container,image);
+=======
+        if(image.parentElement.id == "ezContainer") {
+            
+            
+            
+        } else {
+            
+            image.parentElement.insertBefore(container,image);
+>>>>>>> f05281316460cf4103e964b63b0afc3724d79c74
 
-        //document.body.appendChild(container);
+            container.appendChild(image);
 
-        //document.body.replaceChild(container, image);
-		
-		//l_(image.id);
+            container.appendChild(button);
+        }
+        
+        
+        
 	}
 
 }
