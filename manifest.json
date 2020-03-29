@@ -17,10 +17,10 @@
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": ["ezButtons.js", "ezLibrary.js"]
+            "js": ["ezButtons.js", "ezLibrary.js","jquery.min.js"]
         }
     ],
-
+                                                                   
     "background": {
         "scripts": ["background.js"]
 		

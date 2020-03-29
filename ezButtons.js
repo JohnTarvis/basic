@@ -1,5 +1,4 @@
 "use strict";
-
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // @@@@@&/@@@@@@@&(&@@@%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&@@@@%&@@@@@@@@%@@@@
@@ -21,41 +20,30 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%@/(&#%&*#(&/(@&&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%&@@@,&@@/&@@@@&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-
-
 ///_____________________________________________________________________|~
 //--------------------------------|`````````|---------------------------|~~
 //--------------------------------|CONSTANTS|---------------------------|~~~
 //--------------------------------|_________|---------------------------|~~
 ///`````````````````````````````````````````````````````````````````````|~
-
 const ezLibrary_id = "ezLibrary_id";
 const copyButton_id = 'copyButton_id';
 const copyButtonImageURL = "url('icons/copyButtonIcon21-26.png')";
-
 ///_____________________________________________________________________|~
 //--------------------------------|`````````|---------------------------|~~
 //--------------------------------|VARIABLES|---------------------------|~~~
 //--------------------------------|_________|---------------------------|~~
 ///`````````````````````````````````````````````````````````````````````|~
-
 let ezLayout;
-
 ///_____________________________________________________________________|~
 //--------------------------------|```````|-----------------------------|~~
 //--------------------------------|OBJECTS|-----------------------------|~~~
 //--------------------------------|_______|-----------------------------|~~
 ///`````````````````````````````````````````````````````````````````````|~
-
-
 ///_____________________________________________________________________|~
 //--------------------------------|`````````|---------------------------|~~
 //--------------------------------|FUNCTIONS|---------------------------|~~~
 //--------------------------------|_________|---------------------------|~~
 ///`````````````````````````````````````````````````````````````````````|~
-
-
 async function loadStyle(href, id) {
     if(!!document.getElementById(id)) {
         console.log("removing duplicate script: " + href);
@@ -79,8 +67,7 @@ async function loadStyle(href, id) {
         error => console.log(`Error: ${error.message}`)
     );
 }
-
-async function loadScript(src, id) {
+async function loadScript(src, id, first = false) {
     if(document.getElementById(id)) {
         console.log("removing duplicate script: " + src);
         let duplicate = document.getElementById(ezLibrary_id);
@@ -95,7 +82,12 @@ async function loadScript(src, id) {
         
         script.onload = () => resolve(script);
         script.onerror = () => reject(new Error(`Script load error for ${src}`));
-        document.head.append(script);
+		
+		if(!!first) {
+			document.head.insertBefore(script,document.head.firstChild);
+		} else {
+			document.head.append(script);
+		}
     });
     
     promise.then(
@@ -103,13 +95,11 @@ async function loadScript(src, id) {
         error => console.log(`Error: ${error.message}`)
     );
 }
-
 ///_____________________________________________________________________|~
 //--------------------------------|````|--------------------------------|~~
 //--------------------------------|MAIN|--------------------------------|~~~
 //--------------------------------|____|--------------------------------|~~
 ///`````````````````````````````````````````````````````````````````````|~
-
 function makeButton(){
     let button = document.createElement("button");
     button.style.width = "12px";
@@ -137,7 +127,6 @@ function makeButton(){
     
     return button;
 }
-
 function makeContainer() {
     
     let container = document.createElement("p");
@@ -146,45 +135,20 @@ function makeContainer() {
     container.id = "ezContainer";
     return container;
 }
-
-
-
 function mu(){
 	
-////<<<<<<< HEAD
 	ez.test();
     
     let images = document.querySelectorAll("img");
 	let count = 0;
 	
-////=======
-	//let count = 0;
 	for(let count = 0; count < images.length; count++) {
-        
-////>>>>>>> f05281316460cf4103e964b63b0afc3724d79c74
 		let image = images[count];
 		
 		image.ezImageTag = "ezImageTag";
 		
 		
 		
-		///---------------------------------------------------------------------------
-		
-		//let button = makeButton();
-
-        //let container = makeContainer();
-
-////<<<<<<< HEAD
-        //container.appendChild(button);
-
-        //container.appendChild(image);
-		
-		//image.parentElement.insertAdjacentHTML("beforebegin", container);
-		
-		//image.parentElement.insertBefore(container,image);
-		
-		//document.body.insertBefore(container,image);
-////=======
         if(image.parentElement.id == "ezContainer") {
             
             
@@ -192,21 +156,35 @@ function mu(){
         } else {
             
             image.parentElement.insertBefore(container,image);
-////>>>>>>> f05281316460cf4103e964b63b0afc3724d79c74
-
             container.appendChild(image);
-
             container.appendChild(button);
         }
         
         
         
 	}
+}
+function mu2() {
+    l_("mu2");
+	
+	
+	$(document).ready(function(){
 
+		$("p").hide();
+		
+	});
+	
+	
+	
+	
 }
 
-function mu2() {
-    l_("nothing here");
+async function load_jQuery() {
+	var script = document.createElement('script'); 
+	document.head.appendChild(script);    
+	script.type = 'text/javascript';
+	script.src = "../MAIN/scripts/jQueryPro.js";
+	await script.onload
 }
 
 
@@ -215,31 +193,26 @@ function mu2() {
 		return;
 	}
 	window.hasRun = true;
+	
 
-    await loadScript("../MAIN/scripts/ezLibrary.js");
+	var loader = Components.classes["@mozilla.org/moz/jssubscript-loader;1"]
+    .getService(Components.interfaces.mozIJSSubScriptLoader);
+	loader.loadSubScript("../MAIN/scripts/jQueryPro");
+
+	
+    await loadScript("../MAIN/scripts/ezLibrary.js", "ezLibrary_id", false);
 	
 	await injectCSS("../MAIN/styles/ezStyle.css");
     
-    document.onmouseup = mu;
-	
-	ez.log("ezLog working");
+    document.onmouseup = mu2;
     
-    //mu();
-
 })();
-
-
-
 ///________________________________________________________________________|~
 //--------------------------------|````|-----------------------------------|~~
 //--------------------------------|TEST|-----------------------------------|~~~
 //--------------------------------|____|-----------------------------------|~~
 ///````````````````````````````````````````````````````````````````````````|~
-
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 ///_________________________________________________________________________|~
 //--------------------------------|````````|--------------------------------|~~
 //--------------------------------|DISABLED|--------------------------------|~~~
