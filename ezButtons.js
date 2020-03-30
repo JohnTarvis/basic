@@ -183,42 +183,9 @@ async function load_jQuery() {
 	await script.onload
 }
 
-
 function mu3() {
 	
-
-	
-	
-}
-
-
-(async function main(){
-	if (window.hasRun) {
-		return;
-	}
-	window.hasRun = true;
-	
-	//load_jQuery();
-	
-	await loadScript("jQuery.js", "jQuery_id",true);
-	
-    await loadScript("../MAIN/scripts/ezLibrary.js", "ezLibrary_id", false);
-	
-	await injectCSS("../MAIN/styles/ezStyle.css");
-	
-	$(document).ready(function(){
-		
-	///-------------------------------------------------------------------
-
-	///-------------------------------------------------------------------	
-
-		// <ul class='custom-menu'>
-		  // <li data-action="first">First thing</li>
-		  // <li data-action="second">Second thing</li>
-		  // <li data-action="third">Third thing</li>
-		// </ul>
-		
-		let contextMenu = document.createElement("ul");
+    let contextMenu = document.createElement("ul");
 		contextMenu.className = "custom-menu";
 		
 		let listItem = document.createElement("li");
@@ -284,11 +251,44 @@ function mu3() {
 			// Hide it AFTER the action was triggered
 			$(".custom-menu").hide(100);
 		  });
-		
-		
-	///-------------------------------------------------------------------	
+	
+	
+}
 
-	///--------------------------------------------------------------------
+(async function main(){
+	if (window.hasRun) {
+		return;
+	}
+	window.hasRun = true;
+	
+	//load_jQuery();
+	
+	await loadScript("jQuery.js", "jQuery_id",true);
+	
+    //await loadScript("../MAIN/scripts/ezLibrary.js", "ezLibrary_id", false);
+	
+	//await injectCSS("../MAIN/styles/ezStyle.css");
+	
+	$(document).ready(function(){
+		
+        ///-------------------------------------------------------------------
+
+        ///-------------------------------------------------------------------	
+
+
+        let iframe = document.createElement("iframe");
+        iframe.src = "http://www.google.com";//"ezFrame.html";
+        iframe.style.position = "fixed";
+        iframe.style.zIndex = "999";
+        
+        //document.body.prepend(iframe);
+        
+        $.append(iframe);
+
+
+        ///--------------------------------------------------------------------	
+
+        ///--------------------------------------------------------------------
 		
     });
 	
