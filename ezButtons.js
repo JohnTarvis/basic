@@ -290,17 +290,7 @@ function createImageToSave (src) {
     
 }
 
-//function addImageToSavePane(image) {
-//    let src = image.src;
-//    let imageToSave = createImageToSave(src);
-//    
-//    
-//}
-//
-//let savePane = createElement();
-//savePane.style.backgroundColor = "pink";
-//savePane.style.height = "90px";
-//savePane.style.width = "auto";
+
 
 
 (async function main() {
@@ -318,32 +308,41 @@ function createImageToSave (src) {
 
         //let div = createElement();
         
-        let iframe = document.createElement("iframe");
+        let div = document.createElement("div");
         
-        iframe.style.backgroundColor = "green";
+        div.style.backgroundColor = "green";
 
-        iframe.style.height = "100px";
+        div.style.height = "auto";
         
-        iframe.style.width = "auto";
+        div.style.width = "100px";
                 
         //div.style.position = "absolute";
         
         let firstChild = document.body.firstChild;
         
-        document.body.insertBefore(iframe,firstChild);
+        div.style.zIndex = "999";
         
-        iframe.style.zIndex = "999";
+        div.style.textAlign = "center";
         
-        iframe.style.textAlign = "center";
+        div.style.position = "fixed";
         
-        iframe.style.position = "fixed";
+        div.style.overflow = "auto";
+        
+        div.id = "tempDiv";
+        
+        if(!!document.getElementById("tempDiv")) {
+            dupDiv = document.getElementById("tempDiv");
+            dupDiv.parentElement.removeChild(dupDiv);
+        }
+        
+        document.body.insertBefore(div,firstChild);
         
         let images = document.querySelectorAll("img");
         
         for(let count = 0; count < images.length; count++) {
             let rawImageSource = images[count].src;
             let imageToSave = createImageToSave(rawImageSource);
-            iframe.appendChild(imageToSave);
+            div.appendChild(imageToSave);
         }
         ///--------------------------------------------------------------------	
         ///--------------------------------------------------------------------
