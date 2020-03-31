@@ -255,39 +255,109 @@ function mu3() {
 	
 }
 
-(async function main(){
+function getHighestZindex() {
+    let children = $("body").children();
+    let highestZ = -999;
+    for(let count = 0; count < children.length; count++) {
+        if(children[count].style.zIndex > highestZ)
+            highestZ = children[count].style.zIndex;
+    }
+    return highestZ
+}
+
+function createElement (type = "div") {
+    let element = document.createElement(type);
+    return element;    
+}
+
+function createImageToSave (src) {
+    
+    let image = document.createElement("img");
+    
+    image.src = src;//"https://images-na.ssl-images-amazon.com/images/I/7102BnBdGoL._AC_UX679_.jpg";
+    
+    image.style.maxHeight = "90%";
+
+    image.style.maxWidth = "90%";
+
+    image.style.border = "2px solid gold";
+
+    image.style.margin = "5px";
+
+    image.style.display = "inline-block";
+    
+    return image;
+    
+}
+
+//function addImageToSavePane(image) {
+//    let src = image.src;
+//    let imageToSave = createImageToSave(src);
+//    
+//    
+//}
+//
+//let savePane = createElement();
+//savePane.style.backgroundColor = "pink";
+//savePane.style.height = "90px";
+//savePane.style.width = "auto";
+
+
+(async function main() {
 	if (window.hasRun) {
 		return;
 	}
 	window.hasRun = true;
 	
-	//load_jQuery();
-	
-	await loadScript("jQuery.js", "jQuery_id",true);
-	
-    //await loadScript("../MAIN/scripts/ezLibrary.js", "ezLibrary_id", false);
-	
-	//await injectCSS("../MAIN/styles/ezStyle.css");
+	await loadScript("jQuery.js", "jQuery_id", true);
 	
 	$(document).ready(function(){
 		
         ///-------------------------------------------------------------------
-
         ///-------------------------------------------------------------------	
 
-
-        let iframe = document.createElement("iframe");
-        iframe.src = "http://www.google.com";//"ezFrame.html";
-        iframe.style.position = "fixed";
-        iframe.style.zIndex = "999";
+        let div = createElement();
+        div.style.backgroundColor = "green";
         
-        //document.body.prepend(iframe);
+        let innerDiv = createElement();
+        innerDiv.style.backgroundColor = "blue";
         
-        $.append(iframe);
+        div.style.height = "100px";
+        innerDiv.style.height = "90px";
+        
+        div.style.width = "auto";
+        innerDiv.style.width = "auto";
+        
+        //div.style.position = "absolute";
+        innerDiv.style.position = "absolute";
+        
+        let firstChild = document.body.firstChild;
+        
+        document.body.insertBefore(div,firstChild);
+        
+        //let image = createImageToSave("https://images-na.ssl-images-amazon.com/images/I/7102BnBdGoL._AC_UX679_.jpg");
+        
+        div.style.zIndex = "999";
+        
+        //div.appendChild(image);
+        
+        div.style.textAlign = "center";
+        
+        div.style.position = "fixed";
+        
+        let images = document.querySelectorAll("img");
+        
+        for(let count = 0; count < images.length; count++) {
+            let rawImageSource = images[count].src;
+            let imageToSave = createImageToSave(rawImageSource);
+            div.appendChild(imageToSave);
+        }
+        
+        
+        
 
 
         ///--------------------------------------------------------------------	
-
         ///--------------------------------------------------------------------
 		
     });
@@ -300,7 +370,9 @@ function mu3() {
 //--------------------------------|TEST|-----------------------------------|~~~
 //--------------------------------|____|-----------------------------------|~~
 ///````````````````````````````````````````````````````````````````````````|~
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 ///_________________________________________________________________________|~
 //--------------------------------|````````|--------------------------------|~~
 //--------------------------------|DISABLED|--------------------------------|~~~
