@@ -316,47 +316,35 @@ function createImageToSave (src) {
         ///-------------------------------------------------------------------
         ///-------------------------------------------------------------------	
 
-        let div = createElement();
-        div.style.backgroundColor = "green";
+        //let div = createElement();
         
-        let innerDiv = createElement();
-        innerDiv.style.backgroundColor = "blue";
+        let iframe = document.createElement("iframe");
         
-        div.style.height = "100px";
-        innerDiv.style.height = "90px";
+        iframe.style.backgroundColor = "green";
+
+        iframe.style.height = "100px";
         
-        div.style.width = "auto";
-        innerDiv.style.width = "auto";
-        
+        iframe.style.width = "auto";
+                
         //div.style.position = "absolute";
-        innerDiv.style.position = "absolute";
         
         let firstChild = document.body.firstChild;
         
-        document.body.insertBefore(div,firstChild);
+        document.body.insertBefore(iframe,firstChild);
         
-        //let image = createImageToSave("https://images-na.ssl-images-amazon.com/images/I/7102BnBdGoL._AC_UX679_.jpg");
+        iframe.style.zIndex = "999";
         
-        div.style.zIndex = "999";
+        iframe.style.textAlign = "center";
         
-        //div.appendChild(image);
-        
-        div.style.textAlign = "center";
-        
-        div.style.position = "fixed";
+        iframe.style.position = "fixed";
         
         let images = document.querySelectorAll("img");
         
         for(let count = 0; count < images.length; count++) {
             let rawImageSource = images[count].src;
             let imageToSave = createImageToSave(rawImageSource);
-            div.appendChild(imageToSave);
+            iframe.appendChild(imageToSave);
         }
-        
-        
-        
-
-
         ///--------------------------------------------------------------------	
         ///--------------------------------------------------------------------
 		
