@@ -1,5 +1,8 @@
 "use strict";
 
+
+///----remove globals
+
 ///-USE THIS TO LOAD THE LIBRARY
 //async function loadScript(src, id) {
 //    if(document.getElementById(id)) {
@@ -67,6 +70,184 @@ XXXXNO;,dKXXXXKXKo;:oO00KKd;':xkO000KXOl;:kKKKXOo:,,cxOO00KOc'.'cdkO000Ko'';okOO
 //--------------------------------|OBJECTS|---------------------------|~~~
 //--------------------------------|_______|---------------------------|~~
 ///```````````````````````````````````````````````````````````````````|~
+
+
+////===========================================================================
+
+let ez = {
+	className : "ezClassName",
+	id : "ez_id",
+	test : function() {
+		l_("test");
+	},
+	///_____________________________________________________________________|~
+	//--------------------------------|`````````|---------------------------|~~
+	//--------------------------------|CONSTANTS|---------------------------|~~~
+	//--------------------------------|_________|---------------------------|~~
+	///`````````````````````````````````````````````````````````````````````|~
+	ez_id : "ez_id",
+	ez_class : "ez_class",
+	///_____________________________________________________________________|~
+	//--------------------------------|`````````|---------------------------|~~
+	//--------------------------------|VARIABLES|---------------------------|~~~
+	//--------------------------------|_________|---------------------------|~~
+	///`````````````````````````````````````````````````````````````````````|~
+
+	///_____________________________________________________________________|~
+	//--------------------------------|`````````|---------------------------|~~
+	//--------------------------------|FUNCTIONS|---------------------------|~~~
+	//--------------------------------|_________|---------------------------|~~
+	///`````````````````````````````````````````````````````````````````````|~
+	injectCSS : function(cssFile, id = "CSS_ID") {
+		
+		if(document.getElementById(id)) {
+		   console.log("removing duplicate CSS: " + link.href);
+		   let duplicate = document.getElementById(id);
+		   duplicate.parentElement.removeChild(duplicate);
+		}
+		
+		let promise = new Promise(function(resolve, reject) {
+			
+			let link = document.createElement("link");
+			link.rel = "stylesheet";
+			link.type = "text/css";
+			link.href = cssFile;
+			link.async = false;
+			link.onload = () => resolve(link);
+			link.onerror = () => reject(new Error(`load error for ${link.href}`));
+			document.head.append(link);
+		   
+		});
+	   
+		promise.then(
+		   link => console.log(`${link.href} is loaded!`),
+		   error => console.log(`Error: ${error.message}`)
+		   )
+		   
+	},
+
+	insertStringInString : function(insertTo, receiveAt, place){
+		return receiveAt.slice(0,place) + insertTo + receiveAt.slice(place);	
+	},
+
+	set_Register_Mouse_Up_On_Document : function(callback  = () => {
+					addToYellowBox("NO CALLBACK FOR MOUSEUP");
+				}){
+				document.onmouseup = callback;
+				document.onkeyup = callback;
+	},
+
+	set_Register_Document_Selection_Change : function(callback = () => {
+					addToYellowBox("NO CALLBACK FOR SELECTION CHANGE");
+				}){
+				document.onselectionchange = callback;    
+	},
+
+	sleep : function(mils){
+		let currentTime = new Date().getTime();
+		while(currentTime + mils >= new Date().getTime()){}
+	},
+	
+	sleepSeconds : function(secs) {
+		let currentTime = new Date().getTime();
+		while(currentTime + mils * 1000 >= new Date().getTime()){}
+	},
+
+	///==================================================================================|
+	//____________________________________HERE/THERE_____________________________________|
+	//-----------------------------------------------------------------------------------|
+	///-These elements are in the test page which should be bundled with this script     |
+	//-also console functions															 |
+	//-----------------------------------------------------------------------------------|
+	//```````````````````````````````````````````````````````````````````````````````````|
+	///==================================================================================|
+
+	getHere : function(){
+		return document.getElementById("here");
+	},
+
+	getThere : function(){
+		return document.getElementById("there");
+	},
+
+	///==================================================================================|
+	//____________________________________THE YELLOW BOX_________________________________|
+	//-----------------------------------------------------------------------------------|
+	///-The Yellow Box is a second console displayed on the current webpage              |															 |
+	//-----------------------------------------------------------------------------------|
+	//```````````````````````````````````````````````````````````````````````````````````|
+	///==================================================================================|
+
+	generateYellowBox : function(startingText = "LOG"){
+		let theYellowBox = document.createElement("div");
+		theYellowBox.style.backgroundColor = "yellow";
+		theYellowBox.innerHTML = startingText;  
+		theYellowBox.id = "theYellowBox";
+		return theYellowBox;
+	},
+
+	getYellowBoxFromDocument : function(){
+		let theYellowBox = document.getElementById("theYellowBox");
+		if(!!theYellowBox) 
+			return theYellowBox;
+		else 
+			console.log("theYellowBox is not in the document");
+	},
+
+	generateAndAppendYellowBox : function(){
+		let theYellowBox = generateYellowBox();
+		let isInDocument = document.getElementById("theYellowBow");
+		if(!isInDocument) {
+			document.body.appendChild(theYellowBox);
+		}
+	},
+
+	replaceYellowBox : function(startText = "replaced"){
+		l_("replacing yellow box");
+		removeYellowBox();
+		generateAndAppendYellowBox();
+		l_(startText);
+	},
+
+	removeYellowBox : function(){
+		let theYellowBow = document.getElementById("theYellowBox");
+		if (!!theYellowBow) 
+			document.body.removeChild(theYellowBow);
+		
+	},
+
+	clearYellowBox : function(){
+		let theYellowBox = document.getElementById('theYellowBox');
+		theYellowBox.innerHTML = "";
+	},
+
+	addToYellowBox : function(text = "...", prefix = ""){
+		if(!!document.getElementById('theYellowBox')){
+			let theYellowBox = document.getElementById('theYellowBox');
+			let theYellowBox_innerHTML = theYellowBox.innerHTML;
+			let textToYellowBox = theYellowBox_innerHTML + '<br>' + prefix + ' : ' + text;
+			theYellowBox.innerHTML = textToYellowBox;
+		}
+	},
+	
+	log : function(message) {
+		console.log(message);
+		if(!!document.getElementById("theYellowBox")){ 
+			addToYellowBox(message);
+		}
+	},
+	
+	clearLog: function(){
+		console.clear();
+		if(!!document.getElementById("theYellowBox")){ 
+			clearYellowBox();
+		}
+	},
+
+}
+
+
+////===========================================================================
 
 class Timer_ez {
 	constructor() {
@@ -220,31 +401,52 @@ class Selection_ez {
 		}		
     }
 }
-
 ///_____________________________________________________________________|~
 //--------------------------------|`````````|---------------------------|~~
 //--------------------------------|CONSTANTS|---------------------------|~~~
 //--------------------------------|_________|---------------------------|~~
 ///`````````````````````````````````````````````````````````````````````|~
-
 const ez_id = "ez_id";
-
 const ez_class = "ez_class";
-
 ///_____________________________________________________________________|~
 //--------------------------------|`````````|---------------------------|~~
 //--------------------------------|VARIABLES|---------------------------|~~~
 //--------------------------------|_________|---------------------------|~~
 ///`````````````````````````````````````````````````````````````````````|~
 
-
 ///_____________________________________________________________________|~
 //--------------------------------|`````````|---------------------------|~~
 //--------------------------------|FUNCTIONS|---------------------------|~~~
 //--------------------------------|_________|---------------------------|~~
 ///`````````````````````````````````````````````````````````````````````|~
+function injectCSS(cssFile, id = "CSS_ID") {
+	
+	if(document.getElementById(id)) {
+       console.log("removing duplicate CSS: " + link.href);
+       let duplicate = document.getElementById(id);
+       duplicate.parentElement.removeChild(duplicate);
+	}
+	
+	let promise = new Promise(function(resolve, reject) {
+		
+		let link = document.createElement("link");
+		link.rel = "stylesheet";
+		link.type = "text/css";
+		link.href = cssFile;
+		link.async = false;
+		link.onload = () => resolve(link);
+		link.onerror = () => reject(new Error(`load error for ${link.href}`));
+		document.head.append(link);
+	   
+	});
+   
+	promise.then(
+       link => console.log(`${link.href} is loaded!`),
+       error => console.log(`Error: ${error.message}`)
+	   )
+	   
+}
 
-//sandwitch the string
 function insertStringInString(insertTo, receiveAt, place){
 	return receiveAt.slice(0,place) + insertTo + receiveAt.slice(place);	
 }
