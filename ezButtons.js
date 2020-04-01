@@ -284,7 +284,12 @@ function createImageToSave (src) {
 
     image.style.margin = "5px";
 
-    image.style.display = "inline-block";
+    //image.style.display = "inline-block";
+	
+	//image.style.display = "block";
+	//image.style.float = "top";
+	
+	
     
     return image;
     
@@ -312,9 +317,9 @@ function createImageToSave (src) {
         
         div.style.backgroundColor = "green";
 
-        div.style.height = "auto";
+        div.style.height = "100px";
         
-        div.style.width = "100px";
+        div.style.width = "auto";
                 
         //div.style.position = "absolute";
         
