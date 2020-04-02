@@ -44,6 +44,7 @@ let ezLayout;
 //--------------------------------|FUNCTIONS|---------------------------|~~~
 //--------------------------------|_________|---------------------------|~~
 ///`````````````````````````````````````````````````````````````````````|~
+
 async function loadStyle(href, id) {
     if(!!document.getElementById(id)) {
         console.log("removing duplicate script: " + href);
@@ -67,6 +68,7 @@ async function loadStyle(href, id) {
         error => console.log(`Error: ${error.message}`)
     );
 }
+
 async function loadScript(src, id, first = false) {
     if(document.getElementById(id)) {
         console.log("removing duplicate script: " + src);
@@ -95,11 +97,13 @@ async function loadScript(src, id, first = false) {
         error => console.log(`Error: ${error.message}`)
     );
 }
+
 ///_____________________________________________________________________|~
 //--------------------------------|````|--------------------------------|~~
 //--------------------------------|MAIN|--------------------------------|~~~
 //--------------------------------|____|--------------------------------|~~
 ///`````````````````````````````````````````````````````````````````````|~
+
 function makeButton(){
     let button = document.createElement("button");
     button.style.width = "12px";
@@ -127,6 +131,7 @@ function makeButton(){
     
     return button;
 }
+
 function makeContainer() {
     
     let container = document.createElement("p");
@@ -135,6 +140,7 @@ function makeContainer() {
     container.id = "ezContainer";
     return container;
 }
+
 function mu(){
 	
 	ez.test();
@@ -164,6 +170,7 @@ function mu(){
         
 	}
 }
+
 function mu2() {
     l_("mu2");
 	
@@ -283,80 +290,89 @@ function createImageToSave (src) {
     image.style.border = "2px solid gold";
 
     image.style.margin = "5px";
-
-    //image.style.display = "inline-block";
-	
-	//image.style.display = "block";
-	//image.style.float = "top";
-	
-	
     
     return image;
     
 }
 
+function createImageContainer() {
+    let imageContainer = document.createElement("div");
+    imageContainer.style.display = "flex";
+    imageContainer.style.backgroundColor = "#001100";
+    imageContainer.style.height = "100px";
+    imageContainer.style.width = "auto";
+    imageContainer.style.zIndex = "999";
+    imageContainer.style.textAlign = "center";
+    imageContainer.style.position = "fixed";
+    imageContainer.style.overflow = "auto";
+    imageContainer.id = "ezImageContainer_id";
+    return imageContainer;
+}
 
+function getImageContainer() {
+    return document.getElementById("ezImageContainer_id");
+}
 
+function wrapImage(image) {
+    let imageBox = document.createElement("div");
+    imageBox.appendChild(image);
+    let removeButton = document.createElement("button");
+    removeButton.innerHTML = "X";
+    removeButton.addEventListener("click",function(e) {
+        let parentElement = e.target.parentElement;
+        removeElement(parentElement);            
+    });
+    imageBox.appendChild(removeButton); 
+    return imageBox;
+}
+
+function removeElement(element) {
+    element.parentElement.removeChild(element);
+}
 
 (async function main() {
 	if (window.hasRun) {
 		return;
 	}
 	window.hasRun = true;
-	
 	await loadScript("jQuery.js", "jQuery_id", true);
-	
 	$(document).ready(function(){
 		
         ///-------------------------------------------------------------------
         ///-------------------------------------------------------------------	
-
-        //let div = createElement();
         
-        let div = document.createElement("div");
-        
-        div.style.backgroundColor = "green";
-
-        div.style.height = "100px";
-        
-        div.style.width = "auto";
-                
-        //div.style.position = "absolute";
-        
-        let firstChild = document.body.firstChild;
-        
-        div.style.zIndex = "999";
-        
-        div.style.textAlign = "center";
-        
-        div.style.position = "fixed";
-        
-        div.style.overflow = "auto";
-        
-        div.id = "tempDiv";
-        
-        if(!!document.getElementById("tempDiv")) {
-            dupDiv = document.getElementById("tempDiv");
-            dupDiv.parentElement.removeChild(dupDiv);
+        if(!!document.getElementById("ezImageContainer_id")) {
+            let dupDiv = document.getElementById("ezImageContainer_id");
+            removeElement(dupDiv);
         }
+
+        let imageContainer = createImageContainer();
         
-        document.body.insertBefore(div,firstChild);
+        //document.body.insertBefore(div,firstChild);
+        
+        //document.head.append(div);
+        
+        document.body.append(imageContainer);
+        
+        //document.body.prepend(div);
         
         let images = document.querySelectorAll("img");
         
         for(let count = 0; count < images.length; count++) {
             let rawImageSource = images[count].src;
             let imageToSave = createImageToSave(rawImageSource);
-            div.appendChild(imageToSave);
+            let wrappedImage = wrapImage(imageToSave);
+            imageContainer.appendChild(wrappedImage);
         }
+    
         ///--------------------------------------------------------------------	
         ///--------------------------------------------------------------------
 		
     });
-	
-    //document.onmouseup = mu2;
-    
 })();
+
+
+
 ///________________________________________________________________________|~
 //--------------------------------|````|-----------------------------------|~~
 //--------------------------------|TEST|-----------------------------------|~~~
