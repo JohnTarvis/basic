@@ -1,4 +1,120 @@
 
+function mu(){
+	
+	ez.test();
+    
+    let images = document.querySelectorAll("img");
+	let count = 0;
+	
+	for(let count = 0; count < images.length; count++) {
+		let image = images[count];
+		
+		image.ezImageTag = "ezImageTag";
+		
+		
+		
+        if(image.parentElement.id == "ezContainer") {
+            
+            
+            
+        } else {
+            
+            image.parentElement.insertBefore(container,image);
+            container.appendChild(image);
+            container.appendChild(button);
+        }
+        
+        
+        
+	}
+}
+
+function mu2() {
+    l_("mu2");
+	
+	
+
+	
+	
+	
+	
+}
+
+
+
+function contextMenu_() {
+	
+    let contextMenu = document.createElement("ul");
+		contextMenu.className = "custom-menu";
+		
+		let listItem = document.createElement("li");
+		listItem.data = "first";
+		listItem.innerText = "proceed";
+		
+		let listItem2 = document.createElement("li");
+		listItem2.data = "second";
+		listItem2.innerText = "exit";
+		
+		contextMenu.appendChild(listItem);
+		contextMenu.appendChild(listItem2);
+		
+		document.body.insertBefore(contextMenu,document.body.childNodes[0]);
+		//document.body.appendChild(contextMenu);
+		
+			
+		$("img").css("border","5px solid orange");
+		
+		// JAVASCRIPT (jQuery)
+
+		// Trigger action when the contexmenu is about to be shown
+		$(document).bind("contextmenu", function (event) {
+			
+			// Avoid the real one
+			event.preventDefault();
+			
+			// Show contextmenu
+			$(".custom-menu").finish().toggle(100).
+			
+			// In the right position (the mouse)
+			css({
+				top: event.pageY + "px",
+				left: event.pageX + "px"
+			});
+		});
+
+
+		// If the document is clicked somewhere
+		$(document).bind("mousedown", function (e) {
+			
+			// If the clicked element is not the menu
+			if (!$(e.target).parents(".custom-menu").length > 0) {
+				
+				// Hide it
+				$(".custom-menu").hide(100);
+			}
+		});
+
+
+		// If the menu element is clicked
+		$(".custom-menu li").click(function(){
+			
+			// This is the triggered action name
+			switch($(this).attr("data-action")) {
+				
+				// A case for each action. Your actions here
+				case "first": alert("first"); break;
+				case "second": alert("second"); break;
+				case "third": alert("third"); break;
+			}
+		  
+			// Hide it AFTER the action was triggered
+			$(".custom-menu").hide(100);
+		  });
+	
+	
+}
+
+
 class EZ_Element {	
 	constructor(type = "div", className = ezClass, id = ezID){
 		this.element = document.createElement(type);
