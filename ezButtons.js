@@ -229,11 +229,20 @@ function imageToFrame(imgSrc) {
 	let iframe = document.getElementById("ezFrame_id");
 	if(iframe.contentWindow || iframe.contentDocument) {
 		iframe.style.backgroundColor = "#000055";
-		let imageInsert = iframe.contentWindow.document.createElement("img");
+		let imageInsert = document.createElement("img");
 		imageInsert.src = imgSrc;
 		iframe.contentWindow.document.body.append(imageInsert);
 	}
 	
+	
+}
+
+function addAllImagesToFrame() {
+	let allImages = document.querySelectorAll("img");
+	for(let count = 0; count < allImages.length; count++) {
+		imageToFrame(allImages[count].src);
+		
+	}
 	
 }
 function colorFrameRed() {
@@ -257,6 +266,7 @@ function colorFrameRed() {
 	$(document).ready(function(){
 		let iframe = create_iframe();
 		document.body.append(iframe);
+		addAllImagesToFrame();
     });
 })();
 
