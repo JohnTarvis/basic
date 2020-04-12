@@ -186,77 +186,65 @@ function removeElement(element) {
     element.parentElement.removeChild(element);
 }
 
-///-make iframe with html section to save images
-
-function wrapImagesInDiv() {
-	let duplicate = document.getElementById("ezImageCollection_class");
-	if(!!duplicate) removeElement(duplicate);
-	let ezImageCollection = document.createElement("div");
-	ezImageCollection.className = "ezImageCollection_class";
-	let images = document.querySelectorAll("img");
-	for(let count = 0; count < images.length; count++) {
-		let ezImageBox = document.createElement("div");
-		ezImageBox.className = "ezImageBox_class";
-		let ezRemoveImageButton = document.createElement("button");
-		ezRemoveImageButton.innerHTML = "X";
-		ezRemoveImageButton.className = "ezRemoveImageButton_class";
-		ezRemoveImageButton.addEventListener("click", function(e) {
-			let parent = e.target.parentElement;
-			removeElement(parent);
-		});
-		
-		let unwrappedImage = document.createElement("img");
-		unwrappedImage.src = images[count].src;
-		ezImageBox.appendChild(unwrappedImage);
-		ezImageBox.appendChild(ezRemoveImageButton);
-		ezImageCollection.appendChild(ezImageBox);
-		
-	}
-	document.body.appendChild(ezImageCollection);
-	
-}
-
-function create_iframe(className = "ezFrame") {
-	var iframe = document.createElement('iframe');
-	var html = '<body>Foo</body>';
-	iframe.src = 'data:text/html;charset=utf-8,' + encodeURI(html);
-	//document.body.appendChild(iframe);
-	console.log('iframe.contentWindow =', iframe.contentWindow);	
-	iframe.id = "ezFrame_id";
-	return iframe;
-}
-function imageToFrame(imgSrc) {
-	let iframe = document.getElementById("ezFrame_id");
-	if(iframe.contentWindow || iframe.contentDocument) {
-		iframe.style.backgroundColor = "#000055";
-		let imageInsert = iframe.contentWindow.document.createElement("img");
-		imageInsert.src = imgSrc;
-		iframe.contentWindow.document.body.append(imageInsert);
-	}
-	
-	
-}
-function colorFrameRed() {
-	var x = document.getElementById("ezFrame_id");
-	var y = (x.contentWindow || x.contentDocument);
-	if (y.document)y = y.document;
-	y.body.style.backgroundColor = "red"; 
-	
-	
-}
-
-
 (async function main() {
 	if (window.hasRun) {
 		return;
 	}
 	window.hasRun = true;
 	await loadScript("jQuery.js", "jQuery_id", true);
-	if(!document.getElementById("ezButtons_css_id")) 
-		await loadStyle("ezButtons.css","ezButtons_css_id");
+	await loadStyle("ezButtons.css");
 	$(document).ready(function(){
-		let iframe = create_iframe();
-		document.body.append(iframe);
+		
+        ///-------------------------------------------------------------------
+        ///-------------------------------------------------------------------	
+        
+        // if(!!document.getElementById("ezImageContainer_id")) {
+            // let dupDiv = document.getElementById("ezImageContainer_id");
+            // removeElement(dupDiv);
+        // }
+        // let imageContainer = createImageContainer();
+        // document.body.append(imageContainer);
+        // let images = document.querySelectorAll("img");
+        // for(let count = 0; count < images.length; count++) {
+            // let rawImageSource = images[count].src;
+            // let imageToSave = createImageToSave(rawImageSource);
+            // let wrappedImage = wrapImage(imageToSave);
+            // imageContainer.appendChild(wrappedImage);
+        // }
+		
+		let duplicate = document.getElementById("ezImageCollection_class");
+		if(!!duplicate) removeElement(duplicate);
+		
+		let ezImageCollection = document.createElement("div");
+		ezImageCollection.className = "ezImageCollection_class";
+		
+		document.body.append(ezImageCollection);
+		
+		let images = document.querySelectorAll("img");
+		
+		for(let count = 0; count < images.length; count++) {
+			let ezImageBox = document.createElement("div");
+			ezImageBox.className = "ezImageBox_class";
+			let ezRemoveImageButton = document.createElement("button");
+			ezRemoveImageButton.innerHTML = "X";
+			ezRemoveImageButton.className = "ezRemoveImageButton_class";
+			ezRemoveImageButton.addEventListener("click", function(e) {
+				let parent = e.target.parentElement;
+				removeElement(parent);
+			});
+			
+			let unwrappedImage = document.createElement("img");
+			unwrappedImage.src = images[count].src;
+			ezImageBox.append(unwrappedImage);
+			ezImageBox.append(ezRemoveImageButton);
+			ezImageCollection.append(ezImageBox);
+			
+		}
+		
+    
+        ///--------------------------------------------------------------------	
+        ///--------------------------------------------------------------------
+		
     });
 })();
 
